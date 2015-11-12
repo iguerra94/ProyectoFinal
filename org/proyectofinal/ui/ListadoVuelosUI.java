@@ -338,8 +338,9 @@ public class ListadoVuelosUI extends JFrame {
 					
 					Object[] cantidad = new Object[cant];
 					
-					for(int i = 0; i < cantidad.length; i++){
-						cantidad[i] = i+1;
+					for(int i = 1; i < cantidad.length; i++){
+						cantidad[0] = 0;
+						cantidad[i] = i;
 					}
 					
 					ui.getComboBox().setModel(new DefaultComboBoxModel(cantidad));

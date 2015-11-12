@@ -6,6 +6,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -21,7 +23,6 @@ import javax.swing.border.LineBorder;
 
 import org.proyectofinal.model.impl.Boton;
 import javax.swing.border.TitledBorder;
-import javax.swing.border.EtchedBorder;
 import javax.swing.JTextField;
 
 public class ReservaBoletoUI extends JFrame implements MouseListener{
@@ -66,6 +67,9 @@ public class ReservaBoletoUI extends JFrame implements MouseListener{
 	private JTextField textField_1;
 	private JTextField textField_2;
 	private JTextField textField_3;
+	private JTextField textField_4;
+	private int a = 1;
+	private Object opcion;
 	
 	/**
 	 * Create the frame.
@@ -699,11 +703,11 @@ public class ReservaBoletoUI extends JFrame implements MouseListener{
 		lblInformacionSobreEl.setHorizontalAlignment(SwingConstants.CENTER);
 		lblInformacionSobreEl.setFont(new Font("Dialog", Font.BOLD, 16));
 		
-		JPanel panel_1 = new JPanel();
+		final JPanel panel_1 = new JPanel();
 		panel_1.setLayout(null);
 		panel_1.setBorder(new LineBorder(new Color(99, 130, 191), 4));
 		panel_1.setBackground(Color.GRAY);
-		panel_1.setBounds(580, 12, 374, 290);
+		panel_1.setBounds(580, 12, 374, 323);
 		getContentPane().add(panel_1);
 		
 		JLabel lblNewLabel = new JLabel("Cantidad de pasajeros: ");
@@ -719,7 +723,63 @@ public class ReservaBoletoUI extends JFrame implements MouseListener{
 //			cantidad[i] = i+1;
 //		}
 		
+		final JPanel panel_2 = new JPanel();
+		panel_2.setBackground(Color.GRAY);
+		panel_2.setBounds(20, 89, 333, 182);
+		panel_2.setLayout(null);
+		
+
+		final JButton btnSiguiente = new JButton("Siguiente");
+		btnSiguiente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if (a < (Integer)opcion){
+					a++;
+					
+					panel_1.remove(panel_2);
+					panel_1.remove(btnSiguiente);
+					
+					panel_2.setBorder(new TitledBorder(null, "Pasajero " + a +"/" + opcion, TitledBorder.LEADING, TitledBorder.TOP, null, null));
+					
+					panel_1.add(panel_2);
+					panel_1.add(btnSiguiente);
+					
+					panel_1.validate();
+					panel_1.repaint();
+				}
+				
+			}
+		});
+		btnSiguiente.setBounds(234, 283, 116, 29);
+
+				
 		comboBox = new JComboBox();
+		comboBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if (comboBox.getSelectedIndex() > 0){
+					
+					a = 1;
+					opcion = comboBox.getSelectedItem();
+					
+					panel_2.setBorder(new TitledBorder(null, "Pasajero " + a +"/" + opcion, TitledBorder.LEADING, TitledBorder.TOP, null, null));
+					
+					panel_1.add(panel_2);
+					panel_1.add(btnSiguiente);
+					
+					panel_1.validate();
+					panel_1.repaint();
+				
+				}else{
+					panel_1.remove(panel_2);
+
+					panel_1.remove(btnSiguiente);
+
+					panel_1.validate();
+					panel_1.repaint();
+				}
+			}
+		});
 		comboBox.setBounds(176, 52, 68, 22);
 		panel_1.add(comboBox);
 		
@@ -730,51 +790,55 @@ public class ReservaBoletoUI extends JFrame implements MouseListener{
 		lblinformacinSobrePasajeros.setBounds(0, 0, 374, 50);
 		panel_1.add(lblinformacinSobrePasajeros);
 		
-		JButton btnSiguiente = new JButton("Siguiente");
-		btnSiguiente.setBounds(213, 249, 126, 30);
-		panel_1.add(btnSiguiente);
 		
-		JPanel panel_2 = new JPanel();
-		panel_2.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "Informacion de pasajero N\u00BA 1", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_2.setBounds(10, 89, 347, 149);
-		panel_1.add(panel_2);
-		panel_2.setLayout(null);
+		
 		
 		JLabel lblNombre = new JLabel("Nombre:");
-		lblNombre.setBounds(10, 30, 41, 14);
+		lblNombre.setBounds(20, 25, 116, 20);
 		panel_2.add(lblNombre);
 		
-		JLabel lblApellido = new JLabel("Apellido: ");
-		lblApellido.setBounds(10, 55, 44, 14);
+		JLabel lblApellido = new JLabel("Apellido:");
+		lblApellido.setBounds(20, 55, 116, 20);
 		panel_2.add(lblApellido);
 		
-		JLabel lblAsiento = new JLabel("Asiento:");
-		lblAsiento.setBounds(10, 81, 40, 14);
+		JLabel lblDni = new JLabel("DNI:");
+		lblDni.setBounds(20, 85, 116, 20);
+		panel_2.add(lblDni);
+		
+		JLabel lblAsiento = new JLabel("Asiento: ");
+		lblAsiento.setBounds(20, 115, 116, 20);
 		panel_2.add(lblAsiento);
 		
 		JLabel lblPrecio = new JLabel("Precio:");
-		lblPrecio.setBounds(10, 106, 33, 14);
+		lblPrecio.setBounds(20, 145, 116, 20);
 		panel_2.add(lblPrecio);
 		
 		textField = new JTextField();
-		textField.setBounds(101, 27, 166, 20);
+		textField.setBounds(99, 25, 176, 20);
 		panel_2.add(textField);
 		textField.setColumns(10);
 		
 		textField_1 = new JTextField();
-		textField_1.setBounds(101, 52, 166, 20);
-		panel_2.add(textField_1);
 		textField_1.setColumns(10);
+		textField_1.setBounds(99, 55, 176, 20);
+		panel_2.add(textField_1);
 		
 		textField_2 = new JTextField();
-		textField_2.setBounds(101, 78, 166, 20);
-		panel_2.add(textField_2);
 		textField_2.setColumns(10);
+		textField_2.setBounds(99, 85, 176, 20);
+		panel_2.add(textField_2);
 		
 		textField_3 = new JTextField();
-		textField_3.setBounds(101, 103, 166, 20);
-		panel_2.add(textField_3);
+		textField_3.setEnabled(false);
 		textField_3.setColumns(10);
+		textField_3.setBounds(99, 115, 176, 20);
+		panel_2.add(textField_3);
+		
+		textField_4 = new JTextField();
+		textField_4.setEnabled(false);
+		textField_4.setColumns(10);
+		textField_4.setBounds(99, 145, 176, 20);
+		panel_2.add(textField_4);
 		
 	}
 	
