@@ -1,10 +1,19 @@
 package org.proyectofinal.ui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import javax.swing.JButton;
 
 import org.proyectofinal.bo.impl.UsuarioBoImpl;
 import org.proyectofinal.bo.interfaces.UsuarioBo;
@@ -12,13 +21,6 @@ import org.proyectofinal.dao.ex.UserNotExistsException;
 import org.proyectofinal.dao.ex.UserNotValidException;
 import org.proyectofinal.dao.impl.UsuarioDaoImpl;
 import org.proyectofinal.dao.interfaces.UsuarioDao;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class DialogMissedPass extends JDialog {
 
@@ -63,11 +65,29 @@ public class DialogMissedPass extends JDialog {
 		getContentPane().add(lblIngreseSuUsuario);
 		
 		txtUsuario = new JTextField();
+		txtUsuario.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+
+				if (txtUsuario.getText().trim().length() >= 0){
+					usuario = txtUsuario.getText();
+				}
+
+				System.out.println(usuario);
+			}
+		});
 		txtUsuario.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
 				
-				if (txtUsuario.getText().trim().length() > 0){
+				if (txtUsuario.getText().trim().length() >= 0){
+					usuario = txtUsuario.getText();
+				}
+			}
+			@Override
+			public void focusGained(FocusEvent e) {
+				
+				if (txtUsuario.getText().trim().length() >= 0){
 					usuario = txtUsuario.getText();
 				}
 			}
@@ -97,7 +117,7 @@ public class DialogMissedPass extends JDialog {
 					} catch (UserNotExistsException e1) {
 						JOptionPane.showMessageDialog(null, e1.getMessage());
 					} catch (UserNotValidException e1) {
-						JOptionPane.showMessageDialog(null, e1.getMessage());
+						JOptionPane.showMessageDialog(null, e1.getMessage()); 
 					} finally {
 						limpiar();
 					}
@@ -108,6 +128,8 @@ public class DialogMissedPass extends JDialog {
 		});
 		btnRecuperar.setBounds(12, 60, 117, 25);
 		getContentPane().add(btnRecuperar);
+		
+		getRootPane().setDefaultButton(btnRecuperar);
 	}
 
 	private void limpiar() {

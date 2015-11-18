@@ -45,6 +45,7 @@ import org.proyectofinal.model.impl.UsuarioImpl;
 import org.proyectofinal.model.interfaces.Usuario;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import java.awt.event.WindowAdapter;
 
 public class MainFrameUI extends JFrame {
 
@@ -71,6 +72,7 @@ public class MainFrameUI extends JFrame {
 			public void run() {
 				try {
 					MainFrameUI frame = new MainFrameUI();
+					frame.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(null, "Error de MainFrame");
@@ -86,12 +88,29 @@ public class MainFrameUI extends JFrame {
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public MainFrameUI() {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				
+				String ObjButtons[] = {"Yes","No"};
+			    
+				int PromptResult = JOptionPane.showOptionDialog(null, 
+			        "Are you sure you want to exit?", "Online Examination System", 
+			        JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, 
+			        ObjButtons,ObjButtons[1]);
+			    
+				if(PromptResult == 0)
+			    {
+					System.exit(0);          
+			    }
+			}
+		});
 		
 		u = new UsuarioImpl();
 		uBo = new UsuarioBoImpl();
 		uDao = new UsuarioDaoImpl();
 		pDao = new PersonaDaoImpl();		
-	
+		
 		addWindowFocusListener(new WindowFocusListener() {
 			public void windowGainedFocus(WindowEvent arg0) {
 
@@ -141,7 +160,18 @@ public class MainFrameUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 				if (e.getSource() == mntmSalir){
-					System.exit(0);
+					
+					String ObjButtons[] = {"Si","No"};
+				    
+					int PromptResult = JOptionPane.showOptionDialog(null, 
+				        "Seguro que quieres salir?", "Advertencia", 
+				        JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, 
+				        ObjButtons,ObjButtons[1]);
+				    
+					if(PromptResult == 0) {
+						System.exit(0);          
+				    }
+					
 				}
 			}
 		});
@@ -370,6 +400,8 @@ public class MainFrameUI extends JFrame {
 		btnIngresar.setBounds(25, 165, 165, 30);
 		panelInicioSesion.add(btnIngresar);
 		
+		getRootPane().setDefaultButton(btnIngresar);
+		
 		JLabel btnaunNoEs = new JLabel("¿Aun no es usuario?");
 		btnaunNoEs.setBounds(25, 217, 170, 25);
 		panelInicioSesion.add(btnaunNoEs);
@@ -425,10 +457,5 @@ public class MainFrameUI extends JFrame {
 		cmbTipoUsuario.setSelectedIndex(0);
 		txtNombreUsuario.requestFocus();
 	}
-
 	
-
-
-
-
 }

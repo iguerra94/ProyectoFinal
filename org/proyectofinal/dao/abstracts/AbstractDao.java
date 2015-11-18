@@ -14,8 +14,8 @@ public abstract class AbstractDao implements IDao {
 	
 		Class.forName("com.mysql.jdbc.Driver");
 		
-		this.conexion = DriverManager.getConnection("jdbc:mysql://localhost:3305/ReservasAvion", "root", "asd123");
-//		this.conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/ReservasAvion", "root", "genius34");
+//		this.conexion = DriverManager.getConnection("jdbc:mysql://localhost:3305/ReservasAvion", "root", "asd123");
+		this.conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/ReservasAvion", "root", "genius34");
 	}
 	
 	public void desconectar() throws SQLException{

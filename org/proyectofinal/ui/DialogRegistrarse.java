@@ -5,16 +5,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-//import java.awt.event.ItemEvent;
-//import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
 import java.sql.Date;
 import java.sql.SQLException;
-
 import java.sql.Timestamp;
-//import java.text.SimpleDateFormat;
-
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -44,10 +43,9 @@ import org.proyectofinal.model.interfaces.Persona;
 import org.proyectofinal.model.interfaces.Usuario;
 
 import com.toedter.calendar.JDateChooser;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.WindowFocusListener;
-import java.awt.event.WindowEvent;
+//import java.awt.event.ItemEvent;
+//import java.awt.event.ItemListener;
+//import java.text.SimpleDateFormat;
 
 public class DialogRegistrarse extends JDialog {
 	
@@ -133,7 +131,7 @@ public class DialogRegistrarse extends JDialog {
 		panelDatosPersonales.setLayout(null);
 		
 		JLabel lblDni = new JLabel("DNI: ");
-		lblDni.setBounds(20, 82, 170, 27);
+		lblDni.setBounds(20, 90, 170, 15);
 		panelDatosPersonales.add(lblDni);
 		
 		JLabel lblNombre = new JLabel("Nombre: ");
@@ -141,7 +139,7 @@ public class DialogRegistrarse extends JDialog {
 		panelDatosPersonales.add(lblNombre);
 			
 		JLabel lblApellido = new JLabel("Apellido: ");
-		lblApellido.setBounds(20, 56, 170, 15);
+		lblApellido.setBounds(20, 60, 170, 15);
 		panelDatosPersonales.add(lblApellido);
 	
 		JLabel lblEmail = new JLabel("Email: ");
@@ -169,7 +167,7 @@ public class DialogRegistrarse extends JDialog {
 			@Override
 			public void focusLost(FocusEvent e) {
 				
-				if (txtDni.getText().trim().length() > 0){
+				if (txtDni.getText().trim().length() >= 0){
 					p.setDni(txtDni.getText());
 				}
 			}
@@ -194,7 +192,7 @@ public class DialogRegistrarse extends JDialog {
 			@Override
 			public void focusLost(FocusEvent e) {
 			
-				if (txtNombre.getText().trim().length() > 0){
+				if (txtNombre.getText().trim().length() >= 0){
 					p.setNombre(txtNombre.getText());
 				}
 			}
@@ -219,7 +217,7 @@ public class DialogRegistrarse extends JDialog {
 			@Override
 			public void focusLost(FocusEvent e) {
 				
-				if (txtApellido.getText().trim().length() > 0){
+				if (txtApellido.getText().trim().length() >= 0){
 					p.setApellido(txtApellido.getText());
 				}
 			}
@@ -244,7 +242,7 @@ public class DialogRegistrarse extends JDialog {
 			@Override
 			public void focusLost(FocusEvent e) {
 				
-				if (txtEmail.getText().trim().length() > 0){
+				if (txtEmail.getText().trim().length() >= 0){
 					p.setEmail(txtEmail.getText());
 				}
 			}
@@ -258,7 +256,7 @@ public class DialogRegistrarse extends JDialog {
 			@Override
 			public void focusLost(FocusEvent e) {
 			
-				if (txtTelefono.getText().trim().length() > 0){
+				if (txtTelefono.getText().trim().length() >= 0){
 					p.setTelefono(txtTelefono.getText());
 				}
 			}
@@ -283,7 +281,7 @@ public class DialogRegistrarse extends JDialog {
 			@Override
 			public void focusLost(FocusEvent e) {
 				
-				if (txtPais.getText().trim().length() > 0){
+				if (txtPais.getText().trim().length() >= 0){
 					p.setPais(txtPais.getText());
 				}
 			}
@@ -308,7 +306,7 @@ public class DialogRegistrarse extends JDialog {
 			@Override
 			public void focusLost(FocusEvent e) {
 				
-				if (txtCiudad.getText().trim().length() > 0){
+				if (txtCiudad.getText().trim().length() >= 0){
 					p.setCiudad(txtCiudad.getText());
 				}
 			}
@@ -348,7 +346,7 @@ public class DialogRegistrarse extends JDialog {
 				}
 			}
 		});
-		cmbTipoUsuario.setModel(new DefaultComboBoxModel(new String[] {"Común", "Administrador"}));
+		cmbTipoUsuario.setModel(new DefaultComboBoxModel(new String[] {"ComÃºn", "Administrador"}));
 		cmbTipoUsuario.setBounds(187, 120, 177, 20);
 		
 		JPanel panelDatosUsuario = new JPanel();
@@ -367,7 +365,7 @@ public class DialogRegistrarse extends JDialog {
 			@Override
 			public void focusLost(FocusEvent e) {
 				
-				if (txtNombreUsuario.getText().trim().length() > 0){
+				if (txtNombreUsuario.getText().trim().length() >= 0){
 					u.setNombreUsuario(txtNombreUsuario.getText());
 				}
 			}
@@ -376,7 +374,7 @@ public class DialogRegistrarse extends JDialog {
 		txtNombreUsuario.setBounds(187, 30, 177, 20);
 		panelDatosUsuario.add(txtNombreUsuario);
 	
-		JLabel lblContrasea = new JLabel("Contraseña: ");
+		JLabel lblContrasea = new JLabel("ContraseÃ±a: ");
 		lblContrasea.setBounds(20, 60, 170, 20);
 		panelDatosUsuario.add(lblContrasea);
 	
@@ -384,7 +382,7 @@ public class DialogRegistrarse extends JDialog {
 		lblTipoUsuario.setBounds(20, 120, 170, 20);
 		panelDatosUsuario.add(lblTipoUsuario);
 	
-		JLabel lblReescribirContrasea = new JLabel("Reescribir contraseña: ");
+		JLabel lblReescribirContrasea = new JLabel("Reescribir contraseÃ±a: ");
 		lblReescribirContrasea.setBounds(20, 90, 170, 20);
 		panelDatosUsuario.add(lblReescribirContrasea);
 	
@@ -394,7 +392,7 @@ public class DialogRegistrarse extends JDialog {
 			public void focusLost(FocusEvent arg0) {
 				String pass = new String(txtContrasea.getPassword());
 				
-				if (pass.trim().length() > 0){
+				if (pass.trim().length() >= 0){
 					u.setPassword(pass);					
 				}
 				
@@ -408,20 +406,19 @@ public class DialogRegistrarse extends JDialog {
 		panelDatosUsuario.add(txtReescribirContrasea);
 	
 		final JButton btnRegistrarse = new JButton("Registrarse");
-		btnRegistrarse.addActionListener(new ActionListener() {
-			
+		btnRegistrarse.addActionListener(new ActionListener() {			
 			
 			public void actionPerformed(ActionEvent e) {	
-				
 				
 				if (e.getSource() == btnRegistrarse){
 					
 					java.util.Date now = new java.util.Date();
 					Timestamp fechaActual = new Timestamp(now.getTime());
 					
-					Date date = new Date(birthDateChooser.getDate().getTime());
-					
-					p.setFechaNacimiento(date);
+					if (birthDateChooser.getDate() != null){
+						Date date = new Date(birthDateChooser.getDate().getTime());
+						p.setFechaNacimiento(date);
+					}
 					
 					u.setFechaInicio(fechaActual);
 					
@@ -437,12 +434,11 @@ public class DialogRegistrarse extends JDialog {
 
 						JOptionPane.showMessageDialog(null, "Se ha registrado el usuario con exito!"); setVisible(false);
 
-
 					} catch (ClassNotFoundException e1) {
 						JOptionPane.showMessageDialog(null, "No se pudo conectar a la base de datos.");
 						limpiar();
 					} catch (SQLException e1) {
-						JOptionPane.showMessageDialog(null, "Ocurrio en error en la base de datos. Compruebe su conexión y vuelva a intentarlo.");
+						JOptionPane.showMessageDialog(null, "Ocurrio en error en la base de datos. Compruebe su conexiÃ³n y vuelva a intentarlo.");
 						limpiar();
 					} catch (UserNotValidException e1) {
 						JOptionPane.showMessageDialog(null, e1.getMessage());
@@ -460,6 +456,8 @@ public class DialogRegistrarse extends JDialog {
 		});
 		btnRegistrarse.setBounds(12, 476, 174, 25);
 		getContentPane().add(btnRegistrarse);
+		
+		getRootPane().setDefaultButton(btnRegistrarse);
 
 		final JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.addActionListener(new ActionListener() {

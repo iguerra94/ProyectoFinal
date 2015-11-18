@@ -24,7 +24,7 @@ public class UsuarioBoImpl implements UsuarioBo {
 	
 	public void verificar(String usuario) throws UserNotValidException{
 		
-		if (usuario == null){			
+		if (usuario == null || usuario.length() == 0){			
 			throw new UserNotValidException();
 		}
 	}
