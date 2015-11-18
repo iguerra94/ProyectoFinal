@@ -75,6 +75,7 @@ public class ListadoVuelosUI extends JFrame {
 	 */
 	@SuppressWarnings("rawtypes")
 	public ListadoVuelosUI() {
+		setResizable(false);
 		
 		vC = new ViajeCabeceraImpl();
 

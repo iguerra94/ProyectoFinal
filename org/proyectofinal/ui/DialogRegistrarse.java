@@ -133,15 +133,15 @@ public class DialogRegistrarse extends JDialog {
 		panelDatosPersonales.setLayout(null);
 		
 		JLabel lblDni = new JLabel("DNI: ");
-		lblDni.setBounds(20, 30, 170, 15);
+		lblDni.setBounds(20, 82, 170, 27);
 		panelDatosPersonales.add(lblDni);
 		
 		JLabel lblNombre = new JLabel("Nombre: ");
-		lblNombre.setBounds(20, 60, 170, 15);
+		lblNombre.setBounds(20, 30, 170, 15);
 		panelDatosPersonales.add(lblNombre);
 			
 		JLabel lblApellido = new JLabel("Apellido: ");
-		lblApellido.setBounds(20, 90, 170, 15);
+		lblApellido.setBounds(20, 56, 170, 15);
 		panelDatosPersonales.add(lblApellido);
 	
 		JLabel lblEmail = new JLabel("Email: ");
@@ -185,7 +185,7 @@ public class DialogRegistrarse extends JDialog {
 				}
 			}
 		});
-		txtDni.setBounds(187, 30, 177, 20);
+		txtDni.setBounds(187, 87, 177, 20);
 		panelDatosPersonales.add(txtDni);
 		txtDni.setColumns(10);
 	
@@ -211,7 +211,7 @@ public class DialogRegistrarse extends JDialog {
 			}
 		});
 		txtNombre.setColumns(10);
-		txtNombre.setBounds(187, 60, 177, 20);
+		txtNombre.setBounds(187, 27, 177, 20);
 		panelDatosPersonales.add(txtNombre);
 	
 		txtApellido = new JTextField();
@@ -236,7 +236,7 @@ public class DialogRegistrarse extends JDialog {
 					}
 				});
 		txtApellido.setColumns(10);
-		txtApellido.setBounds(187, 90, 177, 20);
+		txtApellido.setBounds(187, 56, 177, 20);
 		panelDatosPersonales.add(txtApellido);		
 		
 		txtEmail = new JTextField();
@@ -409,7 +409,10 @@ public class DialogRegistrarse extends JDialog {
 	
 		final JButton btnRegistrarse = new JButton("Registrarse");
 		btnRegistrarse.addActionListener(new ActionListener() {
+			
+			
 			public void actionPerformed(ActionEvent e) {	
+				
 				
 				if (e.getSource() == btnRegistrarse){
 					
@@ -432,7 +435,9 @@ public class DialogRegistrarse extends JDialog {
 						uDao.alta(u);
 						pDao.alta(p);
 
-						JOptionPane.showMessageDialog(null, "Se ha registrado el usuario con exito!");
+						JOptionPane.showMessageDialog(null, "Se ha registrado el usuario con exito!"); setVisible(false);
+
+
 					} catch (ClassNotFoundException e1) {
 						JOptionPane.showMessageDialog(null, "No se pudo conectar a la base de datos.");
 						limpiar();
@@ -448,6 +453,7 @@ public class DialogRegistrarse extends JDialog {
 					}
 
 				}
+			
 			}
 
 			
@@ -457,6 +463,8 @@ public class DialogRegistrarse extends JDialog {
 
 		final JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.addActionListener(new ActionListener() {
+			
+			
 			public void actionPerformed(ActionEvent e) {
 			
 				if (e.getSource() == btnCancelar){

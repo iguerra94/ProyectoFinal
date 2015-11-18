@@ -76,7 +76,9 @@ public class MainFrameUI extends JFrame {
 					JOptionPane.showMessageDialog(null, "Error de MainFrame");
 				}
 			}
+			
 		});
+		
 	}
 
 	/**
@@ -116,9 +118,13 @@ public class MainFrameUI extends JFrame {
 			}
 		});
 		
+		
+		
 		setResizable(false);
 		setTitle("Sistema de Gestion de Boletos de Avion");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		
 		setSize(1006, 576);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
@@ -419,4 +425,10 @@ public class MainFrameUI extends JFrame {
 		cmbTipoUsuario.setSelectedIndex(0);
 		txtNombreUsuario.requestFocus();
 	}
+
+	
+
+
+
+
 }
