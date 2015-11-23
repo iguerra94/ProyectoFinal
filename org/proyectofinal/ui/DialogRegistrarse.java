@@ -438,7 +438,7 @@ public class DialogRegistrarse extends JDialog {
 						JOptionPane.showMessageDialog(null, "No se pudo conectar a la base de datos.");
 						limpiar();
 					} catch (SQLException e1) {
-						JOptionPane.showMessageDialog(null, "Ocurrio en error en la base de datos. Compruebe su conexión y vuelva a intentarlo.");
+						e1.printStackTrace();
 						limpiar();
 					} catch (UserNotValidException e1) {
 						JOptionPane.showMessageDialog(null, e1.getMessage());

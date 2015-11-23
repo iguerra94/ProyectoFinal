@@ -92,10 +92,10 @@ public class MainFrameUI extends JFrame {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				
-				String ObjButtons[] = {"Yes","No"};
+				String ObjButtons[] = {"Si","No"};
 			    
 				int PromptResult = JOptionPane.showOptionDialog(null, 
-			        "Are you sure you want to exit?", "Online Examination System", 
+			        "Estas seguro que deseas salir?", "Advertencia", 
 			        JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, 
 			        ObjButtons,ObjButtons[1]);
 			    
@@ -164,11 +164,12 @@ public class MainFrameUI extends JFrame {
 					String ObjButtons[] = {"Si","No"};
 				    
 					int PromptResult = JOptionPane.showOptionDialog(null, 
-				        "Seguro que quieres salir?", "Advertencia", 
+				        "Estas seguro que deseas salir?", "Advertencia", 
 				        JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, 
 				        ObjButtons,ObjButtons[1]);
 				    
-					if(PromptResult == 0) {
+					if(PromptResult == 0)
+				    {
 						System.exit(0);          
 				    }
 					
@@ -193,6 +194,16 @@ public class MainFrameUI extends JFrame {
 			}
 		});
 		mnVuelos.add(mntmVerListado);
+		
+		final JMenuItem mntmCargarVuelo = new JMenuItem("Cargar vuelo..");
+		mntmCargarVuelo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if (e.getSource() == mntmCargarVuelo){
+					
+				}
+			}
+		});
 		
 		@SuppressWarnings("unused")
 		ImageIcon icono = new ImageIcon(MainFrameUI.class.getResource("/imagenes/user-resized.png"));
@@ -286,7 +297,7 @@ public class MainFrameUI extends JFrame {
 				}
 			}
 		});
-		cmbTipoUsuario.setModel(new DefaultComboBoxModel(new String[] {"Seleccione tipo", "", "Común", "Administrador"}));
+		cmbTipoUsuario.setModel(new DefaultComboBoxModel(new String[] {"Seleccione tipo", "-----------------------", "Común", "Administrador"}));
 		cmbTipoUsuario.setBounds(184, 121, 153, 19);
 		panelInicioSesion.add(cmbTipoUsuario);
 		
@@ -295,36 +306,7 @@ public class MainFrameUI extends JFrame {
 		lblIcono.setIcon(new ImageIcon(MainFrameUI.class.getResource("/imagenes/user-resized.png")));
 		panelInicioSesion.add(lblIcono);
 		
-
-		btnCerrarSesin = new JButton("Cerrar Sesión");
-		btnCerrarSesin.setBounds(790, 73, 180, 50);
-		btnCerrarSesin.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				if (e.getSource() == btnCerrarSesin){
-					
-					getContentPane().remove(btnCerrarSesin);
-					getContentPane().remove(pU);
-					menuBar.remove(mnVuelos);
-					
-					getContentPane().add(panelInicioSesion);
-					getContentPane().add(lblIconoAvion);
-					getContentPane().add(lblSistemaDeGestion);
-
-					txtNombreUsuario.setText("");
-					txtContrasea.setText("");
-					cmbTipoUsuario.setSelectedIndex(0);
-					
-					txtNombreUsuario.requestFocus();
-					
-					validate();
-					repaint();
-				}
-			
-			}
-		});
-		
-		JButton btnIngresar = new JButton("Ingresar");
+		final JButton btnIngresar = new JButton("Ingresar");
 		btnIngresar.setFont(new Font("Dialog", Font.BOLD, 16));
 		btnIngresar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -348,6 +330,10 @@ public class MainFrameUI extends JFrame {
 					getContentPane().add(pU);
 		
 					menuBar.add(mnVuelos);
+					
+					if (u.getTipoUsuario() == 0){
+						mnVuelos.add(mntmCargarVuelo);
+					}
 					
 					persona = pDao.consultarPorUsuario(u);
 					
@@ -401,6 +387,37 @@ public class MainFrameUI extends JFrame {
 		panelInicioSesion.add(btnIngresar);
 		
 		getRootPane().setDefaultButton(btnIngresar);
+
+		btnCerrarSesin = new JButton("Cerrar Sesión");
+		btnCerrarSesin.setBounds(790, 73, 180, 50);
+		btnCerrarSesin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if (e.getSource() == btnCerrarSesin){
+					
+					getContentPane().remove(btnCerrarSesin);
+					getContentPane().remove(pU);
+					menuBar.remove(mnVuelos);
+					mnVuelos.remove(mntmCargarVuelo);
+					
+					getContentPane().add(panelInicioSesion);
+					getContentPane().add(lblIconoAvion);
+					getContentPane().add(lblSistemaDeGestion);
+					
+					getRootPane().setDefaultButton(btnIngresar);
+
+					txtNombreUsuario.setText("");
+					txtContrasea.setText("");
+					cmbTipoUsuario.setSelectedIndex(0);
+					
+					txtNombreUsuario.requestFocus();
+					
+					validate();
+					repaint();
+				}
+			
+			}
+		});
 		
 		JLabel btnaunNoEs = new JLabel("¿Aun no es usuario?");
 		btnaunNoEs.setBounds(25, 217, 170, 25);

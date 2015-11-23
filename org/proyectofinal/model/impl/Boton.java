@@ -16,6 +16,7 @@ public class Boton extends JButton implements ActionListener, MouseListener {
 	private Float precio;
 	private String asiento;
 	private Integer cant;
+	private Boolean estado;
 	
 	public Boton(String asiento, Float precio){
 		
@@ -26,6 +27,7 @@ public class Boton extends JButton implements ActionListener, MouseListener {
 		this.addActionListener(this);
 	
 		this.cant = 0;
+		this.setEstado(false);
 	}
 	
 	public Float getPrecio() {
@@ -43,6 +45,14 @@ public class Boton extends JButton implements ActionListener, MouseListener {
 	public void setAsiento(String asiento) {
 		this.asiento = asiento;
 	}
+	
+	public Boolean getEstado() {
+		return estado;
+	}
+
+	public void setEstado(Boolean estado) {
+		this.estado = estado;
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -51,13 +61,19 @@ public class Boton extends JButton implements ActionListener, MouseListener {
 			
 			if (cant % 2 == 0){
 				
-				System.out.println("Numero: " + getAsiento());
-				System.out.println("Precio: $" + getPrecio());
+//				System.out.println("Numero: " + getAsiento());
+//				System.out.println("Precio: $" + getPrecio());
 				
-				this.setContentAreaFilled(true);						
+				this.setContentAreaFilled(true);
+				
+				setEstado(true);
+				
 				cant++;
 			}else{
 				this.setContentAreaFilled(false);
+				
+				setEstado(false);
+				
 				cant--;
 			}
 		}
