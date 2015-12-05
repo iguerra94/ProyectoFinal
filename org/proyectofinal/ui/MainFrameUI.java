@@ -52,10 +52,12 @@ public class MainFrameUI extends JFrame {
 	private static final long serialVersionUID = 3667571948857412383L;
 	
 	private panelUsuario pU;
+	private DialogCambiarDatos dCD;
 //	private panelInicio pI;
 	private JTextField txtNombreUsuario;
 	private JPasswordField txtContrasea;
 	private JButton btnCerrarSesin;
+	private JButton btnCambiarDatosPersonales;
 	@SuppressWarnings("rawtypes")
 	private JComboBox cmbTipoUsuario;
 	private UsuarioBo uBo;
@@ -324,6 +326,7 @@ public class MainFrameUI extends JFrame {
 					remove(lblSistemaDeGestion);
 					
 					getContentPane().add(btnCerrarSesin);
+					getContentPane().add(btnCambiarDatosPersonales);
 					
 					pU = new panelUsuario(u);
 					pU.setBounds(10, 22, 978, 550);		
@@ -396,6 +399,7 @@ public class MainFrameUI extends JFrame {
 				if (e.getSource() == btnCerrarSesin){
 					
 					getContentPane().remove(btnCerrarSesin);
+					getContentPane().remove(btnCambiarDatosPersonales);
 					getContentPane().remove(pU);
 					menuBar.remove(mnVuelos);
 					mnVuelos.remove(mntmCargarVuelo);
@@ -414,6 +418,48 @@ public class MainFrameUI extends JFrame {
 					
 					validate();
 					repaint();
+				}
+			
+			}
+		});
+		
+		btnCambiarDatosPersonales = new JButton("<html><center>Cambiar<br />datos<br />personales<center></html>");
+		btnCambiarDatosPersonales.setBounds(790, 140, 180, 70);
+		btnCambiarDatosPersonales.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if (e.getSource() == btnCambiarDatosPersonales){
+					
+					dCD = new DialogCambiarDatos();
+	
+					try {
+						
+						persona = pDao.consultarPorUsuario(u);
+						
+						if (persona.next()){
+							
+							dCD.getTxtDni().setText(dCD.getTxtDni().getText() + persona.getString("dni"));
+							dCD.getTxtNombre().setText(dCD.getTxtNombre().getText() + persona.getString("nombre"));
+							dCD.getTxtApellido().setText(dCD.getTxtApellido().getText() + persona.getString("apellido"));
+							dCD.getTxtEmail().setText(dCD.getTxtEmail().getText() + persona.getString("email"));
+							dCD.getTxtTelefono().setText(dCD.getTxtTelefono().getText() + persona.getString("telefono"));
+							dCD.getDateChooserNacimiento().setDate(persona.getDate("fechaNacimiento"));
+							dCD.getTxtPais().setText(dCD.getTxtPais().getText() + persona.getString("pais"));
+							dCD.getTxtCiudad().setText(dCD.getTxtCiudad().getText() + persona.getString("ciudad"));
+							
+							dCD.getTxtUsuario().setText(dCD.getTxtUsuario().getText() + persona.getString("usuario"));
+							dCD.getTxtPassword().setText(dCD.getTxtPassword().getPassword().toString() + persona.getString("contrasenia"));
+							
+						}
+					} catch (ClassNotFoundException e1) {
+						// TODO Auto-generated catch block
+						JOptionPane.showMessageDialog(null, e1.getMessage());
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						JOptionPane.showMessageDialog(null, e1.getMessage());
+					}
+					
+					dCD.setVisible(true);
 				}
 			
 			}
@@ -466,6 +512,8 @@ public class MainFrameUI extends JFrame {
 		btnRecuperarla.setBorderPainted(false);
 		btnRecuperarla.setBounds(199, 244, 100, 25);
 		panelInicioSesion.add(btnRecuperarla);
+		
+		
 		
 	}	
 

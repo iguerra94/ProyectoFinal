@@ -28,7 +28,6 @@ public class panelUsuario extends JPanel {
 	private JLabel lblPais;
 	private JPanel panelDatosPersonales;
 	private JPanel panelHistorialReservas;
-	private JButton btnCambiarDatosPersonales;
 	private JButton btnReservarBoleto;
 	private JTable table;
 	private JLabel lblCantidadDeReservas;
@@ -141,9 +140,9 @@ public class panelUsuario extends JPanel {
 		lblCantidadDeReservas.setBounds(40, 12, 347, 46);
 		panelHistorialReservas.add(lblCantidadDeReservas);
 		
-		btnCambiarDatosPersonales = new JButton("<html><center>Cambiar<br />datos<br />personales<center></html>");
-		btnCambiarDatosPersonales.setBounds(780, 130, 180, 70);
-		add(btnCambiarDatosPersonales);
+//		btnCambiarDatosPersonales = new JButton("<html><center>Cambiar<br />datos<br />personales<center></html>");
+//		btnCambiarDatosPersonales.setBounds(780, 130, 180, 70);
+//		add(btnCambiarDatosPersonales);
 		
 		btnReservarBoleto = new JButton("Reservar Boleto");
 		btnReservarBoleto.setFont(new Font("Dialog", Font.BOLD, 16));
