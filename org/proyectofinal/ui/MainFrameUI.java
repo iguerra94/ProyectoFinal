@@ -111,7 +111,7 @@ public class MainFrameUI extends JFrame {
 		u = new UsuarioImpl();
 		uBo = new UsuarioBoImpl();
 		uDao = new UsuarioDaoImpl();
-		pDao = new PersonaDaoImpl();		
+		pDao = new PersonaDaoImpl();
 		
 		addWindowFocusListener(new WindowFocusListener() {
 			public void windowGainedFocus(WindowEvent arg0) {
@@ -430,7 +430,7 @@ public class MainFrameUI extends JFrame {
 				
 				if (e.getSource() == btnCambiarDatosPersonales){
 					
-					dCD = new DialogCambiarDatos();
+					dCD = new DialogCambiarDatos(u);
 	
 					try {
 						

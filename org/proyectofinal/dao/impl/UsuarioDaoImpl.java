@@ -68,7 +68,7 @@ public class UsuarioDaoImpl extends AbstractDao implements UsuarioDao {
 		desconectar();
 	}
 
-	public void baja(Usuario u) throws SQLException, ClassNotFoundException{
+	public void baja(Usuario u) throws SQLException, ClassNotFoundException {
 			
 		conectar();
 		
@@ -81,8 +81,20 @@ public class UsuarioDaoImpl extends AbstractDao implements UsuarioDao {
 		desconectar();
 	}
 
-	public void modificacion(Usuario u) throws SQLException, ClassNotFoundException{
+	public void modificacion(String atr, String valor, String user) throws SQLException, ClassNotFoundException{
+		
 		conectar();
+		
+		PreparedStatement sentencia = null;
+
+		if (atr.equals("usuario")) sentencia = getConexion().prepareStatement("update Usuario set usuario = ? where usuario = ?");
+		else if (atr.equals("contrasenia")) sentencia = getConexion().prepareStatement("update Usuario set contrasenia = ? where usuario = ?");
+		
+		sentencia.setString(1, valor);
+		sentencia.setString(2, user);
+		
+		sentencia.executeUpdate();
+		
 		desconectar();
 	}
 

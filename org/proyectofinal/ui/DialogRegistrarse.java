@@ -432,7 +432,8 @@ public class DialogRegistrarse extends JDialog {
 						uDao.alta(u);
 						pDao.alta(p);
 
-						JOptionPane.showMessageDialog(null, "Se ha registrado el usuario con exito!"); setVisible(false);
+						JOptionPane.showMessageDialog(null, "Se ha registrado el usuario con exito!"); 
+						setVisible(false);
 
 					} catch (ClassNotFoundException e1) {
 						JOptionPane.showMessageDialog(null, "No se pudo conectar a la base de datos.");

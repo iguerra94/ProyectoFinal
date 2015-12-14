@@ -101,8 +101,35 @@ public class PersonaDaoImpl extends AbstractDao implements PersonaDao {
 		this.desconectar();
 	}
 
-	public void modificacion(Persona p) throws SQLException, ClassNotFoundException{	
-		this.conectar();
+	public void modificacion(String atr, String valor, String dni) throws SQLException, ClassNotFoundException{	
+
+		this.conectar();			
+		
+		PreparedStatement sentencia = null;
+		
+		if (atr.equals("dni")) {
+			sentencia = getConexion().prepareStatement("update Persona set dni = ? where dni = ?");
+		} else if (atr.equals("nombre")) { 
+			sentencia = getConexion().prepareStatement("update Persona set nombre = ? where dni = ?");
+		} else if (atr.equals("apellido")) {
+			sentencia = getConexion().prepareStatement("update Persona set apellido = ? where dni = ?");
+		} else if (atr.equals("email")) {
+			sentencia = getConexion().prepareStatement("update Persona set email = ? where dni = ?");
+		} else if (atr.equals("telefono")) {
+			sentencia = getConexion().prepareStatement("update Persona set telefono = ? where dni = ?");
+		} else if (atr.equals("fechaNacimiento")) {
+			sentencia = getConexion().prepareStatement("update Persona set fechaNacimiento = ? where dni = ?");
+		} else if (atr.equals("pais")) {
+			sentencia = getConexion().prepareStatement("update Persona set pais = ? where dni = ?");
+		} else if (atr.equals("ciudad")) {
+			sentencia = getConexion().prepareStatement("update Persona set ciudad = ? where dni = ?");
+		}
+		
+		sentencia.setString(1, valor);
+		sentencia.setString(2, dni);
+		
+		sentencia.executeUpdate();
+		
 		this.desconectar();
 	}
 

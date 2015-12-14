@@ -15,6 +15,6 @@ public interface UsuarioDao {
 	public void alta(Usuario u) throws SQLException, ClassNotFoundException;
 	
 	public void baja(Usuario u) throws SQLException, ClassNotFoundException;
-	
-	public void modificacion(Usuario u) throws SQLException, ClassNotFoundException;
+
+	public void modificacion(String atr, String valor, String user) throws SQLException, ClassNotFoundException;
 }

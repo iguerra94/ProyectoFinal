@@ -18,5 +18,5 @@ public interface PersonaDao {
 
 	public void baja(Persona p) throws SQLException, ClassNotFoundException;
 
-	public void modificacion(Persona p) throws SQLException, ClassNotFoundException;
+	public void modificacion(String atr, String valor, String dni) throws SQLException, ClassNotFoundException;
 }
