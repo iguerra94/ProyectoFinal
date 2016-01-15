@@ -23,7 +23,8 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
 
-import org.proyectofinal.model.impl.Boton;
+import org.proyectofinal.ui.botones.Boton;
+
 import javax.swing.border.TitledBorder;
 import javax.swing.JTextField;
 
@@ -948,7 +949,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		lblDestino.setBounds(20, 140, 337, 30);
 		panelInfoVuelo.add(lblDestino);
 		
-		lblSalida = new JLabel("Salida:");
+		lblSalida = new JLabel("Salida: ");
 		lblSalida.setBounds(20, 170, 337, 30);
 		panelInfoVuelo.add(lblSalida);
 		

@@ -92,15 +92,17 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 
 	public void alta(ViajeCabecera vC) throws SQLException, ClassNotFoundException{
 		
-		PreparedStatement sentencia = getConexion().prepareStatement("INSERT INTO ViajeCabecera (codViaje, ciudadOrigen, paisOrigen, ciudadDestino, paisDestino, fechaSalida, fechaLlegada) VALUES (?,?,?,?,?,?,?)");
+		PreparedStatement sentencia = getConexion().prepareStatement("INSERT INTO ViajeCabecera (codViaje, ciudadOrigen, paisOrigen, ciudadDestino, paisDestino, fechaSalida, horaSalida, fechaLlegada, horaLlegada) VALUES (?,?,?,?,?,?,?,?,?)");
 		
 		sentencia.setInt(1, vC.getCodigoViaje());
 		sentencia.setString(2, vC.getCiudadOrigen());
 		sentencia.setString(3, vC.getPaisOrigen());
 		sentencia.setString(4, vC.getCiudadDestino());
 		sentencia.setString(5, vC.getPaisDestino());
-		sentencia.setTimestamp(6, vC.getFechaSalida());
-		sentencia.setTimestamp(7, vC.getFechaLlegada());
+		sentencia.setDate(6, vC.getFechaSalida());
+		sentencia.setTime(7, vC.getHoraSalida());
+		sentencia.setDate(8, vC.getFechaLlegada());
+		sentencia.setTime(9, vC.getHoraLlegada());
 		
 		sentencia.executeUpdate();
 

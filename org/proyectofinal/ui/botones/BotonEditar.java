@@ -1,4 +1,4 @@
-package org.proyectofinal.model.impl;
+package org.proyectofinal.ui.botones;
 
 import javax.swing.JButton;
 

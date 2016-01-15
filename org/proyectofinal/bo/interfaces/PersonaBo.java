@@ -5,5 +5,7 @@ import org.proyectofinal.model.interfaces.Persona;
 
 public interface PersonaBo {
 
-	public void verificar(Persona p) throws PersonNotValidException;
+	public void verificarTodos(Persona p) throws PersonNotValidException;
+	public void verificarImportantes(Persona p) throws PersonNotValidException;
+
 }

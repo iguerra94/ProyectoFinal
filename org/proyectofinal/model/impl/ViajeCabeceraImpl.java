@@ -1,6 +1,7 @@
 package org.proyectofinal.model.impl;
 
-import java.sql.Timestamp;
+import java.sql.Date;
+import java.sql.Time;
 
 import org.proyectofinal.model.interfaces.ViajeCabecera;
 
@@ -11,8 +12,10 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 	private String paisOrigen = null;
 	private String ciudadDestino = null;
 	private String paisDestino = null;
-	private Timestamp fechaSalida = null;
-	private Timestamp fechaLlegada = null;
+	private Date fechaSalida = null;
+	private Time horaSalida = null;
+	private Date fechaLlegada = null;
+	private Time horaLlegada = null;
 	
 	public ViajeCabeceraImpl(){
 		
@@ -58,40 +61,84 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 		this.paisDestino = paisDestino;
 	}
 
-	public Timestamp getFechaSalida() {
+	public Date getFechaSalida() {
 		return fechaSalida;
 	}
 
-	public void setFechaSalida(Timestamp fechaSalida) {
+	public void setFechaSalida(Date fechaSalida) {
 		this.fechaSalida = fechaSalida;
 	}
 
-	public Timestamp getFechaLlegada() {
+	public Time getHoraSalida() {
+		return horaSalida;
+	}
+
+	public void setHoraSalida(Time horaSalida) {
+		this.horaSalida = horaSalida;
+	}
+
+	public Date getFechaLlegada() {
 		return fechaLlegada;
 	}
 
-	public void setFechaLlegada(Timestamp fechaLlegada) {
+	public void setFechaLlegada(Date fechaLlegada) {
 		this.fechaLlegada = fechaLlegada;
+	}
+
+	public Time getHoraLlegada() {
+		return horaLlegada;
+	}
+
+	public void setHoraLlegada(Time horaLlegada) {
+		this.horaLlegada = horaLlegada;
+	}
+
+	@Override
+	public String toString() {
+
+		String res = "Viaje Cabecera: \n";
+		
+		res += "Codigo Viaje: " + getCodigoViaje() + "\n";
+		res += "Ciudad de origen: " + getCiudadOrigen() + "\n";
+		res += "Pais de origen: " + getPaisOrigen() + "\n";
+		res += "Ciudad de destino: " + getCiudadDestino() + "\n";
+		res += "Pais de destino: " + getPaisDestino() + "\n";
+		res += "Fecha de Salida: " + getFechaSalida() + "\n";
+		res += "Hora de Salida: " + getHoraSalida() + "\n";
+		res += "Fecha de Llegada: " + getFechaLlegada() + "\n";
+		res += "Hora de Llegada: " + getHoraLlegada() + "\n";
+
+		return res; 
+	}
+
+	public ViajeCabecera clone() throws CloneNotSupportedException {
+		
+		ViajeCabecera vC = new ViajeCabeceraImpl();
+		
+		vC.setCodigoViaje(getCodigoViaje());
+		vC.setCiudadOrigen(getCiudadOrigen());
+		vC.setPaisOrigen(getPaisOrigen());
+		vC.setCiudadDestino(getCiudadDestino());
+		vC.setPaisDestino(getPaisDestino());
+		vC.setFechaSalida(getFechaSalida());
+		vC.setFechaLlegada(getFechaLlegada());
+		
+		return vC;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((ciudadDestino == null) ? 0 : ciudadDestino.hashCode());
-		result = prime * result
-				+ ((ciudadOrigen == null) ? 0 : ciudadOrigen.hashCode());
-		result = prime * result
-				+ ((codigoViaje == null) ? 0 : codigoViaje.hashCode());
-		result = prime * result
-				+ ((fechaLlegada == null) ? 0 : fechaLlegada.hashCode());
-		result = prime * result
-				+ ((fechaSalida == null) ? 0 : fechaSalida.hashCode());
-		result = prime * result
-				+ ((paisDestino == null) ? 0 : paisDestino.hashCode());
-		result = prime * result
-				+ ((paisOrigen == null) ? 0 : paisOrigen.hashCode());
+		result = prime * result + ((ciudadDestino == null) ? 0 : ciudadDestino.hashCode());
+		result = prime * result + ((ciudadOrigen == null) ? 0 : ciudadOrigen.hashCode());
+		result = prime * result + ((codigoViaje == null) ? 0 : codigoViaje.hashCode());
+		result = prime * result + ((fechaLlegada == null) ? 0 : fechaLlegada.hashCode());
+		result = prime * result + ((fechaSalida == null) ? 0 : fechaSalida.hashCode());
+		result = prime * result + ((horaLlegada == null) ? 0 : horaLlegada.hashCode());
+		result = prime * result + ((horaSalida == null) ? 0 : horaSalida.hashCode());
+		result = prime * result + ((paisDestino == null) ? 0 : paisDestino.hashCode());
+		result = prime * result + ((paisOrigen == null) ? 0 : paisOrigen.hashCode());
 		return result;
 	}
 
@@ -129,6 +176,16 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 				return false;
 		} else if (!fechaSalida.equals(other.fechaSalida))
 			return false;
+		if (horaLlegada == null) {
+			if (other.horaLlegada != null)
+				return false;
+		} else if (!horaLlegada.equals(other.horaLlegada))
+			return false;
+		if (horaSalida == null) {
+			if (other.horaSalida != null)
+				return false;
+		} else if (!horaSalida.equals(other.horaSalida))
+			return false;
 		if (paisDestino == null) {
 			if (other.paisDestino != null)
 				return false;
@@ -140,37 +197,6 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 		} else if (!paisOrigen.equals(other.paisOrigen))
 			return false;
 		return true;
-	}
-
-	@Override
-	public String toString() {
-
-		String res = "Viaje Cabecera: \n";
-		
-		res += "Codigo Viaje: " + getCodigoViaje() + "\n";
-		res += "Ciudad de origen: " + getCiudadOrigen() + "\n";
-		res += "Pais de origen: " + getPaisOrigen() + "\n";
-		res += "Ciudad de destino: " + getCiudadDestino() + "\n";
-		res += "Pais de destino: " + getPaisDestino() + "\n";
-		res += "Fecha de Salida: " + getFechaSalida() + "\n";
-		res += "Fecha de Llegada: " + getFechaLlegada() + "\n";
-	
-		return res; 
-	}
-
-	public ViajeCabecera clone() throws CloneNotSupportedException {
-		
-		ViajeCabecera vC = new ViajeCabeceraImpl();
-		
-		vC.setCodigoViaje(getCodigoViaje());
-		vC.setCiudadOrigen(getCiudadOrigen());
-		vC.setPaisOrigen(getPaisOrigen());
-		vC.setCiudadDestino(getCiudadDestino());
-		vC.setPaisDestino(getPaisDestino());
-		vC.setFechaSalida(getFechaSalida());
-		vC.setFechaLlegada(getFechaLlegada());
-		
-		return vC;
 	}
 
 }

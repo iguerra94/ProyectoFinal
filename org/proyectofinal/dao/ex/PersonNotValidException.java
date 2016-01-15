@@ -9,7 +9,7 @@ public class PersonNotValidException extends Exception {
 	}
 	
 	public String getMessage(){
-		return "La persona no es valida. Faltan ingresar campos obligatorios";
+		return "La persona no es válida. Faltan ingresar campos obligatorios";
 	}
 
 }

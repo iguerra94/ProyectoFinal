@@ -65,6 +65,7 @@ public class MainFrameUI extends JFrame {
 	private PersonaDao pDao;
 	private ResultSet persona;
 	private Usuario u;
+	private ResultSet r;
 	
 	/**
 	 * Launch the application.
@@ -101,8 +102,7 @@ public class MainFrameUI extends JFrame {
 			        JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, 
 			        ObjButtons,ObjButtons[1]);
 			    
-				if(PromptResult == 0)
-			    {
+				if(PromptResult == 0) {
 					System.exit(0);          
 			    }
 			}
@@ -134,17 +134,85 @@ public class MainFrameUI extends JFrame {
 					u.setTipoUsuario(0);
 				}
 				
+				if (pU instanceof panelUsuario){
+					
+					try {
+						
+						r = pDao.consultarPorUsuario(u);
+						
+						if (r.next()) {
+							
+							if (!r.getString("nombre").equals(pU.getLblNombre().getText())){
+								pU.getLblNombre().setText(r.getString("nombre"));
+							}
+							if (!r.getString("apellido").equals(pU.getLblApellido().getText())){
+								pU.getLblApellido().setText(r.getString("apellido"));
+							}
+							if (!r.getString("email").equals(pU.getLblEmail().getText())){
+								pU.getLblEmail().setText(r.getString("email"));
+							}
+							if (!r.getString("telefono").equals(pU.getLblTelefono().getText())){
+								pU.getLblTelefono().setText(r.getString("telefono"));
+							}
+							if (!r.getString("ciudad").equals(pU.getLblCiudad().getText())){
+								pU.getLblCiudad().setText(r.getString("ciudad"));
+							}
+							if (!r.getString("pais").equals(pU.getLblPais().getText())){
+								pU.getLblPais().setText(r.getString("pais"));	
+							}
+							if (!r.getString("dni").equals(pU.getLblDni().getText())){
+								pU.getLblDni().setText(r.getString("dni"));							
+							}
+							
+						}
+
+						pU.getLblTelefono().validate();
+						pU.getLblTelefono().repaint();
+					
+						pU.getLblNombre().validate();
+						pU.getLblNombre().repaint();
+						
+						pU.getLblApellido().validate();
+						pU.getLblApellido().repaint();
+						
+						pU.getLblEmail().validate();
+						pU.getLblEmail().repaint();
+						
+						pU.getLblCiudad().validate();
+						pU.getLblCiudad().repaint();
+						
+						pU.getLblPais().validate();
+						pU.getLblPais().repaint();
+
+						pU.getLblDni().validate();
+						pU.getLblDni().repaint();
+
+					} catch (ClassNotFoundException e1) {
+						// TODO Auto-generated catch block
+//						e1.printStackTrace();
+						JOptionPane.showMessageDialog(null, e1.getMessage());
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+//						e1.printStackTrace();
+						JOptionPane.showMessageDialog(null, e1.getMessage());
+					} finally {
+						try {
+							r.close();
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+					
+				}
 			}
 			public void windowLostFocus(WindowEvent arg0) {
 			}
 		});
 		
-		
-		
 		setResizable(false);
 		setTitle("Sistema de Gestion de Boletos de Avion");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
 		
 		setSize(1006, 576);
 		setLocationRelativeTo(null);
@@ -319,6 +387,10 @@ public class MainFrameUI extends JFrame {
 					
 					ResultSet res = uDao.consultarPorUsuario(u.getNombreUsuario());
 				
+					if (res.next()){
+						u.setFechaInicio(res.getTimestamp("fechaInicio"));
+					}
+					
 					uBo.verificarDatosCorrectos(res, u);
 					
 					remove(panelInicioSesion);
@@ -337,19 +409,18 @@ public class MainFrameUI extends JFrame {
 					if (u.getTipoUsuario() == 0){
 						mnVuelos.add(mntmCargarVuelo);
 					}
-					
+						
 					persona = pDao.consultarPorUsuario(u);
-					
+				
 					if (persona.next()){
 						
-						pU.getLblDni().setText(pU.getLblDni().getText() + persona.getString("dni"));
-						pU.getLblNombre().setText(pU.getLblNombre().getText() + persona.getString("nombre"));
-						pU.getLblApellido().setText(pU.getLblApellido().getText() + persona.getString("apellido"));
-						pU.getLblUsuario().setText(pU.getLblUsuario().getText() + persona.getString("usuario"));
-						pU.getLblEmail().setText(pU.getLblEmail().getText() + persona.getString("email"));
-						pU.getLblCiudad().setText(pU.getLblCiudad().getText() + persona.getString("ciudad"));
-						pU.getLblPais().setText(pU.getLblPais().getText() + persona.getString("pais"));
-						
+						pU.getLblNombre().setText(persona.getString("nombre"));
+						pU.getLblApellido().setText(persona.getString("apellido"));
+						pU.getLblEmail().setText(persona.getString("email"));
+						pU.getLblTelefono().setText(persona.getString("telefono"));
+						pU.getLblCiudad().setText(persona.getString("ciudad"));
+						pU.getLblPais().setText(persona.getString("pais"));
+						pU.getLblDni().setText(persona.getString("dni"));
 
 						if (persona.getInt("tipoUsuario") == 0){
 							pU.getLblBienvenido().setText("Bienvenido Administrador!");
@@ -368,13 +439,7 @@ public class MainFrameUI extends JFrame {
 					validate();
 					repaint();
 					
-				} catch (ClassNotFoundException e1) {
-					JOptionPane.showMessageDialog(null, "No se pudo conectar a la base de datos.");
-					limpiar();
-				} catch (SQLException e1) {
-					JOptionPane.showMessageDialog(null, e1.getMessage());
-					limpiar();
-				} catch (UserNotValidException e1) {
+				}catch (UserNotValidException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage());
 					limpiar();
 				} catch (UserNotCorrectException e1) {
@@ -383,7 +448,25 @@ public class MainFrameUI extends JFrame {
 				} catch (UserNotExistsException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage());
 					limpiar();
+				} catch (SQLException e1) {
+	//				e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, e1.getMessage());
+					limpiar();
+				} catch (ClassNotFoundException e1) {
+	//				e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, "No se pudo conectar a la base de datos.");
+					limpiar();
+				} finally {
+					try {
+						if (persona != null){
+							persona.close();
+						}
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						JOptionPane.showMessageDialog(null, e.getMessage());
+					}
 				}
+				
 			}
 		});
 		btnIngresar.setBounds(25, 165, 165, 30);
@@ -426,6 +509,7 @@ public class MainFrameUI extends JFrame {
 		btnCambiarDatosPersonales = new JButton("<html><center>Cambiar<br />datos<br />personales<center></html>");
 		btnCambiarDatosPersonales.setBounds(790, 140, 180, 70);
 		btnCambiarDatosPersonales.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
 				
 				if (e.getSource() == btnCambiarDatosPersonales){
@@ -438,7 +522,6 @@ public class MainFrameUI extends JFrame {
 						
 						if (persona.next()){
 							
-							dCD.getTxtDni().setText(dCD.getTxtDni().getText() + persona.getString("dni"));
 							dCD.getTxtNombre().setText(dCD.getTxtNombre().getText() + persona.getString("nombre"));
 							dCD.getTxtApellido().setText(dCD.getTxtApellido().getText() + persona.getString("apellido"));
 							dCD.getTxtEmail().setText(dCD.getTxtEmail().getText() + persona.getString("email"));
@@ -448,15 +531,28 @@ public class MainFrameUI extends JFrame {
 							dCD.getTxtCiudad().setText(dCD.getTxtCiudad().getText() + persona.getString("ciudad"));
 							
 							dCD.getTxtUsuario().setText(dCD.getTxtUsuario().getText() + persona.getString("usuario"));
-							dCD.getTxtPassword().setText(dCD.getTxtPassword().getPassword().toString() + persona.getString("contrasenia"));
+							dCD.getTxtPassword().setText(dCD.getTxtPassword().getText() + persona.getString("contrasenia"));
 							
+							dCD.getTxtDni().setText(dCD.getTxtDni().getText() + persona.getString("dni"));
 						}
 					} catch (ClassNotFoundException e1) {
 						// TODO Auto-generated catch block
-						JOptionPane.showMessageDialog(null, e1.getMessage());
+						e1.printStackTrace();
+//						JOptionPane.showMessageDialog(null, e1.getMessage());
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
-						JOptionPane.showMessageDialog(null, e1.getMessage());
+						e1.printStackTrace();
+//						JOptionPane.showMessageDialog(null, e1.getMessage());
+					} 
+					finally {
+						try {
+							if (persona != null){
+								persona.close();
+							}
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
 					}
 					
 					dCD.setVisible(true);
@@ -512,8 +608,6 @@ public class MainFrameUI extends JFrame {
 		btnRecuperarla.setBorderPainted(false);
 		btnRecuperarla.setBounds(199, 244, 100, 25);
 		panelInicioSesion.add(btnRecuperarla);
-		
-		
 		
 	}	
 

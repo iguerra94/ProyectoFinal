@@ -1,19 +1,22 @@
 package org.proyectofinal.ui;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableModel;
 
 import org.proyectofinal.model.interfaces.Usuario;
-import javax.swing.JTabbedPane;
-import javax.swing.JButton;
-import java.awt.Font;
-import javax.swing.SwingConstants;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.JTable;
-import javax.swing.JScrollPane;
-import javax.swing.table.DefaultTableModel;
-import java.awt.Color;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class panelUsuario extends JPanel {
 
@@ -22,8 +25,8 @@ public class panelUsuario extends JPanel {
 	private JLabel lblDni;
 	private JLabel lblNombre;
 	private JLabel lblApellido;
-	private JLabel lblUsuario;
 	private JLabel lblEmail;
+	private JLabel lblTelefono;
 	private JLabel lblCiudad;
 	private JLabel lblPais;
 	private JPanel panelDatosPersonales;
@@ -35,8 +38,33 @@ public class panelUsuario extends JPanel {
 	private JLabel lblBienvenido;
 	
 	@SuppressWarnings("serial")
-	public panelUsuario(Usuario u) {
-		
+	public panelUsuario(final Usuario u) {
+		addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+//				getLblDni().validate();
+//				getLblDni().repaint();
+//				
+//				getLblNombre().validate();
+//				getLblNombre().repaint();
+//				
+//				getLblApellido().validate();
+//				getLblApellido().repaint();
+//				
+//				getLblUsuario().validate();
+//				getLblUsuario().repaint();
+//				
+//				getLblEmail().validate();
+//				getLblEmail().repaint();
+//				
+//				getLblCiudad().validate();
+//				getLblCiudad().repaint();
+//				
+//				getLblPais().validate();
+//				getLblPais().repaint();
+			}
+		});
+	
 		setSize(978,500);
 		setLayout(null);
 		
@@ -60,46 +88,83 @@ public class panelUsuario extends JPanel {
 		tabbedPane.addTab("Datos Personales", null, panelDatosPersonales, null);
 		panelDatosPersonales.setLayout(null);
 		
-		lblNombre = new JLabel("Nombre: ");
-		lblNombre.setHorizontalTextPosition(SwingConstants.LEADING);
-		lblNombre.setFont(new Font("Dialog", Font.BOLD, 15));
-		lblNombre.setBounds(40, 70, 320, 40);
-		panelDatosPersonales.add(lblNombre);
-		
-		lblUsuario = new JLabel("Usuario: ");
-		lblUsuario.setHorizontalTextPosition(SwingConstants.LEADING);
-		lblUsuario.setFont(new Font("Dialog", Font.BOLD, 15));
-		lblUsuario.setBounds(40, 170, 320, 40);
-		panelDatosPersonales.add(lblUsuario);
-		
-		lblApellido = new JLabel("Apellido: ");
-		lblApellido.setHorizontalTextPosition(SwingConstants.LEADING);
-		lblApellido.setFont(new Font("Dialog", Font.BOLD, 15));
-		lblApellido.setBounds(40, 120, 320, 40);
-		panelDatosPersonales.add(lblApellido);
-		
-		lblEmail = new JLabel("Email: ");
-		lblEmail.setHorizontalTextPosition(SwingConstants.LEADING);
-		lblEmail.setFont(new Font("Dialog", Font.BOLD, 15));
-		lblEmail.setBounds(40, 220, 320, 40);
-		panelDatosPersonales.add(lblEmail);
-		
-		lblDni = new JLabel("DNI: ");
+		lblDni = new JLabel("");
+		lblDni.setHorizontalTextPosition(SwingConstants.LEADING);
 		lblDni.setFont(new Font("Dialog", Font.BOLD, 15));
-		lblDni.setBounds(40, 20, 320, 40);
+		lblDni.setBounds(127, 20, 233, 40);
 		panelDatosPersonales.add(lblDni);
 		
-		lblCiudad = new JLabel("Ciudad: ");
+		lblNombre = new JLabel("");
+		lblNombre.setHorizontalTextPosition(SwingConstants.LEADING);
+		lblNombre.setFont(new Font("Dialog", Font.BOLD, 15));
+		lblNombre.setBounds(127, 70, 233, 40);
+		panelDatosPersonales.add(lblNombre);
+		
+		
+		lblApellido = new JLabel("");
+		lblApellido.setHorizontalTextPosition(SwingConstants.LEADING);
+		lblApellido.setFont(new Font("Dialog", Font.BOLD, 15));
+		lblApellido.setBounds(127, 120, 233, 40);
+		panelDatosPersonales.add(lblApellido);
+		
+		lblEmail = new JLabel("");
+		lblEmail.setHorizontalTextPosition(SwingConstants.LEADING);
+		lblEmail.setFont(new Font("Dialog", Font.BOLD, 15));
+		lblEmail.setBounds(127, 170, 233, 40);
+		panelDatosPersonales.add(lblEmail);
+		
+		lblTelefono = new JLabel("");
+		lblTelefono.setHorizontalTextPosition(SwingConstants.LEADING);
+		lblTelefono.setFont(new Font("Dialog", Font.BOLD, 15));
+		lblTelefono.setBounds(127, 220, 233, 40);
+		panelDatosPersonales.add(lblTelefono);
+		
+		lblCiudad = new JLabel("");
 		lblCiudad.setHorizontalTextPosition(SwingConstants.LEADING);
 		lblCiudad.setFont(new Font("Dialog", Font.BOLD, 15));
-		lblCiudad.setBounds(40, 270, 320, 40);
+		lblCiudad.setBounds(127, 270, 233, 40);
 		panelDatosPersonales.add(lblCiudad);
 		
-		lblPais = new JLabel("Pais: ");
+		lblPais = new JLabel("");
 		lblPais.setHorizontalTextPosition(SwingConstants.LEADING);
 		lblPais.setFont(new Font("Dialog", Font.BOLD, 15));
-		lblPais.setBounds(40, 320, 320, 40);
+		lblPais.setBounds(127, 320, 233, 40);
 		panelDatosPersonales.add(lblPais);
+		
+		JLabel label1 = new JLabel("DNI: ");
+		label1.setFont(new Font("Dialog", Font.BOLD, 15));
+		label1.setBounds(36, 20, 80, 40);
+		panelDatosPersonales.add(label1);
+		
+		JLabel label2 = new JLabel("Nombre: ");
+		label2.setFont(new Font("Dialog", Font.BOLD, 15));
+		label2.setBounds(36, 70, 80, 40);
+		panelDatosPersonales.add(label2);
+		
+		JLabel label3 = new JLabel("Apellido:");
+		label3.setFont(new Font("Dialog", Font.BOLD, 15));
+		label3.setBounds(36, 120, 80, 40);
+		panelDatosPersonales.add(label3);
+		
+		JLabel label4 = new JLabel("Email:");
+		label4.setFont(new Font("Dialog", Font.BOLD, 15));
+		label4.setBounds(36, 170, 80, 40);
+		panelDatosPersonales.add(label4);
+		
+		JLabel label5 = new JLabel("Telefono:");
+		label5.setFont(new Font("Dialog", Font.BOLD, 15));
+		label5.setBounds(36, 220, 80, 40);
+		panelDatosPersonales.add(label5);
+		
+		JLabel label6 = new JLabel("Ciudad:");
+		label6.setFont(new Font("Dialog", Font.BOLD, 15));
+		label6.setBounds(36, 270, 80, 40);
+		panelDatosPersonales.add(label6);
+		
+		JLabel label7 = new JLabel("Pais:");
+		label7.setFont(new Font("Dialog", Font.BOLD, 15));
+		label7.setBounds(36, 320, 80, 40);
+		panelDatosPersonales.add(label7);
 		
 		panelHistorialReservas = new JPanel();
 		tabbedPane.addTab("Historial de Reservas", null, panelHistorialReservas, null);
@@ -171,14 +236,6 @@ public class panelUsuario extends JPanel {
 		this.lblBienvenido = lblBienvenido;
 	}
 
-	public JLabel getLblDni() {
-		return lblDni;
-	}
-
-	public void setLblDni(JLabel lblDni) {
-		this.lblDni = lblDni;
-	}
-
 	public JLabel getLblNombre() {
 		return lblNombre;
 	}
@@ -193,14 +250,6 @@ public class panelUsuario extends JPanel {
 
 	public void setLblApellido(JLabel lblApellido) {
 		this.lblApellido = lblApellido;
-	}
-
-	public JLabel getLblUsuario() {
-		return lblUsuario;
-	}
-
-	public void setLblUsuario(JLabel lblUsuario) {
-		this.lblUsuario = lblUsuario;
 	}
 
 	public JLabel getLblEmail() {
@@ -225,5 +274,21 @@ public class panelUsuario extends JPanel {
 
 	public void setLblPais(JLabel lblPais) {
 		this.lblPais = lblPais;
+	}
+
+	public JLabel getLblDni() {
+		return lblDni;
+	}
+
+	public void setLblDni(JLabel lblDni) {
+		this.lblDni = lblDni;
+	}
+
+	public JLabel getLblTelefono() {
+		return lblTelefono;
+	}
+
+	public void setLblTelefono(JLabel lblTelefono) {
+		this.lblTelefono = lblTelefono;
 	}
 }

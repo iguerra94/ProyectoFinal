@@ -43,10 +43,10 @@ public class PersonaDaoImpl extends AbstractDao implements PersonaDao {
 		
 		conectar();
 		
-		PreparedStatement sentencia = getConexion().prepareStatement("select p.dni, p.nombre, p.apellido, p.email, p.telefono, p.fechaNacimiento, p.pais, p.ciudad, u.usuario, u.contrasenia, u.tipoUsuario from Usuario u inner join Persona p on u.usuario = p.usuario where u.usuario = ?");
+		PreparedStatement sentencia = getConexion().prepareStatement("select p.dni, p.nombre, p.apellido, p.email, p.telefono, p.fechaNacimiento, p.pais, p.ciudad, u.usuario, u.contrasenia, u.tipoUsuario, u.fechaInicio from Usuario u inner join Persona p on u.usuario = p.usuario where u.usuario = ?");
 		
 		sentencia.setString(1, u.getNombreUsuario());
-		
+
 		ResultSet resultado = sentencia.executeQuery();
 	
 		return resultado;
@@ -56,7 +56,7 @@ public class PersonaDaoImpl extends AbstractDao implements PersonaDao {
 
 		conectar();
 		
-		PreparedStatement sentencia = getConexion().prepareStatement("select p.dni, p.nombre, p.apellido, p.email, p.telefono, p.fechaNacimiento, p.pais, p.ciudad, u.usuario, u.contrasenia, u.tipoUsuario from Usuario u inner join Persona p on u.usuario = p.usuario where u.usuario = ?");
+		PreparedStatement sentencia = getConexion().prepareStatement("select p.dni, p.nombre, p.apellido, p.email, p.telefono, p.fechaNacimiento, p.pais, p.ciudad, u.usuario, u.contrasenia, u.tipoUsuario, u.fechaInicio from Usuario u inner join Persona p on u.usuario = p.usuario where u.usuario = ?");
 
 		sentencia.setString(1, user);
 		
@@ -123,13 +123,15 @@ public class PersonaDaoImpl extends AbstractDao implements PersonaDao {
 			sentencia = getConexion().prepareStatement("update Persona set pais = ? where dni = ?");
 		} else if (atr.equals("ciudad")) {
 			sentencia = getConexion().prepareStatement("update Persona set ciudad = ? where dni = ?");
+		} else if (atr.equals("usuario")) {
+			sentencia = getConexion().prepareStatement("update Persona set usuario = ? where dni = ?");
 		}
-		
+
 		sentencia.setString(1, valor);
 		sentencia.setString(2, dni);
 		
 		sentencia.executeUpdate();
-		
+
 		this.desconectar();
 	}
 

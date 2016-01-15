@@ -16,8 +16,9 @@ public class UsuarioBoImpl implements UsuarioBo {
 	
 	public void verificar(Usuario u) throws UserNotValidException{
 		
-		if (u.getNombreUsuario() == null || u.getPassword() == null || 
-			u.getTipoUsuario() == null) {
+		if (u.getNombreUsuario() == null || u.getNombreUsuario().length() == 0 || 
+			u.getPassword() == null || u.getPassword().length() == 0) {
+			
 			throw new UserNotValidException();
 		}
 	}
@@ -31,8 +32,7 @@ public class UsuarioBoImpl implements UsuarioBo {
 	
 	public void verificarDatosCorrectos(ResultSet res, Usuario u) throws UserNotCorrectException, SQLException, UserNotValidException{
 		
-		if (!res.getString("usuario").equals(u.getNombreUsuario()) || !res.getString("contrasenia").equals(u.getPassword()) || 
-			!(res.getInt("tipoUsuario") == u.getTipoUsuario())) {
+		if (!res.getString("usuario").equals(u.getNombreUsuario()) || !res.getString("contrasenia").equals(u.getPassword()) || !(res.getInt("tipoUsuario") == u.getTipoUsuario())) {
 			throw new UserNotCorrectException();
 		}
 	}

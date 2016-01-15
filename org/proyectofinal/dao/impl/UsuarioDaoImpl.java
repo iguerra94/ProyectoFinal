@@ -32,8 +32,6 @@ public class UsuarioDaoImpl extends AbstractDao implements UsuarioDao {
 		
 		ResultSet resultado = sentencia.executeQuery();
 		
-//		if (!resultado.next()) throw new UserNotExistsException();
-//		else 
 		return resultado;
 	}
 	
@@ -47,7 +45,7 @@ public class UsuarioDaoImpl extends AbstractDao implements UsuarioDao {
 		
 		ResultSet resultado = sentencia.executeQuery();
 		
-		if (!resultado.next()) throw new UserNotExistsException();
+//		if (!resultado.next()) throw new UserNotExistsException();
 
 		return resultado;
 	}
@@ -56,12 +54,11 @@ public class UsuarioDaoImpl extends AbstractDao implements UsuarioDao {
 		
 		conectar();
 		
-		PreparedStatement sentencia = getConexion().prepareStatement("insert into Usuario (usuario, contrasenia, tipoUsuario, fechaInicio) values (?,?,?,?)");
+		PreparedStatement sentencia = getConexion().prepareStatement("insert into Usuario (usuario, contrasenia, tipoUsuario, fechaInicio) values (?,?, 1, ?)");
 		
 		sentencia.setString(1, u.getNombreUsuario());
 		sentencia.setString(2, u.getPassword());
-		sentencia.setInt(3, u.getTipoUsuario());
-		sentencia.setTimestamp(4, u.getFechaInicio());
+		sentencia.setTimestamp(3, u.getFechaInicio());
 		
 		sentencia.executeUpdate();
 		
@@ -87,8 +84,11 @@ public class UsuarioDaoImpl extends AbstractDao implements UsuarioDao {
 		
 		PreparedStatement sentencia = null;
 
-		if (atr.equals("usuario")) sentencia = getConexion().prepareStatement("update Usuario set usuario = ? where usuario = ?");
-		else if (atr.equals("contrasenia")) sentencia = getConexion().prepareStatement("update Usuario set contrasenia = ? where usuario = ?");
+		if (atr.equals("usuario")){
+			sentencia = getConexion().prepareStatement("update Usuario set usuario = ? where usuario = ?");
+		} else if (atr.equals("contrasenia")) {
+			sentencia = getConexion().prepareStatement("update Usuario set contrasenia = ? where usuario = ?");
+		}
 		
 		sentencia.setString(1, valor);
 		sentencia.setString(2, user);

@@ -182,7 +182,7 @@ public class PersonaImpl implements Persona {
 		res += "Telefono: " + getTelefono() + "\n"; 
 		res += "Pais: " + getPais() + "\n";
 		res += "Ciudad: " + getCiudad() + "\n";
-		res += getUsuario().toString() + "\n";
+		res += getUsuario().toString();
 		
 		return res; 
 	}

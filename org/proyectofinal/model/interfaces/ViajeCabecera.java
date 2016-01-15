@@ -1,6 +1,7 @@
 package org.proyectofinal.model.interfaces;
 
-import java.sql.Timestamp;
+import java.sql.Date;
+import java.sql.Time;
 
 public interface ViajeCabecera extends Cloneable {
 	
@@ -19,11 +20,17 @@ public interface ViajeCabecera extends Cloneable {
 	public String getPaisDestino();
 	public void setPaisDestino(String paisDestino);
 	
-	public Timestamp getFechaSalida();
-	public void setFechaSalida(Timestamp fechaSalida);
+	public Date getFechaSalida();
+	public void setFechaSalida(Date fechaSalida);
+
+	public Time getHoraSalida();
+	public void setHoraSalida(Time horaSalida);
 	
-	public Timestamp getFechaLlegada();
-	public void setFechaLlegada(Timestamp fechaLlegada);
+	public Date getFechaLlegada();
+	public void setFechaLlegada(Date fechaLlegada);
+
+	public Time getHoraLlegada();
+	public void setHoraLlegada(Time horaLlegada);
 	
 	@Override
 	public int hashCode();

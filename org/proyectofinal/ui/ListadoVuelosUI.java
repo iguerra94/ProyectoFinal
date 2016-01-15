@@ -12,9 +12,9 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -73,7 +73,7 @@ public class ListadoVuelosUI extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "serial" })
 	public ListadoVuelosUI() {
 		setResizable(false);
 		
@@ -92,7 +92,7 @@ public class ListadoVuelosUI extends JFrame {
 				
 				java.util.Date date = dateChooserSalida.getDate();
 				
-				Timestamp dateSQL = new Timestamp(date.getTime());
+				Date dateSQL = new Date(date.getTime());
 				
 				vC.setFechaSalida(dateSQL);
 				
@@ -302,7 +302,7 @@ public class ListadoVuelosUI extends JFrame {
 				
 				java.util.Date date = dateChooserSalida.getDate();
 				
-				Timestamp dateSQL = new Timestamp(date.getTime());
+				Date dateSQL = new Date(date.getTime());
 				
 				vC.setFechaSalida(dateSQL);
 			}
@@ -331,8 +331,11 @@ public class ListadoVuelosUI extends JFrame {
 					ui.getLblNumeroDeViaje().setText(ui.getLblNumeroDeViaje().getText() + table.getValueAt(filaSelecc, 0));
 					ui.getLblOrigen().setText(ui.getLblOrigen().getText() + table.getValueAt(filaSelecc, 1));
 					ui.getLblDestino().setText(ui.getLblDestino().getText() + table.getValueAt(filaSelecc, 2));
-					ui.getLblSalida().setText(ui.getLblSalida().getText() + table.getValueAt(filaSelecc, 3));
-					ui.getLblLlegada().setText(ui.getLblLlegada().getText() + table.getValueAt(filaSelecc, 4));
+
+					ui.getLblSalida().setText(ui.getLblSalida().getText() + table.getValueAt(filaSelecc, 3).toString().substring(0, 10) + " -- Hora: " + table.getValueAt(filaSelecc, 3).toString().substring(11, 16));
+					
+					ui.getLblLlegada().setText(ui.getLblLlegada().getText() + table.getValueAt(filaSelecc, 4).toString().substring(0, 10) + " -- Hora: " + table.getValueAt(filaSelecc, 4).toString().substring(11, 16));
+					
 					ui.getLblAsientosDisp().setText(ui.getLblAsientosDisp().getText() + table.getValueAt(filaSelecc, 5));
 					
 					int cant = (int) table.getValueAt(filaSelecc, 5); 
@@ -371,23 +374,24 @@ public class ListadoVuelosUI extends JFrame {
 			new Object[][] {
 			},
 			new String[] {
-				"Codigo Viaje", "Origen", "Destino", "Salida", "Llegada", "Cupo"
+				"Codigo Viaje", "Origen", "Destino", "Fecha de Salida", "Fecha de Llegada", "Cupo"
 			}
-		));
-		
-		
+		) {
+			boolean[] columnEditables = new boolean[] {
+				false, false, false, false, false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
 		table.getColumnModel().getColumn(0).setResizable(false);
 		table.getColumnModel().getColumn(0).setPreferredWidth(103);
-		table.getColumnModel().getColumn(1).setResizable(false);
-		table.getColumnModel().getColumn(1).setPreferredWidth(145);
-		table.getColumnModel().getColumn(2).setResizable(false);
-		table.getColumnModel().getColumn(2).setPreferredWidth(145);
-		table.getColumnModel().getColumn(3).setResizable(false);
+		table.getColumnModel().getColumn(1).setPreferredWidth(165);
+		table.getColumnModel().getColumn(2).setPreferredWidth(165);
 		table.getColumnModel().getColumn(3).setPreferredWidth(135);
-		table.getColumnModel().getColumn(4).setResizable(false);
 		table.getColumnModel().getColumn(4).setPreferredWidth(135);
 		table.getColumnModel().getColumn(5).setResizable(false);
-		table.getColumnModel().getColumn(5).setPreferredWidth(58);
+		table.getColumnModel().getColumn(5).setPreferredWidth(51);
 		
 		final JButton btnConsultar = new JButton("Consultar");
 		btnConsultar.addActionListener(new ActionListener() {
@@ -405,19 +409,28 @@ public class ListadoVuelosUI extends JFrame {
 							model.removeRow(0);
 						}
 						
-						Object[] fila = new Object[6];
+						Object[] fila = new Object[8];
 						
 						vCDao.conectar();
 
 						ResultSet res = vCDao.consultarVuelos(vC);
 						
+						String fecha = "";
+
 						while (res.next()){
-							
+
 							fila[0] = res.getInt("codViaje");
 							fila[1] = res.getString("ciudadOrigen") + ", " + res.getString("paisOrigen");
-							fila[2] = res.getString("ciudadDestino") + ", " + res.getString("paisDestino");
-							fila[3] = res.getTimestamp("fechaSalida");
-							fila[4] = res.getTimestamp("fechaLlegada");
+							fila[2] = res.getString("ciudadDestino") + ", " + res.getString("paisDestino");							
+						
+							fecha = res.getDate("fechaSalida").toString().substring(8, 10) + "-" + res.getDate("fechaSalida").toString().substring(5, 7) + "-" + res.getDate("fechaSalida").toString().substring(0, 4);
+							
+							fila[3] = fecha + " " + res.getTime("horaSalida").toString().substring(0, 5);
+							
+							fecha = res.getDate("fechaLlegada").toString().substring(8, 10) + "-" + res.getDate("fechaLlegada").toString().substring(5, 7) + "-" + res.getDate("fechaLlegada").toString().substring(0, 4);
+							
+							fila[4] = fecha + " " + res.getTime("horaLlegada").toString().substring(0, 5);
+							
 							fila[5] = res.getInt("cupo");
 							
 							model.addRow(fila);					
