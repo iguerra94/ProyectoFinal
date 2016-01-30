@@ -65,6 +65,8 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 	private JTextField txtDni;
 	private JTextField txtAsiento;
 	private JTextField txtPrecio;
+	private JButton btnAnterior;
+	private JButton btnSiguiente;
 	private List<Boton> botones;
 //	private List<List<Object>> pasajeros;
 	private int a = 1;
@@ -976,7 +978,6 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		panelPasajeros.add(lblCantPasajeros);
 		
 //		Integer cant = Integer.parseInt(getCantDisp());
-
 		
 //		Object[] cantidad = new String[cant];
 		
@@ -989,11 +990,11 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		panelDatosPasajeros.setBounds(20, 89, 333, 182);
 		panelDatosPasajeros.setLayout(null);
 
-		final JButton btnSiguiente = new JButton("Siguiente");
+		btnSiguiente = new JButton("Siguiente");
 		btnSiguiente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				if (a < (Integer)opcion){
+				if (a < (Integer) opcion){
 					a++;
 					
 					panelPasajeros.remove(panelDatosPasajeros);
@@ -1002,17 +1003,59 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 					panelDatosPasajeros.setBorder(new TitledBorder(null, "Pasajero " + a +"/" + opcion, TitledBorder.LEADING, TitledBorder.TOP, null, null));
 					
 					panelPasajeros.add(panelDatosPasajeros);
+					
 					panelPasajeros.add(btnSiguiente);
 					
+					if (a > 1){
+						panelPasajeros.add(btnAnterior);
+						if (a == (Integer) opcion){
+							btnSiguiente.setText("Finalizar");
+						}else{
+							btnSiguiente.setText("Siguiente");
+						}
+					}else {
+						panelPasajeros.remove(btnAnterior);
+					}
+
+					panelPasajeros.validate();
+					panelPasajeros.repaint();
+				}
+			}
+		});
+		btnSiguiente.setBounds(234, 283, 116, 29);
+		
+		btnAnterior = new JButton("Anterior");
+		btnAnterior.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if (a < (Integer) opcion || a > 0){
+					a = a - 1;
+					
+					panelPasajeros.remove(panelDatosPasajeros);
+					panelPasajeros.remove(btnAnterior);
+					panelPasajeros.remove(btnSiguiente);
+					
+					panelDatosPasajeros.setBorder(new TitledBorder(null, "Pasajero " + a +"/" + opcion, TitledBorder.LEADING, TitledBorder.TOP, null, null));
+					
+					panelPasajeros.add(panelDatosPasajeros);
+					panelPasajeros.add(btnSiguiente);
+					
+					btnSiguiente.setText("Siguiente");
+					
+					if (a <= 1){
+						a = 1;
+					}else {
+						panelPasajeros.add(btnAnterior);
+					}
+
 					panelPasajeros.validate();
 					panelPasajeros.repaint();
 				}
 				
 			}
 		});
-		btnSiguiente.setBounds(234, 283, 116, 29);
-
-				
+		btnAnterior.setBounds(20, 283, 116, 29);
+		
 		cmbCantPasajeros = new JComboBox();
 		cmbCantPasajeros.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -1027,6 +1070,12 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 					panelPasajeros.add(panelDatosPasajeros);
 					panelPasajeros.add(btnSiguiente);
 					
+					if (a > 1){
+						panelPasajeros.add(btnAnterior);					
+					}else {
+						panelPasajeros.remove(btnAnterior);
+					}
+					
 					panelPasajeros.validate();
 					panelPasajeros.repaint();
 				
@@ -1034,7 +1083,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 					panelPasajeros.remove(panelDatosPasajeros);
 
 					panelPasajeros.remove(btnSiguiente);
-
+					
 					panelPasajeros.validate();
 					panelPasajeros.repaint();
 				}
@@ -1055,7 +1104,6 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		lblAvion.setIcon(new ImageIcon(ReservaBoletoUI.class.getResource("/imagenes/avion.png")));
 		lblAvion.setBounds(12, 12, 537, 553);
 		getContentPane().add(lblAvion);
-		
 		
 		
 		JLabel lblNombre = new JLabel("Nombre:");

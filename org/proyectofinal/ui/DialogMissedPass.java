@@ -69,26 +69,31 @@ public class DialogMissedPass extends JDialog {
 			@Override
 			public void keyReleased(KeyEvent e) {
 
-				if (txtUsuario.getText().trim().length() >= 0){
+				if (txtUsuario.getText().trim().length() > 0){
 					usuario = txtUsuario.getText();
+				}else{
+					usuario = null;
 				}
 
-				System.out.println(usuario);
 			}
 		});
 		txtUsuario.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
 				
-				if (txtUsuario.getText().trim().length() >= 0){
+				if (txtUsuario.getText().trim().length() > 0){
 					usuario = txtUsuario.getText();
+				}else{
+					usuario = null;
 				}
 			}
 			@Override
 			public void focusGained(FocusEvent e) {
 				
-				if (txtUsuario.getText().trim().length() >= 0){
+				if (txtUsuario.getText().trim().length() > 0){
 					usuario = txtUsuario.getText();
+				}else{
+					usuario = null;
 				}
 			}
 		});
@@ -108,8 +113,12 @@ public class DialogMissedPass extends JDialog {
 						
 						ResultSet res = uDao.consultarPorUsuario(usuario);
 
-						JOptionPane.showMessageDialog(null, "Contraseña: " + res.getString("contrasenia"));
-
+						if (res.next()){
+							JOptionPane.showMessageDialog(null, "Contraseña: " + res.getString("contrasenia"));
+						}else{
+							throw new UserNotExistsException();
+						}
+						
 					} catch (ClassNotFoundException e1) {
 						JOptionPane.showMessageDialog(null, "No se pudo conectar a la base de datos.");
 					} catch (SQLException e1) {

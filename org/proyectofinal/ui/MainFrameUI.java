@@ -10,8 +10,11 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -29,8 +32,10 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableModel;
 
 import org.proyectofinal.bo.impl.UsuarioBoImpl;
 import org.proyectofinal.bo.interfaces.UsuarioBo;
@@ -39,13 +44,14 @@ import org.proyectofinal.dao.ex.UserNotExistsException;
 import org.proyectofinal.dao.ex.UserNotValidException;
 import org.proyectofinal.dao.impl.PersonaDaoImpl;
 import org.proyectofinal.dao.impl.UsuarioDaoImpl;
+import org.proyectofinal.dao.impl.ViajeCabeceraDaoImpl;
 import org.proyectofinal.dao.interfaces.PersonaDao;
 import org.proyectofinal.dao.interfaces.UsuarioDao;
+import org.proyectofinal.dao.interfaces.ViajeCabeceraDao;
 import org.proyectofinal.model.impl.UsuarioImpl;
 import org.proyectofinal.model.interfaces.Usuario;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
-import java.awt.event.WindowAdapter;
+import org.proyectofinal.ui.util.AccionTableCellRenderer;
+import org.proyectofinal.ui.util.CeldaAccionEditor;
 
 public class MainFrameUI extends JFrame {
 
@@ -53,7 +59,7 @@ public class MainFrameUI extends JFrame {
 	
 	private panelUsuario pU;
 	private DialogCambiarDatos dCD;
-//	private panelInicio pI;
+//	private panelIniciio pI;
 	private JTextField txtNombreUsuario;
 	private JPasswordField txtContrasea;
 	private JButton btnCerrarSesin;
@@ -255,29 +261,100 @@ public class MainFrameUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 				if (e.getSource() == mntmVerListado){
-					ListadoVuelosUI ui = new ListadoVuelosUI();
 					
-					ui.setSize(970, 460);
+					try {
+
+						final ListadoVuelosUI ui = new ListadoVuelosUI(u);
+						
+						if (u.getTipoUsuario() == 1){
+							SwingUtilities.invokeLater(new Runnable() {
+							    @Override public void run() {
+							        ui.getTable().removeColumn(ui.getTable().getColumnModel().getColumn(6));
+							    }
+							});
+						}
+						
+						ui.ocultarCampos();
+						
+						DefaultTableModel model = (DefaultTableModel) ui.getTable().getModel();
+						
+						int a = model.getRowCount() - 1;
+						
+						for(int i = a; i >= 0; i--){
+							model.removeRow(0);
+						}
+						
+						Object[] fila = null;
+						
+						if (u.getTipoUsuario() == 0){
+							fila = new Object[8];
+						}else if (u.getTipoUsuario() == 1){
+							fila = new Object[6];
+						}
+						
+						ViajeCabeceraDao vCDao = new ViajeCabeceraDaoImpl();
+						
+						vCDao.conectar();
+
+						ResultSet res = vCDao.consultar();
+						
+						String fecha = "";
+
+						while (res.next()){
+
+							fila[0] = res.getInt("codViaje");
+							fila[1] = res.getString("ciudadOrigen") + ", " + res.getString("paisOrigen");
+							fila[2] = res.getString("ciudadDestino") + ", " + res.getString("paisDestino");							
+						
+							fecha = res.getDate("fechaSalida").toString().substring(8, 10) + "-" + res.getDate("fechaSalida").toString().substring(5, 7) + "-" + res.getDate("fechaSalida").toString().substring(0, 4);
+							
+							fila[3] = fecha + " " + res.getTime("horaSalida").toString().substring(0, 5);
+							
+							fecha = res.getDate("fechaLlegada").toString().substring(8, 10) + "-" + res.getDate("fechaLlegada").toString().substring(5, 7) + "-" + res.getDate("fechaLlegada").toString().substring(0, 4);
+							
+							fila[4] = fecha + " " + res.getTime("horaLlegada").toString().substring(0, 5);
+							
+							fila[5] = res.getInt("cupo");
+							
+							if (u.getTipoUsuario() == 0){
+								ui.getTable().getColumnModel().getColumn(6).setCellRenderer(new AccionTableCellRenderer());
+								ui.getTable().getColumnModel().getColumn(6).setCellEditor(new CeldaAccionEditor());
+							}
+							
+							model.addRow(fila);					
+						}
+						
+						vCDao.desconectar();
 					
-					ui.setVisible(true);
+						if (u.getTipoUsuario() == 0){
+							ui.setSize(970,380);
+						}else if (u.getTipoUsuario() == 1){
+							ui.remove(ui.getBtnAgregar());
+							ui.setSize(970,330);
+						}
+						
+						
+						ui.setLocationRelativeTo(null);
+						ui.setResizable(false);
+						
+						ui.validate();
+						ui.repaint();
+						
+						ui.setVisible(true);
+
+					} catch (ClassNotFoundException e1) {
+						JOptionPane.showMessageDialog(null, e1.getMessage());
+					} catch (SQLException e1) {
+						JOptionPane.showMessageDialog(null, e1.getMessage());
+					}
+					
 				}
 			}
 		});
 		mnVuelos.add(mntmVerListado);
 		
-		final JMenuItem mntmCargarVuelo = new JMenuItem("Cargar vuelo..");
-		mntmCargarVuelo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				if (e.getSource() == mntmCargarVuelo){
-					
-				}
-			}
-		});
-		
 		@SuppressWarnings("unused")
 		ImageIcon icono = new ImageIcon(MainFrameUI.class.getResource("/imagenes/user-resized.png"));
-		
 		
 		final JLabel lblSistemaDeGestion = new JLabel("SISTEMA DE GESTIÓN DE BOLETOS DE AVIÓN");
 		lblSistemaDeGestion.setBounds(0, 485, 978, 49);
@@ -289,7 +366,10 @@ public class MainFrameUI extends JFrame {
 		final JLabel lblIconoAvion = new JLabel("");
 		lblIconoAvion.setBounds(616, 70, 329, 205);
 		getContentPane().add(lblIconoAvion);
-		lblIconoAvion.setIcon(new ImageIcon(MainFrameUI.class.getResource("/imagenes/avion4.png")));
+		
+		ImageIcon iconAvion = new ImageIcon(MainFrameUI.class.getResource("/imagenes/avion4.png"));
+		iconAvion.setDescription("Avion");
+		lblIconoAvion.setIcon(iconAvion);
 		lblIconoAvion.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		final JPanel panelInicioSesion = new JPanel();
@@ -405,10 +485,6 @@ public class MainFrameUI extends JFrame {
 					getContentPane().add(pU);
 		
 					menuBar.add(mnVuelos);
-					
-					if (u.getTipoUsuario() == 0){
-						mnVuelos.add(mntmCargarVuelo);
-					}
 						
 					persona = pDao.consultarPorUsuario(u);
 				
@@ -485,7 +561,6 @@ public class MainFrameUI extends JFrame {
 					getContentPane().remove(btnCambiarDatosPersonales);
 					getContentPane().remove(pU);
 					menuBar.remove(mnVuelos);
-					mnVuelos.remove(mntmCargarVuelo);
 					
 					getContentPane().add(panelInicioSesion);
 					getContentPane().add(lblIconoAvion);
@@ -616,5 +691,16 @@ public class MainFrameUI extends JFrame {
 		cmbTipoUsuario.setSelectedIndex(0);
 		txtNombreUsuario.requestFocus();
 	}
+//	
+//	private ImageIcon createImageIcon(String path, String description){
+//		
+//		ImageIcon icon = new ImageIcon(MainFrameUI.class.getResource(path));
+//		
+//		icon.setDescription(description);
+//		
+//		return icon;
+//		
+//	}
 	
 }
+

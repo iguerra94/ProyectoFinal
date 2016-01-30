@@ -12,6 +12,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 import org.proyectofinal.model.interfaces.Usuario;
@@ -65,7 +66,6 @@ public class panelUsuario extends JPanel {
 			}
 		});
 	
-		setSize(978,500);
 		setLayout(null);
 		
 		lblBienvenido = new JLabel("");
@@ -215,9 +215,29 @@ public class panelUsuario extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 			
 				if (e.getSource() == btnReservarBoleto){
-					ListadoVuelosUI ui = new ListadoVuelosUI();
-					ui.setSize(970, 520);
+					final ListadoVuelosUI ui = new ListadoVuelosUI(u);
+					
+					SwingUtilities.invokeLater(new Runnable() {
+					    @Override public void run() {
+					    	SwingUtilities.invokeLater(new Runnable() {
+							    @Override public void run() {
+							        ui.getTable().removeColumn(ui.getTable().getColumnModel().getColumn(6));
+							    }
+							});
+					    }
+					});
+					ui.remove(ui.getBtnAgregar());
+					
 					ui.getContentPane().add(ui.getBtnContinuar());
+					
+					ui.setSize(970, 527);
+					
+					ui.setLocationRelativeTo(null);
+//					ui.setResizable(false);
+//					
+					ui.validate();
+					ui.repaint();
+
 					ui.setVisible(true);
 				}
 			}
