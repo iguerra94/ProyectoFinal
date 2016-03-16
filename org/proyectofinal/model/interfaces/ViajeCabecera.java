@@ -31,7 +31,10 @@ public interface ViajeCabecera extends Cloneable {
 
 	public Time getHoraLlegada();
 	public void setHoraLlegada(Time horaLlegada);
-	
+
+	public Integer getCupo();
+	public void setCupo(Integer cupo);
+
 	@Override
 	public int hashCode();
 	

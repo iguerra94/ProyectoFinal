@@ -41,6 +41,17 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		return resultado;
 	}
 	
+	public ResultSet consultarCodigosViaje() throws SQLException, ClassNotFoundException {
+		
+		conectar();
+		
+		PreparedStatement sentencia = getConexion().prepareStatement("SELECT codViaje FROM ViajeCabecera");
+		
+		ResultSet resultado = sentencia.executeQuery();
+		
+		return resultado;
+	}
+	
 	public ResultSet consultarPorCodigoViaje(Integer codViaje) throws SQLException, ClassNotFoundException {
 		
 		PreparedStatement sentencia = getConexion().prepareStatement("SELECT * FROM ViajeCabecera WHERE codViaje = ?");
@@ -92,7 +103,9 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 
 	public void alta(ViajeCabecera vC) throws SQLException, ClassNotFoundException{
 		
-		PreparedStatement sentencia = getConexion().prepareStatement("INSERT INTO ViajeCabecera (codViaje, ciudadOrigen, paisOrigen, ciudadDestino, paisDestino, fechaSalida, horaSalida, fechaLlegada, horaLlegada) VALUES (?,?,?,?,?,?,?,?,?)");
+		conectar();
+		
+		PreparedStatement sentencia = getConexion().prepareStatement("INSERT INTO ViajeCabecera VALUES (?,?,?,?,?,?,?,?,?,?)");
 		
 		sentencia.setInt(1, vC.getCodigoViaje());
 		sentencia.setString(2, vC.getCiudadOrigen());
@@ -103,6 +116,7 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		sentencia.setTime(7, vC.getHoraSalida());
 		sentencia.setDate(8, vC.getFechaLlegada());
 		sentencia.setTime(9, vC.getHoraLlegada());
+		sentencia.setInt(10, vC.getCupo());
 		
 		sentencia.executeUpdate();
 
@@ -123,7 +137,26 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 	}
 
 	public void modificacion(ViajeCabecera vC) throws SQLException, ClassNotFoundException{
-		conectar();
+		
+		conectar();			
+		
+		PreparedStatement sentencia = null;
+		
+		sentencia = getConexion().prepareStatement("update ViajeCabecera set ciudadOrigen = ?, paisOrigen = ?, ciudadDestino = ?, paisDestino = ?, fechaSalida = ?, horaSalida = ?, fechaLlegada = ?, horaLlegada = ?, cupo = ? where codViaje = ?");
+		
+		sentencia.setString(1, vC.getCiudadOrigen());
+		sentencia.setString(2, vC.getPaisOrigen());
+		sentencia.setString(3, vC.getCiudadDestino());
+		sentencia.setString(4, vC.getPaisDestino());
+		sentencia.setDate(5, vC.getFechaSalida());
+		sentencia.setTime(6, vC.getHoraSalida());
+		sentencia.setDate(7, vC.getFechaLlegada());
+		sentencia.setTime(8, vC.getHoraLlegada());
+		sentencia.setInt(9, vC.getCupo());
+		sentencia.setInt(10, vC.getCodigoViaje());
+		
+		sentencia.executeUpdate();
+		
 		desconectar();
 	}
 	

@@ -7,7 +7,7 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 
-public class Boton extends JButton implements ActionListener, MouseListener {
+public class BotonPasajero extends JButton implements ActionListener, MouseListener {
 	
 	/**
 	 * 
@@ -16,9 +16,9 @@ public class Boton extends JButton implements ActionListener, MouseListener {
 	private Float precio;
 	private String asiento;
 	private Integer cant;
-	private Boolean estado;
+	private String estadoAsiento;
 	
-	public Boton(String asiento, Float precio){
+	public BotonPasajero(String asiento, Float precio){
 		
 		this.precio = precio;
 		this.asiento = asiento;
@@ -27,7 +27,6 @@ public class Boton extends JButton implements ActionListener, MouseListener {
 		this.addActionListener(this);
 	
 		this.cant = 0;
-		this.setEstado(false);
 	}
 	
 	public Float getPrecio() {
@@ -45,13 +44,13 @@ public class Boton extends JButton implements ActionListener, MouseListener {
 	public void setAsiento(String asiento) {
 		this.asiento = asiento;
 	}
-	
-	public Boolean getEstado() {
-		return estado;
+
+	public String getEstadoAsiento() {
+		return estadoAsiento;
 	}
 
-	public void setEstado(Boolean estado) {
-		this.estado = estado;
+	public void setEstadoAsiento(String estadoAsiento) {
+		this.estadoAsiento = estadoAsiento;
 	}
 
 	@Override
@@ -66,13 +65,13 @@ public class Boton extends JButton implements ActionListener, MouseListener {
 				
 				this.setContentAreaFilled(true);
 				
-				setEstado(true);
+				setEstadoAsiento("SELECCIONADO");
 				
 				cant++;
 			}else{
 				this.setContentAreaFilled(false);
 				
-				setEstado(false);
+				setEstadoAsiento("NO SELECCIONADO");
 				
 				cant--;
 			}
@@ -94,8 +93,8 @@ public class Boton extends JButton implements ActionListener, MouseListener {
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		System.out.println("Numero: " + getAsiento());
-		System.out.println("Precio: $" + getPrecio());
+//		System.out.println("Numero: " + getAsiento());
+//		System.out.println("Precio: $" + getPrecio());
 	}
 
 	@Override

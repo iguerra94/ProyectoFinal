@@ -16,6 +16,7 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 	private Time horaSalida = null;
 	private Date fechaLlegada = null;
 	private Time horaLlegada = null;
+	private Integer cupo = null;
 	
 	public ViajeCabeceraImpl(){
 		
@@ -92,6 +93,14 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 	public void setHoraLlegada(Time horaLlegada) {
 		this.horaLlegada = horaLlegada;
 	}
+	
+	public Integer getCupo() {
+		return cupo;
+	}
+
+	public void setCupo(Integer cupo) {
+		this.cupo = cupo;
+	}
 
 	@Override
 	public String toString() {
@@ -107,6 +116,7 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 		res += "Hora de Salida: " + getHoraSalida() + "\n";
 		res += "Fecha de Llegada: " + getFechaLlegada() + "\n";
 		res += "Hora de Llegada: " + getHoraLlegada() + "\n";
+		res += "Cupo: " + getCupo() + "\n";
 
 		return res; 
 	}
@@ -121,7 +131,10 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 		vC.setCiudadDestino(getCiudadDestino());
 		vC.setPaisDestino(getPaisDestino());
 		vC.setFechaSalida(getFechaSalida());
+		vC.setHoraSalida(getHoraSalida());
 		vC.setFechaLlegada(getFechaLlegada());
+		vC.setHoraLlegada(getHoraLlegada());
+		vC.setCupo(getCupo());
 		
 		return vC;
 	}
@@ -133,6 +146,7 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 		result = prime * result + ((ciudadDestino == null) ? 0 : ciudadDestino.hashCode());
 		result = prime * result + ((ciudadOrigen == null) ? 0 : ciudadOrigen.hashCode());
 		result = prime * result + ((codigoViaje == null) ? 0 : codigoViaje.hashCode());
+		result = prime * result + ((cupo == null) ? 0 : cupo.hashCode());
 		result = prime * result + ((fechaLlegada == null) ? 0 : fechaLlegada.hashCode());
 		result = prime * result + ((fechaSalida == null) ? 0 : fechaSalida.hashCode());
 		result = prime * result + ((horaLlegada == null) ? 0 : horaLlegada.hashCode());
@@ -166,6 +180,11 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 				return false;
 		} else if (!codigoViaje.equals(other.codigoViaje))
 			return false;
+		if (cupo == null) {
+			if (other.cupo != null)
+				return false;
+		} else if (!cupo.equals(other.cupo))
+			return false;
 		if (fechaLlegada == null) {
 			if (other.fechaLlegada != null)
 				return false;
@@ -198,5 +217,5 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 			return false;
 		return true;
 	}
-
+	
 }

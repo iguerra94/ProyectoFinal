@@ -1,5 +1,10 @@
 package org.proyectofinal.bo.interfaces;
 
-public interface ViajeCabeceraBo {
+import org.proyectofinal.dao.ex.ViajeCabeceraNotValidException;
+import org.proyectofinal.model.interfaces.ViajeCabecera;
 
+public interface ViajeCabeceraBo {
+	
+	public void verificarTodos(ViajeCabecera vC) throws ViajeCabeceraNotValidException;	
+	
 }

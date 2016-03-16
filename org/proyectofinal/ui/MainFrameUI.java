@@ -333,7 +333,6 @@ public class MainFrameUI extends JFrame {
 							ui.setSize(970,330);
 						}
 						
-						
 						ui.setLocationRelativeTo(null);
 						ui.setResizable(false);
 						

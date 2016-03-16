@@ -44,6 +44,7 @@ public class DialogRegistrarse extends JDialog {
 	 * 
 	 */
 	private static final long serialVersionUID = 8710372283429686677L;
+	
 	private JTextField txtDni;
 	private JTextField txtNombre;
 	private JTextField txtApellido;

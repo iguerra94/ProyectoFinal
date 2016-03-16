@@ -125,11 +125,13 @@ public class PanelAccion extends JPanel {
 				dLF.getTxtPaisOrigen().setText(dLF.getTxtPaisOrigen().getText() + res.getString("paisOrigen"));
 				dLF.getTxtCiudadDestino().setText(dLF.getTxtCiudadDestino().getText() + res.getString("ciudadDestino"));
 				dLF.getTxtPaisDestino().setText(dLF.getTxtPaisDestino().getText() + res.getString("paisDestino"));
-				dLF.getTxtFechaSalida().setText(dLF.getTxtFechaSalida().getText() + res.getDate("fechaSalida"));
+				dLF.getDateChooserFechaSalida().setDate(res.getDate("fechaSalida"));
 				dLF.getTxtHoraSalida().setText(dLF.getTxtHoraSalida().getText() + res.getTime("horaSalida"));
-				dLF.getTxtFechaLlegada().setText(dLF.getTxtFechaLlegada().getText() + res.getDate("fechaLlegada"));
+				dLF.getDateChooserFechaLlegada().setDate(res.getDate("fechaLlegada"));
 				dLF.getTxtHoraLlegada().setText(dLF.getTxtHoraLlegada().getText() + res.getTime("horaLlegada"));
 				dLF.getTxtCupo().setText(dLF.getTxtCupo().getText() + res.getInt("cupo"));			
+
+				dLF.getTxtCodigoViaje().setEnabled(false);
 			}
 			
 			vCDao.desconectar();
