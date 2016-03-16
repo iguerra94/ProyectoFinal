@@ -368,7 +368,7 @@ public class DialogRegistrarse extends JDialog {
 						
 						uDao.alta(u);
 						pDao.alta(p);
-
+						
 						JOptionPane.showMessageDialog(null, "Se ha registrado el usuario con exito!"); 
 						setVisible(false);
 
