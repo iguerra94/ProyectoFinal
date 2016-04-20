@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -43,22 +45,6 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 	 * 
 	 */
 	private static final long serialVersionUID = -3014223326291727038L;
-
-//	/**
-//	 * Launch the application.
-//	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					ReservaBoletoUI frame = new ReservaBoletoUI();
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
 	
 	private JLabel lblNumeroDeViaje;
 	private JLabel lblOrigen;
@@ -80,8 +66,9 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 	private int a = 1;
 	private Object opcion;
 	private Pasajero pasajero;
+	private Boolean estadoAnterior = false;
 	private BotonPasajero b;
-	private List<Pasajero> lista;
+//	private List<Pasajero> lista;
 	private ReservaPasajero reserva;
 	
 	/**
@@ -95,27 +82,46 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		lblSeleccioneCantPasajeros.setBounds(245, 43, 333, 65);
 		getContentPane().add(lblSeleccioneCantPasajeros);
 
-//		addFocusListener(new FocusAdapter() {
-//			@Override
-//			public void focusGained(FocusEvent e) {
-//				if (txtNombre.getText().trim().length() == 0){
-//					pasajero.setNombre("");
-//				}
-//				if (txtApellido.getText().trim().length() == 0){
-//					pasajero.setApellido("");
-//				}
-//				if (txtDni.getText().trim().length() == 0){
-//					pasajero.setDni(-1);
-//				}
-//				if (txtAsiento.getText().length() == 0){
-//					pasajero.setAsientoPasajero(null);
-//					pasajero.getAsientoPasajero().setAsiento("");
-//				}
-//				if (txtPrecio.getText().length() == 0){
-//					pasajero.getAsientoPasajero().setPrecio(-1f);
-//				}
-//			}
-//		});
+		addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				
+				if (txtNombre.getText().trim().length() > 0){
+					pasajero.setNombre(txtNombre.getText());
+				}else{
+					pasajero.setNombre("");
+				}
+				
+				if (txtApellido.getText().trim().length() > 0){
+					pasajero.setApellido(txtApellido.getText());
+				}else{
+					pasajero.setApellido("");
+				}
+				
+				if (txtDni.getText().trim().length() > 0){
+					pasajero.setDni(Integer.parseInt(txtDni.getText()));
+				}else{
+					pasajero.setDni(-1);
+				}
+				
+				pasajero.setAsientoPasajero(b);
+				
+				if (pasajero.getAsientoPasajero() != null){
+					
+					if (txtAsiento.getText().length() > 0){
+						pasajero.getAsientoPasajero().setAsiento(txtAsiento.getText());
+						pasajero.getAsientoPasajero().setPrecio(Float.parseFloat(txtPrecio.getText()));
+					}
+					if (txtAsiento.getText().length() == 0){
+						pasajero.setAsientoPasajero(null);
+						pasajero.getAsientoPasajero().setAsiento("");
+						pasajero.getAsientoPasajero().setPrecio(-1f);
+					}
+					
+				}
+				
+			}
+		});
 		
 		final JPanel panelAsientos = new JPanel();
 		panelAsientos.setBounds(12, 12, 537, 585);
@@ -171,9 +177,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		
 		pasajero = new Pasajero();
 		
-		lista = new ArrayList<Pasajero>();
-		reserva = new ReservaPasajero();
-		reserva.setListPasajeros(lista);
+//		reserva = new ReservaPasajero();
 		
 		botones = new ArrayList<BotonPasajero>();
 		
@@ -1095,91 +1099,89 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnSiguiente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-//				if (txtNombre.getText().trim().length() == 0){
-//					pasajero.setNombre("");
-//				}else{
-//					pasajero.setNombre(txtNombre.getText());
-//				}
-//				
-//				if (txtApellido.getText().trim().length() == 0){
-//					pasajero.setApellido("");
-//				}else{
-//					pasajero.setApellido(txtApellido.getText());
-//				}
-//				
-//				if (txtDni.getText().trim().length() == 0){
-//					pasajero.setDni(-1);
-//				}else{
-//					pasajero.setDni(Integer.parseInt(txtDni.getText()));
-//				}
-				
-				pasajero.setAsientoPasajero(b);
-
-				if (pasajero.getAsientoPasajero() != null){
-
-					if (txtAsiento.getText().trim().length() > 0){
-						pasajero.getAsientoPasajero().setAsiento(txtAsiento.getText());
-					}else{
-						pasajero.getAsientoPasajero().setAsiento("");
-					}
-					if (txtPrecio.getText().trim().length() > 0){
-						pasajero.getAsientoPasajero().setPrecio(Float.parseFloat(txtPrecio.getText()));
-					}else{
-						pasajero.getAsientoPasajero().setPrecio(-1f);
-					}
-				}
-				
-//				for (BotonPasajero botonSelec : botonesSeleccionados){
-//					botonSelec.setContentAreaFilled(true);
-//					botonSelec.setBackground(Color.GREEN);
-//					getContentPane().validate();
-//					getContentPane().repaint();
-//				}
-				
 				try {
 					
-					if (a < (Integer) opcion){
-						
-						a++;
-						
-						pasajero.verificarDatosPasajero(pasajero);				
-						
-						panelPasajeros.remove(panelDatosPasajeros);
-						panelPasajeros.remove(btnSiguiente);
-						
-						panelDatosPasajeros.setBorder(new TitledBorder(null, "Pasajero " + a +"/" + opcion, TitledBorder.LEADING, TitledBorder.TOP, null, null));
-						
-						panelPasajeros.add(panelDatosPasajeros);
-						
-						panelPasajeros.add(btnSiguiente);
-					
-						if (a > 1){
-							panelPasajeros.add(btnAnterior);
-							
-							if (a == (Integer) opcion){
-								btnSiguiente.setText("Finalizar");
-							} else{
-								btnSiguiente.setText("Siguiente");
+					if (estadoAnterior){
+						for (BotonPasajero boton: botones){
+							if (boton.getEstadoAsiento().equals("SELECCIONADO")){
+								System.out.println(boton.getText());
+								pasajero.setNombre(txtNombre.getText());
+								pasajero.setApellido(txtApellido.getText());
+								pasajero.setDni(Integer.parseInt(txtDni.getText()));
+								pasajero.setAsientoPasajero(boton);
+								pasajero.getAsientoPasajero().setAsiento(boton.getAsiento());
+								pasajero.getAsientoPasajero().setPrecio(boton.getPrecio());
 							}
-						}else {
-							panelPasajeros.remove(btnAnterior);
 						}
+						estadoAnterior = false;
+					}else{
 						
-						panelPasajeros.validate();
-						panelPasajeros.repaint();
+						//Setear el asiento del pasajero seleccionado
+						pasajero.setAsientoPasajero(b);
+						
+						if (pasajero.getAsientoPasajero() != null){
+	
+							//Colocar texto en campos de asiento y precio
+							if (txtAsiento.getText().trim().length() > 0){
+								pasajero.getAsientoPasajero().setAsiento(txtAsiento.getText());
+							}else{
+								pasajero.getAsientoPasajero().setAsiento("");
+							}
+							
+							if (txtPrecio.getText().trim().length() > 0){
+								pasajero.getAsientoPasajero().setPrecio(Float.parseFloat(txtPrecio.getText()));
+							}else{
+								pasajero.getAsientoPasajero().setPrecio(-1f);
+							}
+						}
 					}
+					
+					//Verifico que los datos del pasajero sean correctos y sino lanza excepcion 
+					pasajero.verificarDatosPasajero(pasajero);
+				
+//					if (a > 1 && reserva.getListPasajeros().get(a).getDni() != null){
+//						System.out.println("a");
+//						txtNombre.setText(reserva.getListPasajeros().get(a).getNombre());
+//						txtApellido.setText(reserva.getListPasajeros().get(a).getApellido());
+//						txtDni.setText(reserva.getListPasajeros().get(a).getDni().toString());
+//						botonesSeleccionados.get(a).setBackground(Color.WHITE);
+//						botonesSeleccionados.add(a);
+//						txtAsiento.setText(reserva.getListPasajeros().get(a).getAsientoPasajero().getAsiento());
+//						txtPrecio.setText(reserva.getListPasajeros().get(a).getAsientoPasajero().getPrecio().toString());	
+//					}
+					
+//					System.out.println(a);
+					//Aumento la variable que controla el numero de pasajero en uno
+					a++;
+					
+					panelPasajeros.remove(panelDatosPasajeros);
+					panelPasajeros.remove(btnSiguiente);
+					
+					panelDatosPasajeros.setBorder(new TitledBorder(null, "Pasajero " + a +"/" + opcion, TitledBorder.LEADING, TitledBorder.TOP, null, null));
+					
+					panelPasajeros.add(panelDatosPasajeros);
+					
+					panelPasajeros.add(btnSiguiente);
+					
+					if (a > 1){
+						panelPasajeros.add(btnAnterior);
+						
+						if (a == (Integer) opcion){
+							btnSiguiente.setText("Finalizar");						
+						} else{
+							btnSiguiente.setText("Siguiente");
+						}
+					}else {
+						panelPasajeros.remove(btnAnterior);
+					}
+					
+					panelPasajeros.validate();
+					panelPasajeros.repaint();
+				
 				} catch (NotValidPassengerException e1) {
 					// TODO Auto-generated catch block
-					// e1.printStackTrace();
 					JOptionPane.showMessageDialog(null, e1.getMessage());
 					
-					if (txtNombre.getText().length() == 0){
-						txtNombre.requestFocus();
-					} else if (txtApellido.getText().length() == 0){
-						txtApellido.requestFocus();
-					} else if (txtDni.getText().length() == 0){
-						txtDni.requestFocus();
-					}
 				}finally{
 				
 					if (txtNombre.getText().length() > 0 && 
@@ -1187,30 +1189,39 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 						txtDni.getText().length() > 0 && 
 						txtAsiento.getText().length() > 0 && 
 						txtPrecio.getText().length() > 0){
-					
+
 						reserva.agregarPasajero(pasajero);
 
-						botonesSeleccionados.add(b);
+						pasajero.getAsientoPasajero().setContentAreaFilled(true);
+						pasajero.getAsientoPasajero().setBackground(Color.WHITE);
+						pasajero.getAsientoPasajero().setEnabled(false);
 						
-//						if (a > (Integer)opcion){
-//							for (int i = 0; i < reserva.getListPasajeros().size(); i++){
-//								JOptionPane.showMessageDialog(null, reserva.getListPasajeros().get(i));
-//							}
-//							dispose();
+						botonesSeleccionados.add(pasajero.getAsientoPasajero());
+						
+//						for (BotonPasajero botonSelec : botonesSeleccionados){
+//							
+//							getContentPane().validate();
+//							getContentPane().repaint();
 //						}
 						
-						for (BotonPasajero botonSelec : botonesSeleccionados){
-							botonSelec.setContentAreaFilled(true);
-							botonSelec.setBackground(Color.GREEN);
-							getContentPane().validate();
-							getContentPane().repaint();
+						if (a > (Integer)opcion){
+
+							//Generar PDF
+							
+							//....
+							
+							for (int i = 0; i < reserva.getListPasajeros().size(); i++){
+								JOptionPane.showMessageDialog(null, reserva.getListPasajeros().get(i));
+							}
+							
+							dispose();
 						}
 						
 						txtNombre.setText("");
 						txtApellido.setText("");
 						txtDni.setText("");
 						txtAsiento.setText("");
-						b = null;
+//						b = null;
 						txtPrecio.setText("");		
 						
 						pasajero = new Pasajero();
@@ -1225,15 +1236,36 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 			public void actionPerformed(ActionEvent e) {
 				
 				if (a < (Integer) opcion || a > 0){
-					a = a - 1;
 					
+					a--;
+					
+					for (BotonPasajero boton: botones){
+						boton.setContentAreaFilled(false);
+						boton.setEstadoAsiento("NO SELECCIONADO");
+					}
+					
+					BotonPasajero botonAnterior = botonesSeleccionados.get(a-1);
+					
+					botonAnterior.setContentAreaFilled(true);
+					botonAnterior.setEstadoAsiento("SELECCIONADO");
+				
 					txtNombre.setText(reserva.getListPasajeros().get(a-1).getNombre());
 					txtApellido.setText(reserva.getListPasajeros().get(a-1).getApellido());
 					txtDni.setText(reserva.getListPasajeros().get(a-1).getDni().toString());
-					botonesSeleccionados.get(a-1).setBackground(new Color(0,128,0));
+					
 					botonesSeleccionados.remove(a-1);
-					txtAsiento.setText(reserva.getListPasajeros().get(a-1).getAsientoPasajero().getAsiento());
-					txtPrecio.setText(reserva.getListPasajeros().get(a-1).getAsientoPasajero().getPrecio().toString());
+
+					botonAnterior.setBackground(new Color(0,128,0));
+					botonAnterior.setEnabled(true);
+//					txtAsiento.setText(reserva.getListPasajeros().get(a-1).getAsientoPasajero().getAsiento());
+//					txtPrecio.setText(reserva.getListPasajeros().get(a-1).getAsientoPasajero().getPrecio().toString());
+
+					txtAsiento.setText(botonAnterior.getAsiento());
+					txtPrecio.setText(botonAnterior.getPrecio().toString());
+					
+					reserva.eliminarPasajero(a-1);
+					
+					estadoAnterior = true;
 					
 					panelPasajeros.remove(panelDatosPasajeros);
 					panelPasajeros.remove(btnAnterior);
@@ -1261,10 +1293,30 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnAnterior.setBounds(20, 283, 116, 29);
 		
 		cmbCantPasajeros = new JComboBox();
+		cmbCantPasajeros.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				
+				reserva = null;
+				
+				for (int i = 0; i < botonesSeleccionados.size(); i++) {
+					botonesSeleccionados.remove(i);
+				}
+				
+				for (BotonPasajero boton : botones){
+					boton.setContentAreaFilled(false);
+					boton.setEnabled(true);
+				}
+			}
+		});
 		cmbCantPasajeros.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
 				if (cmbCantPasajeros.getSelectedIndex() > 0){
+					
+					reserva = new ReservaPasajero();
+					
 					a = 1;
 					opcion = cmbCantPasajeros.getSelectedItem();
 					
@@ -1307,6 +1359,18 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 					panelPasajeros.remove(panelDatosPasajeros);
 
 					panelPasajeros.remove(btnSiguiente);
+					panelPasajeros.remove(btnAnterior);
+					
+					reserva = null;
+					
+					for (int i = 0; i < botonesSeleccionados.size(); i++) {
+						botonesSeleccionados.remove(i);
+					}
+						
+					for (BotonPasajero boton : botones){
+						boton.setContentAreaFilled(false);
+						boton.setEnabled(true);
+					}
 					
 					panelPasajeros.validate();
 					panelPasajeros.repaint();
@@ -1551,7 +1615,6 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -1560,25 +1623,93 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		
 		b = (BotonPasajero) e.getSource();
 		
-		for (BotonPasajero boton : botones){
-			if (boton.getName() != b.getName()){
-				boton.setContentAreaFilled(false);
+		if (cmbCantPasajeros.getSelectedIndex() > 0){
+		
+			if (botonesSeleccionados.size() > 0){
+				
+				for (BotonPasajero botonSelec : botonesSeleccionados){
+
+					if (b.getName() == botonSelec.getName() && txtAsiento.getText().length() > 0){
+						txtAsiento.setText(txtAsiento.getText());
+						txtPrecio.setText(txtPrecio.getText());
+						botonSelec.setContentAreaFilled(true);
+						botonSelec.setBackground(Color.WHITE);
+						botonSelec.setEnabled(false);
+					}else if (b.getName() != botonSelec.getName()){
+						
+						for (BotonPasajero boton : botones){
+							if (boton.getName() != b.getName()){
+								boton.setContentAreaFilled(false);
+							}
+						}
+						
+						for (BotonPasajero botones : botonesSeleccionados){
+							botones.setContentAreaFilled(true);
+							botones.setBackground(Color.WHITE);
+							botones.setEnabled(false);
+						}
+						
+						if (b.getEstadoAsiento().equals("SELECCIONADO")){
+							txtAsiento.setText(b.getAsiento());
+							txtPrecio.setText(b.getPrecio().toString());
+						}else{
+							txtAsiento.setText("");
+							txtPrecio.setText("");
+						}
+					}
+					
+//					getContentPane().validate();
+//					getContentPane().repaint();
+				}
+				
+				
+			}else{
+				
+				for (BotonPasajero boton : botones){
+					if (boton.getName() != b.getName()){
+						boton.setContentAreaFilled(false);
+					}
+					
+//					if (boton.getEstadoAsiento() == "SELECCIONADO" && estadoAnterior){ 
+//						
+//						pasajero.setNombre(txtNombre.getText());
+//						pasajero.setApellido(txtApellido.getText());
+//						pasajero.setDni(Integer.parseInt(txtDni.getText()));
+//						pasajero.setAsientoPasajero(boton);
+//						pasajero.getAsientoPasajero().setAsiento(boton.getAsiento());
+//						pasajero.getAsientoPasajero().setPrecio(boton.getPrecio());
+//					
+//					}
+				}
+				
+				if (b.getEstadoAsiento().equals("SELECCIONADO")){
+					txtAsiento.setText(b.getAsiento());
+					txtPrecio.setText(b.getPrecio().toString());
+				}else{
+					txtAsiento.setText("");
+					txtPrecio.setText("");
+				}
 			}
+
+
+				
 		}
 		
-		for (BotonPasajero botonSelec : botonesSeleccionados){
-			botonSelec.setContentAreaFilled(true);
-			botonSelec.setBackground(Color.GREEN);
-			getContentPane().validate();
-			getContentPane().repaint();
-		}
-		
-		if (cmbCantPasajeros.getSelectedIndex() > 0 && b.getEstadoAsiento().equals("SELECCIONADO")){
-			txtAsiento.setText(b.getAsiento());
-			txtPrecio.setText(b.getPrecio().toString());
-		}else{
-			txtAsiento.setText("");
-			txtPrecio.setText("");
-		}
 	}
+
+//	private void focalizarCampo(){
+//		
+//		JOptionPane.showMessageDialog(null, "Hola");
+//		if (txtNombre.getText().equals("")){
+//			txtNombre.requestFocus();
+//		}
+//		
+//		if (txtApellido.getText().equals("")){
+//			txtApellido.requestFocus();
+//		}
+//		
+//		if (txtDni.getText().length() == 1){
+//			txtDni.requestFocus();
+//		}
+//	}
 }

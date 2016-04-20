@@ -59,23 +59,6 @@ public class DialogLoadFlight extends JDialog {
 	private List<Integer> codigos;
 	
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					DialogLoadFlight dialog = new DialogLoadFlight();
-					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-					dialog.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
 	 * Create the dialog.
 	 */
 	public DialogLoadFlight() {

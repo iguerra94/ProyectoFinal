@@ -63,22 +63,6 @@ public class ListadoVuelosUI extends JFrame {
 	private JButton btnContinuar;
 	private JButton btnAgregar;
 
-//	/**
-//	 * Launch the application.
-//	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					ListadoVuelosUI frame = new ListadoVuelosUI(u);
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
-
 	/**
 	 * Create the frame.
 	 */
@@ -94,6 +78,7 @@ public class ListadoVuelosUI extends JFrame {
 		
 		setTitle("Listado de Vuelos");
 ////		
+		setResizable(false);
 //		setSize(970, 500);
 		
 		addWindowFocusListener(new WindowFocusListener() {
@@ -421,7 +406,7 @@ public class ListadoVuelosUI extends JFrame {
 					
 //					int cant = (int) table.getValueAt(filaSelecc, 5); 
 					
-					Object[] cantidad = new Object[7];
+					Object[] cantidad = new Object[3];
 					
 					for(int i = 1; i < cantidad.length; i++){
 						cantidad[0] = 0;
@@ -461,9 +446,14 @@ public class ListadoVuelosUI extends JFrame {
 			Class[] columnTypes = new Class[] {
 				Object.class, Object.class, Object.class, Object.class, Object.class, Object.class, PanelAccion.class
 			};
-			@SuppressWarnings("unchecked")
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
+			}
+			boolean[] columnEditables = new boolean[] {
+				false, false, false, false, true, false, true
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
 			}
 		});
 		table.getColumnModel().getColumn(0).setResizable(false);

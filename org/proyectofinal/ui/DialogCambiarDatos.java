@@ -161,7 +161,7 @@ public class DialogCambiarDatos extends JDialog {
 		pDao = new PersonaDaoImpl();
 		
 		setResizable(false);
-		setSize(440,465);
+		setSize(440,478);
 		setLocationRelativeTo(null);
 		setModal(true);
 		setTitle("Cambiar Datos Personales");

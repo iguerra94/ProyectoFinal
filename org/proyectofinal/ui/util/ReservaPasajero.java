@@ -1,5 +1,6 @@
 package org.proyectofinal.ui.util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ReservaPasajero {
@@ -7,11 +8,11 @@ public class ReservaPasajero {
 	private List<Pasajero> listPasajeros;
 	
 	public ReservaPasajero(){
-		
+		listPasajeros = new ArrayList<Pasajero>();
 	}
 	
 	public List<Pasajero> getListPasajeros() {
-		return listPasajeros;
+		return this.listPasajeros;
 	}
 	
 	public void setListPasajeros(List<Pasajero> listPasajeros) {
@@ -19,11 +20,14 @@ public class ReservaPasajero {
 	}
 	
 	public void agregarPasajero(Pasajero pasajero){
-		listPasajeros.add(pasajero);
+		getListPasajeros().add(pasajero);
 	}
 	
-	public void EliminarPasajero(Pasajero pasajero){
-		listPasajeros.remove(pasajero);
+	public void eliminarPasajero(Integer indice){
+		
+		Pasajero p = this.getListPasajeros().get(indice);
+		
+		this.getListPasajeros().remove(p);
 	}
-
+	
 }

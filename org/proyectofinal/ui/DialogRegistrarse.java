@@ -21,6 +21,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
+import org.proyectofinal.bo.ex.PersonNotValidAgeException;
 import org.proyectofinal.bo.impl.PersonaBoImpl;
 import org.proyectofinal.bo.impl.UsuarioBoImpl;
 import org.proyectofinal.bo.interfaces.PersonaBo;
@@ -64,19 +65,6 @@ public class DialogRegistrarse extends JDialog {
 	private JPanel panelDatosPersonales;
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			DialogRegistrarse dialog = new DialogRegistrarse();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Error de DialogRegistrarse");
-		}
-	}
-
-	/**
 	 * Create the dialog.
 	 */
 	public DialogRegistrarse() {
@@ -96,11 +84,11 @@ public class DialogRegistrarse extends JDialog {
 		setResizable(false);
 		setTitle("Registrarse");
 		setModal(true);
-		setBounds(100, 100, 400, 445);
+		setBounds(100, 100, 400, 464);
 		getContentPane().setLayout(null);
 		
 		birthDateChooser = new JDateChooser();
-		birthDateChooser.setBounds(187, 150, 177, 20);
+		birthDateChooser.setBounds(171, 145, 177, 20);
 		
 		panelDatosPersonales = new JPanel();
 		panelDatosPersonales.setBackground(SystemColor.window);
@@ -163,7 +151,7 @@ public class DialogRegistrarse extends JDialog {
 				}
 			}
 		});
-		txtDni.setBounds(187, 87, 177, 20);
+		txtDni.setBounds(171, 82, 177, 20);
 		panelDatosPersonales.add(txtDni);
 		txtDni.setColumns(10);
 	
@@ -189,7 +177,7 @@ public class DialogRegistrarse extends JDialog {
 			}
 		});
 		txtNombre.setColumns(10);
-		txtNombre.setBounds(187, 27, 177, 20);
+		txtNombre.setBounds(171, 22, 177, 20);
 		panelDatosPersonales.add(txtNombre);
 	
 		txtApellido = new JTextField();
@@ -214,7 +202,7 @@ public class DialogRegistrarse extends JDialog {
 			}
 		});
 		txtApellido.setColumns(10);
-		txtApellido.setBounds(187, 56, 177, 20);
+		txtApellido.setBounds(171, 51, 177, 20);
 		panelDatosPersonales.add(txtApellido);		
 		
 		txtEmail = new JTextField();
@@ -228,7 +216,7 @@ public class DialogRegistrarse extends JDialog {
 			}
 		});
 		txtEmail.setColumns(10);
-		txtEmail.setBounds(187, 120, 177, 20);
+		txtEmail.setBounds(171, 115, 177, 20);
 		panelDatosPersonales.add(txtEmail);
 
 		txtTelefono = new JTextField();
@@ -250,7 +238,7 @@ public class DialogRegistrarse extends JDialog {
 			}
 		});
 		txtTelefono.setColumns(10);
-		txtTelefono.setBounds(187, 180, 177, 20);
+		txtTelefono.setBounds(171, 175, 177, 20);
 		panelDatosPersonales.add(txtTelefono);
 
 		txtPais = new JTextField();
@@ -272,7 +260,7 @@ public class DialogRegistrarse extends JDialog {
 			}
 		});
 		txtPais.setColumns(10);
-		txtPais.setBounds(187, 210, 177, 20);
+		txtPais.setBounds(171, 205, 177, 20);
 		panelDatosPersonales.add(txtPais);
 			
 		txtCiudad = new JTextField();
@@ -294,8 +282,16 @@ public class DialogRegistrarse extends JDialog {
 			}
 		});
 		txtCiudad.setColumns(10);
-		txtCiudad.setBounds(187, 240, 177, 20);
+		txtCiudad.setBounds(171, 235, 177, 20);
 		panelDatosPersonales.add(txtCiudad);
+		
+		JButton button = new JButton("<html><strong>?</strong></html>");
+		button.setToolTipText("Debes ser mayor de 18 años para poder registrarte en el sistema.");
+		button.setForeground(Color.BLUE);
+		button.setContentAreaFilled(false);
+		button.setBorderPainted(false);
+		button.setBounds(345, 145, 20, 24);
+		panelDatosPersonales.add(button);
 		
 		JPanel panelDatosUsuario = new JPanel();
 		panelDatosUsuario.setBackground(SystemColor.window);
@@ -319,7 +315,7 @@ public class DialogRegistrarse extends JDialog {
 			}
 		});
 		txtNombreUsuario.setColumns(10);
-		txtNombreUsuario.setBounds(187, 30, 177, 20);
+		txtNombreUsuario.setBounds(174, 30, 177, 20);
 		panelDatosUsuario.add(txtNombreUsuario);
 	
 		JLabel lblContrasea = new JLabel("* Contraseña: ");
@@ -339,7 +335,7 @@ public class DialogRegistrarse extends JDialog {
 				
 			}
 		});
-		txtContrasea.setBounds(187, 60, 177, 20);
+		txtContrasea.setBounds(174, 60, 177, 20);
 		panelDatosUsuario.add(txtContrasea);
 	
 		final JButton btnRegistrarse = new JButton("Registrarse");
@@ -365,6 +361,7 @@ public class DialogRegistrarse extends JDialog {
 													
 						uBo.verificar(u);
 						pBo.verificarImportantes(p);
+						pBo.verificarEdad(p);
 						
 						uDao.alta(u);
 						pDao.alta(p);
@@ -384,6 +381,9 @@ public class DialogRegistrarse extends JDialog {
 					} catch (PersonNotValidException e1) {
 						JOptionPane.showMessageDialog(null, e1.getMessage());
 						limpiarPersona();
+					} catch (PersonNotValidAgeException e1) {
+						JOptionPane.showMessageDialog(null, e1.getMessage());
+						limpiar();
 					}
 
 				}
@@ -423,7 +423,7 @@ public class DialogRegistrarse extends JDialog {
 		txtPais.setText("");
 		txtCiudad.setText("");
 		
-		txtDni.requestFocus();
+		txtNombre.requestFocus();
 	}
 	
 	private void limpiarUsuario() {
@@ -447,6 +447,6 @@ public class DialogRegistrarse extends JDialog {
 		txtNombreUsuario.setText("");
 		txtContrasea.setText("");
 		
-		txtDni.requestFocus();	
+		txtNombre.requestFocus();	
 	}
 }

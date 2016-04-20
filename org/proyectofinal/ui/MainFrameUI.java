@@ -15,6 +15,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.Console;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -52,6 +53,8 @@ import org.proyectofinal.model.impl.UsuarioImpl;
 import org.proyectofinal.model.interfaces.Usuario;
 import org.proyectofinal.ui.util.AccionTableCellRenderer;
 import org.proyectofinal.ui.util.CeldaAccionEditor;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class MainFrameUI extends JFrame {
 
@@ -126,18 +129,24 @@ public class MainFrameUI extends JFrame {
 				
 				if (txtNombreUsuario.getText().trim().length() > 0){
 					u.setNombreUsuario(txtNombreUsuario.getText());
+				}else{
+					u.setNombreUsuario("");
 				}
 				
 				String pass = new String(txtContrasea.getPassword());
 				
 				if (pass.trim().length() > 0){
 					u.setPassword(pass);
+				}else{
+					u.setPassword("");
 				}
 				
 				if (cmbTipoUsuario.getSelectedIndex() == 2){
 					u.setTipoUsuario(1);
 				}else if (cmbTipoUsuario.getSelectedIndex() == 3){
 					u.setTipoUsuario(0);
+				}else{
+					u.setTipoUsuario(-1);	
 				}
 				
 				if (pU instanceof panelUsuario){
@@ -217,7 +226,7 @@ public class MainFrameUI extends JFrame {
 		});
 		
 		setResizable(false);
-		setTitle("Sistema de Gestion de Boletos de Avion");
+		setTitle("AeroManagement");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		setSize(1006, 576);
@@ -355,8 +364,8 @@ public class MainFrameUI extends JFrame {
 		@SuppressWarnings("unused")
 		ImageIcon icono = new ImageIcon(MainFrameUI.class.getResource("/imagenes/user-resized.png"));
 		
-		final JLabel lblSistemaDeGestion = new JLabel("SISTEMA DE GESTIÓN DE BOLETOS DE AVIÓN");
-		lblSistemaDeGestion.setBounds(0, 485, 978, 49);
+		final JLabel lblSistemaDeGestion = new JLabel("AEROMANAGEMENT");
+		lblSistemaDeGestion.setBounds(0, 497, 1000, 49);
 		getContentPane().add(lblSistemaDeGestion);
 		lblSistemaDeGestion.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 35));
 		lblSistemaDeGestion.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -393,12 +402,39 @@ public class MainFrameUI extends JFrame {
 		panelInicioSesion.add(lblTipoUsuario);
 		
 		txtNombreUsuario = new JTextField();
+		txtNombreUsuario.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				
+				char c = e.getKeyChar();
+				
+				if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c == KeyEvent.VK_KP_LEFT) || c == (KeyEvent.VK_KP_RIGHT) || (c == KeyEvent.VK_SPACE) || (c == KeyEvent.VK_BACK_SPACE)){
+					
+					if (txtNombreUsuario.getText().trim().length() > 0){
+						u.setNombreUsuario(txtNombreUsuario.getText());
+					}else{
+						u.setNombreUsuario("");
+					}
+				}
+			}
+			@Override
+			public void keyTyped(KeyEvent e) {
+				
+				char c = e.getKeyChar();
+				
+				if ((c < '0' || c > '9') && (c < 'a' || c > 'z') && (c < 'A' || c > 'Z') && (c != KeyEvent.VK_KP_LEFT) && c != (KeyEvent.VK_KP_RIGHT) && (c != KeyEvent.VK_SPACE) && (c != KeyEvent.VK_BACK_SPACE)){
+					e.consume();
+				}
+			}
+		});
 		txtNombreUsuario.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
 				
 				if (txtNombreUsuario.getText().trim().length() > 0){
 					u.setNombreUsuario(txtNombreUsuario.getText());
+				}else{
+					u.setNombreUsuario("");
 				}
 			}
 		});
@@ -407,6 +443,33 @@ public class MainFrameUI extends JFrame {
 		txtNombreUsuario.setColumns(10);
 		
 		txtContrasea = new JPasswordField();
+		txtContrasea.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				
+				char c = e.getKeyChar();
+				
+				if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c == KeyEvent.VK_KP_LEFT) || c == (KeyEvent.VK_KP_RIGHT) || (c == KeyEvent.VK_SPACE) || (c == KeyEvent.VK_BACK_SPACE)){
+					
+					String pass = new String(txtContrasea.getPassword());
+					
+					if (pass.trim().length() > 0){
+						u.setPassword(pass);
+					}else{
+						u.setPassword("");
+					}
+				}
+			}
+			@Override
+			public void keyTyped(KeyEvent e) {
+			
+				char c = e.getKeyChar();
+				
+				if ((c < '0' || c > '9') && (c < 'a' || c > 'z') && (c < 'A' || c > 'Z') && (c != KeyEvent.VK_KP_LEFT) && c != (KeyEvent.VK_KP_RIGHT) && (c != KeyEvent.VK_SPACE) && (c != KeyEvent.VK_BACK_SPACE)){
+					e.consume();
+				}
+			}
+		});
 		txtContrasea.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
@@ -415,6 +478,8 @@ public class MainFrameUI extends JFrame {
 				
 				if (pass.trim().length() > 0){
 					u.setPassword(pass);
+				}else{
+					u.setPassword("");
 				}
 			}
 		});
@@ -430,7 +495,7 @@ public class MainFrameUI extends JFrame {
 				} else if (cmbTipoUsuario.getSelectedIndex() == 3){
 					u.setTipoUsuario(0);
 				} else {
-					u.setTipoUsuario(null);
+					u.setTipoUsuario(-1);
 				}
 			}
 		});
@@ -442,7 +507,7 @@ public class MainFrameUI extends JFrame {
 				} else if (cmbTipoUsuario.getSelectedIndex() == 3){
 					u.setTipoUsuario(0);
 				} else {
-					u.setTipoUsuario(null);
+					u.setTipoUsuario(-1);
 				}
 			}
 		});

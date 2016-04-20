@@ -68,16 +68,14 @@ public class Pasajero {
 	
 	public void verificarDatosPasajero(Pasajero p) throws NotValidPassengerException {
 		
-		if (p.getDni() == -1 || 
-			p.getNombre().trim().length() == 0 || 
+		if (p.getDni() == -1 || p.getDni().equals("") || 
+			p.getNombre().trim().length() == 0 ||  
 			p.getApellido().trim().length() == 0 || 
 			p.getAsientoPasajero() == null || 
 			p.getAsientoPasajero().getAsiento().trim().length() == 0 || 
 			p.getAsientoPasajero().getPrecio() == -1f){
 			
 			throw new NotValidPassengerException();
-		}else{
-			
 		}
 	}
 		

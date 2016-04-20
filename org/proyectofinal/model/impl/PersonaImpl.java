@@ -5,94 +5,175 @@ import java.sql.Date;
 import org.proyectofinal.model.interfaces.Persona;
 import org.proyectofinal.model.interfaces.Usuario;
 
+// TODO: Auto-generated Javadoc
+/**
+ * Clase de implementacion de la entidad Persona.
+ */
 public class PersonaImpl implements Persona {
 	
+	/** Dni de la persona. */
 	private String dni = null;
+	
+	/** Nombre de la persona. */
 	private String nombre = null;
+	
+	/** Apellido de la persona. */
 	private String apellido = null;
+	
+	/** Email de la persona. */
 	private String email = null;
+	
+	/** Fecha de nacimiento de la persona. */
 	private Date fechaNacimiento = null;
+	
+	/** Telefono de la persona. */
 	private String telefono = null;
+	
+	/** Pais de residencia de la persona. */
 	private String pais = null;
+	
+	/** Ciudad de residencia de la persona. */
 	private String ciudad = null;
+	
+	/** Usuario relacionado con la persona */
 	private Usuario usuario = null;
 	
+	/**
+	 * Constructor de la clase.
+	 */
 	public PersonaImpl(){
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.model.interfaces.Persona#getDni()
+	 */
 	public String getDni() {
 		return dni;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.model.interfaces.Persona#setDni(java.lang.String)
+	 */
 	public void setDni(String dni) {
 		this.dni = dni;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.model.interfaces.Persona#getNombre()
+	 */
 	public String getNombre() {
 		return nombre;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.model.interfaces.Persona#setNombre(java.lang.String)
+	 */
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.model.interfaces.Persona#getApellido()
+	 */
 	public String getApellido() {
 		return apellido;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.model.interfaces.Persona#setApellido(java.lang.String)
+	 */
 	public void setApellido(String apellido) {
 		this.apellido = apellido;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.model.interfaces.Persona#getEmail()
+	 */
 	public String getEmail() {
 		return email;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.model.interfaces.Persona#setEmail(java.lang.String)
+	 */
 	public void setEmail(String email) {
 		this.email = email;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.model.interfaces.Persona#getFechaNacimiento()
+	 */
 	public Date getFechaNacimiento() {
 		return fechaNacimiento;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.model.interfaces.Persona#setFechaNacimiento(java.sql.Date)
+	 */
 	public void setFechaNacimiento(Date fechaNacimiento) {
 		this.fechaNacimiento = fechaNacimiento;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.model.interfaces.Persona#getTelefono()
+	 */
 	public String getTelefono() {
 		return telefono;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.model.interfaces.Persona#setTelefono(java.lang.String)
+	 */
 	public void setTelefono(String telefono) {
 		this.telefono = telefono;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.model.interfaces.Persona#getPais()
+	 */
 	public String getPais() {
 		return pais;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.model.interfaces.Persona#setPais(java.lang.String)
+	 */
 	public void setPais(String pais) {
 		this.pais = pais;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.model.interfaces.Persona#getCiudad()
+	 */
 	public String getCiudad() {
 		return ciudad;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.model.interfaces.Persona#setCiudad(java.lang.String)
+	 */
 	public void setCiudad(String ciudad) {
 		this.ciudad = ciudad;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.model.interfaces.Persona#getUsuario()
+	 */
 	public Usuario getUsuario() {
 		return usuario;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.model.interfaces.Persona#setUsuario(org.proyectofinal.model.interfaces.Usuario)
+	 */
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -112,6 +193,9 @@ public class PersonaImpl implements Persona {
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -169,6 +253,9 @@ public class PersonaImpl implements Persona {
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		
@@ -187,6 +274,9 @@ public class PersonaImpl implements Persona {
 		return res; 
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 */
 	public Persona clone() throws CloneNotSupportedException {
 		
 		Persona p = new PersonaImpl();

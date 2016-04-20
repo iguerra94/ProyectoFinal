@@ -1,5 +1,8 @@
 package org.proyectofinal.bo.impl;
 
+import java.sql.Date;
+
+import org.proyectofinal.bo.ex.PersonNotValidAgeException;
 import org.proyectofinal.bo.interfaces.PersonaBo;
 import org.proyectofinal.dao.ex.PersonNotValidException;
 import org.proyectofinal.model.interfaces.Persona;
@@ -29,6 +32,32 @@ public class PersonaBoImpl implements PersonaBo {
 			throw new PersonNotValidException();
 		}
 		
+	}
+	
+	public void verificarEdad(Persona p) throws PersonNotValidAgeException {
+		
+		Integer edad = null;
+		
+		Integer anioNacimiento = Integer.parseInt(p.getFechaNacimiento().toString().substring(0, 4));
+		Integer mesNacimiento = Integer.parseInt(p.getFechaNacimiento().toString().substring(5, 7));
+
+		java.util.Date now = new java.util.Date();
+		
+		Date date = new Date(now.getTime());
+		
+		Integer anioActual = Integer.parseInt(date.toString().substring(0, 4));
+		Integer mesActual = Integer.parseInt(date.toString().substring(5, 7));
+		
+		if (mesActual < mesNacimiento){
+			edad = anioActual-anioNacimiento-1;
+		}else{
+			edad = anioActual-anioNacimiento;
+		}
+		
+		if (edad < 18){
+			throw new PersonNotValidAgeException();
+		}
+
 	}
 	
 }

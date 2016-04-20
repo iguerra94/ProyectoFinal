@@ -8,7 +8,7 @@ import java.awt.event.MouseListener;
 import javax.swing.JButton;
 
 public class BotonPasajero extends JButton implements ActionListener, MouseListener {
-	
+
 	/**
 	 * 
 	 */
@@ -17,18 +17,18 @@ public class BotonPasajero extends JButton implements ActionListener, MouseListe
 	private String asiento;
 	private Integer cant;
 	private String estadoAsiento;
-	
-	public BotonPasajero(String asiento, Float precio){
-		
+
+	public BotonPasajero(String asiento, Float precio) {
+
 		this.precio = precio;
 		this.asiento = asiento;
 
 		this.setText(asiento);
 		this.addActionListener(this);
-	
+
 		this.cant = 0;
 	}
-	
+
 	public Float getPrecio() {
 		return precio;
 	}
@@ -55,58 +55,64 @@ public class BotonPasajero extends JButton implements ActionListener, MouseListe
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
-		if (e.getSource() == this){
-			
-			if (cant % 2 == 0){
-				
-//				System.out.println("Numero: " + getAsiento());
-//				System.out.println("Precio: $" + getPrecio());
-				
+
+		if (e.getSource() == this) {
+
+			if (cant % 2 == 0) {
+
+				// System.out.println("Numero: " + getAsiento());
+				// System.out.println("Precio: $" + getPrecio());
+
 				this.setContentAreaFilled(true);
-				
+
 				setEstadoAsiento("SELECCIONADO");
-				
+
 				cant++;
-			}else{
+			} else {
 				this.setContentAreaFilled(false);
-				
+
 				setEstadoAsiento("NO SELECCIONADO");
-				
+
 				cant--;
 			}
 		}
-                
+
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-//		System.out.println("Numero: " + getAsiento());
-//		System.out.println("Precio: $" + getPrecio());
+		// System.out.println("Numero: " + getAsiento());
+		// System.out.println("Precio: $" + getPrecio());
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
+	}
+
+	@Override
+	public String toString() {
+		return "BotonPasajero [precio=" + precio + ", asiento=" + asiento + ", cant=" + cant + ", estadoAsiento="
+				+ estadoAsiento + "]";
 	}
 
 }
