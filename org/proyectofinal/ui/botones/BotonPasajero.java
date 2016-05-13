@@ -14,18 +14,18 @@ public class BotonPasajero extends JButton implements ActionListener, MouseListe
 	 */
 	private static final long serialVersionUID = -4718785825566238975L;
 	private Float precio;
-	private String asiento;
+	private Integer asiento;
 	private Integer cant;
 	private String estadoAsiento;
 
-	public BotonPasajero(String asiento, Float precio) {
-
+	public BotonPasajero(Integer asiento, Float precio) {
+		
 		this.precio = precio;
 		this.asiento = asiento;
 
-		this.setText(asiento);
+		this.setText(asiento.toString());
 		this.addActionListener(this);
-
+		
 		this.cant = 0;
 	}
 
@@ -37,11 +37,11 @@ public class BotonPasajero extends JButton implements ActionListener, MouseListe
 		this.precio = precio;
 	}
 
-	public String getAsiento() {
-		return asiento;
+	public Integer getAsiento() {
+		return this.asiento;
 	}
 
-	public void setAsiento(String asiento) {
+	public void setAsiento(Integer asiento) {
 		this.asiento = asiento;
 	}
 
@@ -66,13 +66,15 @@ public class BotonPasajero extends JButton implements ActionListener, MouseListe
 				this.setContentAreaFilled(true);
 
 				setEstadoAsiento("SELECCIONADO");
-
+				setToolTipText("SELECCIONADO");
+				
 				cant++;
 			} else {
 				this.setContentAreaFilled(false);
 
 				setEstadoAsiento("NO SELECCIONADO");
-
+				setToolTipText("DISPONIBLE");
+				
 				cant--;
 			}
 		}
@@ -99,8 +101,8 @@ public class BotonPasajero extends JButton implements ActionListener, MouseListe
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-
+		
+//		System.out.println("HOLA");
 	}
 
 	@Override
@@ -111,8 +113,7 @@ public class BotonPasajero extends JButton implements ActionListener, MouseListe
 
 	@Override
 	public String toString() {
-		return "BotonPasajero [precio=" + precio + ", asiento=" + asiento + ", cant=" + cant + ", estadoAsiento="
-				+ estadoAsiento + "]";
+		return "Asiento: ".concat(getAsiento().toString()).concat("\nPrecio: ").concat(getPrecio().toString().concat("\n"));
 	}
 
 }

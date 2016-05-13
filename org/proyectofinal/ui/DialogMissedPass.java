@@ -44,7 +44,7 @@ public class DialogMissedPass extends JDialog {
 		setResizable(false);
 		setModal(true);
 		setTitle("Recuperación de contraseña");
-		setBounds(200, 200, 337, 105);
+		setBounds(200, 200, 337, 110);
 		getContentPane().setLayout(null);
 		
 		JLabel lblIngreseSuUsuario = new JLabel("Ingrese su usuario:");

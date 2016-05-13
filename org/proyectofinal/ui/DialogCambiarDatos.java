@@ -1,10 +1,12 @@
 package org.proyectofinal.ui;
 
 import java.awt.Color;
+import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.Date;
@@ -20,25 +22,27 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
-import org.proyectofinal.bo.impl.PersonaBoImpl;
+import org.proyectofinal.bo.impl.PersonaRegistradaBoImpl;
 import org.proyectofinal.bo.impl.UsuarioBoImpl;
-import org.proyectofinal.bo.interfaces.PersonaBo;
+import org.proyectofinal.bo.interfaces.PersonaRegistradaBo;
 import org.proyectofinal.bo.interfaces.UsuarioBo;
+import org.proyectofinal.dao.ex.PersonAlreadyExistsException;
 import org.proyectofinal.dao.ex.PersonNotValidException;
+import org.proyectofinal.dao.ex.UserAlreadyExistsException;
 import org.proyectofinal.dao.ex.UserNotValidException;
-import org.proyectofinal.dao.impl.PersonaDaoImpl;
+import org.proyectofinal.dao.impl.PersonaRegistradaDaoImpl;
+import org.proyectofinal.dao.impl.ReservaViajeDaoImpl;
 import org.proyectofinal.dao.impl.UsuarioDaoImpl;
-import org.proyectofinal.dao.interfaces.PersonaDao;
+import org.proyectofinal.dao.interfaces.PersonaRegistradaDao;
+import org.proyectofinal.dao.interfaces.ReservaViajeDao;
 import org.proyectofinal.dao.interfaces.UsuarioDao;
-import org.proyectofinal.model.impl.PersonaImpl;
+import org.proyectofinal.model.impl.PersonaRegistradaImpl;
 import org.proyectofinal.model.impl.UsuarioImpl;
-import org.proyectofinal.model.interfaces.Persona;
+import org.proyectofinal.model.interfaces.PersonaRegistrada;
 import org.proyectofinal.model.interfaces.Usuario;
 
 import com.toedter.calendar.JDateChooser;
-import java.awt.event.WindowFocusListener;
-import java.awt.event.WindowEvent;
-import java.awt.SystemColor;
+import java.awt.event.WindowAdapter;
 
 public class DialogCambiarDatos extends JDialog {
 
@@ -47,12 +51,14 @@ public class DialogCambiarDatos extends JDialog {
 	 */
 	private static final long serialVersionUID = 7726925233817947202L;
 
+	private ResultSet res; 
+	private String dni;
 	private Usuario u;
-	private Persona p;
-	private ResultSet r;
-	private PersonaBo pBo;
+	private PersonaRegistrada p;
+	private PersonaRegistradaBo pBo;
 	private UsuarioBo uBo;
-	private PersonaDao pDao;
+	private PersonaRegistradaDao pDao;
+	private ReservaViajeDao rVDao;
 	private UsuarioDao uDao;
 	private JTextField txtDni;
 	private JTextField txtNombre;
@@ -69,33 +75,35 @@ public class DialogCambiarDatos extends JDialog {
 	/**
 	 * Create the Dialog.
 	 */
-	public DialogCambiarDatos(final Usuario user) {
-		
-		setBackground(SystemColor.window);
-		getContentPane().setBackground(SystemColor.window);
-
-		addWindowFocusListener(new WindowFocusListener() {
-			@SuppressWarnings("deprecation")
-			public void windowGainedFocus(WindowEvent arg0) {
+	public DialogCambiarDatos() {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowOpened(WindowEvent e) {
 				
-				try {
-
-					r = pDao.consultarPorUsuario(user);
+//				ResultSet r = null;
+//				
+//				try {
+//
+//					r = pDao.consultarPorPersonaYUsuario(txtDni.getText());
+//					
+//					if (r.next()){
+//
+//						System.out.println("Inicio .:. " + r.getString("usuario"));
+//						
+//						txtDni.setText(r.getString("dni"));
+//						txtNombre.setText(r.getString("nombre"));
+//						txtApellido.setText(r.getString("apellido"));
+//						txtEmail.setText(r.getString("email"));
+//						txtTelefono.setText(r.getString("telefono"));
+//						dateChooserNacimiento.setDate(r.getDate("fechaNacimiento"));
+//						txtPais.setText(r.getString("pais"));
+//						txtCiudad.setText(r.getString("ciudad"));
+//						txtUsuario.setText(r.getString("usuario"));
+//						txtPassword.setText(r.getString("contrasenia"));
+//					
+//					}
 					
-					if (r.next()){
-
-						txtDni.setText(r.getString("dni"));
-						txtNombre.setText(r.getString("nombre"));
-						txtApellido.setText(r.getString("apellido"));
-						txtEmail.setText(r.getString("email"));
-						txtTelefono.setText(r.getString("telefono"));
-						dateChooserNacimiento.setDate(r.getDate("fechaNacimiento"));
-						txtPais.setText(r.getString("pais"));
-						txtCiudad.setText(r.getString("ciudad"));
-						txtUsuario.setText(r.getString("usuario"));
-						txtPassword.setText(r.getString("contrasenia"));
-					
-					}
+					dni = txtDni.getText();
 					
 					if (txtDni.getText().length() > 0){
 						p.setDni(txtDni.getText());				
@@ -127,38 +135,121 @@ public class DialogCambiarDatos extends JDialog {
 					if (txtPassword.getPassword().toString().length() > 0){
 						u.setPassword(txtPassword.getText());
 					}
-	
-					
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} finally {
-					try {
-						r.close();
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-				
-			}
-			public void windowLostFocus(WindowEvent arg0) {
+//				
+//				} catch (SQLException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				} catch (ClassNotFoundException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				} finally {
+//					try {
+//						r.close();
+//					} catch (SQLException e1) {
+//						// TODO Auto-generated catch block
+//						e1.printStackTrace();
+//					}
+//				}
+//				
 			}
 		});
 		
+		setBackground(SystemColor.window);
+		getContentPane().setBackground(SystemColor.window);
+
+		
+//		addWindowFocusListener(new WindowFocusListener() {
+//			@SuppressWarnings("deprecation")
+//			public void windowGainedFocus(WindowEvent arg0) {
+//				
+//				ResultSet r = null;
+//				
+//				try {
+//
+//					r = pDao.consultarPorUsuario(user);
+//					
+//					if (r.next()){
+//
+//						System.out.println(r.getString("usuario"));
+//						
+//						txtDni.setText(r.getString("dni"));
+//						txtNombre.setText(r.getString("nombre"));
+//						txtApellido.setText(r.getString("apellido"));
+//						txtEmail.setText(r.getString("email"));
+//						txtTelefono.setText(r.getString("telefono"));
+//						dateChooserNacimiento.setDate(r.getDate("fechaNacimiento"));
+//						txtPais.setText(r.getString("pais"));
+//						txtCiudad.setText(r.getString("ciudad"));
+//						txtUsuario.setText(r.getString("usuario"));
+//						txtPassword.setText(r.getString("contrasenia"));
+//					
+//					}
+//					
+//					if (txtDni.getText().length() > 0){
+//						p.setDni(txtDni.getText());				
+//					}
+//					if (txtNombre.getText().length() > 0){			
+//						p.setNombre(txtNombre.getText());
+//					}
+//					if (txtApellido.getText().length() > 0){						
+//						p.setApellido(txtApellido.getText());
+//					}
+//					if (txtEmail.getText().length() > 0){
+//						p.setEmail(txtEmail.getText());
+//					}
+//					if (txtTelefono.getText().length() > 0){
+//						p.setTelefono(txtTelefono.getText());
+//					}
+//					if (dateChooserNacimiento.getDate() != null){
+//						p.setFechaNacimiento(new Date(dateChooserNacimiento.getDate().getTime()));
+//					}
+//					if (txtPais.getText().length() > 0){
+//						p.setPais(txtPais.getText());
+//					}
+//					if (txtCiudad.getText().length() > 0){
+//						p.setCiudad(txtCiudad.getText());
+//					}
+//					if (txtUsuario.getText().length() > 0){						
+//						u.setNombreUsuario(txtUsuario.getText());
+//					}
+//					if (txtPassword.getPassword().toString().length() > 0){
+//						u.setPassword(txtPassword.getText());
+//					}
+//	
+//					dni = txtDni.getText();
+//					
+//				} catch (SQLException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				} catch (ClassNotFoundException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				} finally {
+//					try {
+//						r.close();
+//					} catch (SQLException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//				}
+//				
+//			}
+//			public void windowLostFocus(WindowEvent arg0) {
+//			}
+//		});
+		
 		u = new UsuarioImpl();
 		
-		p = new PersonaImpl();
+		p = new PersonaRegistradaImpl();
 		p.setUsuario(u);
 
 		uBo = new UsuarioBoImpl();
-		pBo = new PersonaBoImpl();
+		pBo = new PersonaRegistradaBoImpl();
 		
 		uDao = new UsuarioDaoImpl();
-		pDao = new PersonaDaoImpl();
+		pDao = new PersonaRegistradaDaoImpl();
+		
+		rVDao = new ReservaViajeDaoImpl();
 		
 		setResizable(false);
 		setSize(440,478);
@@ -527,43 +618,44 @@ public class DialogCambiarDatos extends JDialog {
 						pBo.verificarImportantes(p);
 						uBo.verificar(u);
 						
-						r = pDao.consultarPorUsuario(user);
-					
-						if (r.next()) {
+						res = pDao.consultarPorPersonaYUsuario(dni);
 						
-							u.setTipoUsuario(r.getInt("tipoUsuario"));
-							u.setFechaInicio(r.getTimestamp("fechaInicio"));
+						if (res.next()) {
+						
+							u.setTipoUsuario(res.getInt("tipoUsuario"));
+							u.setFechaInicio(res.getTimestamp("fechaInicio"));
 							
-							if (!r.getString("nombre").equals(p.getNombre())){	
-								pDao.modificacion("nombre", p.getNombre(), r.getString("dni"));
+							if (!res.getString("nombre").equals(p.getNombre())){	
+								pDao.modificacion("nombre", p.getNombre(), res.getString("dni"));
 							}
-							if (!r.getString("apellido").equals(p.getApellido())){
-								pDao.modificacion("apellido", p.getApellido(), r.getString("dni"));
+							if (!res.getString("apellido").equals(p.getApellido())){
+								pDao.modificacion("apellido", p.getApellido(), res.getString("dni"));
 							}
-							if (!r.getString("email").equals(p.getEmail())){	
-								pDao.modificacion("email", p.getEmail(), r.getString("dni"));
+							if (!res.getString("email").equals(p.getEmail())){	
+								pDao.modificacion("email", p.getEmail(), res.getString("dni"));
 							}
-							if (!r.getString("telefono").equals(p.getTelefono())){	
-								pDao.modificacion("telefono", p.getTelefono(), r.getString("dni"));
+							if (!res.getString("telefono").equals(p.getTelefono())){	
+								pDao.modificacion("telefono", p.getTelefono(), res.getString("dni"));
 							}
-							if (!r.getDate("fechaNacimiento").equals(p.getFechaNacimiento())){	
-								pDao.modificacion("fechaNacimiento", p.getFechaNacimiento().toString(), r.getString("dni"));							
+							if (!res.getDate("fechaNacimiento").equals(p.getFechaNacimiento())){	
+								pDao.modificacion("fechaNacimiento", p.getFechaNacimiento().toString(), res.getString("dni"));							
 							}
-							if (!r.getString("ciudad").equals(p.getCiudad())){							
-								pDao.modificacion("ciudad", p.getCiudad(), r.getString("dni"));
+							if (!res.getString("ciudad").equals(p.getCiudad())){							
+								pDao.modificacion("ciudad", p.getCiudad(), res.getString("dni"));
 							}							
-							if (!r.getString("usuario").equals(u.getNombreUsuario())) {	
-								pDao.modificacion("usuario", u.getNombreUsuario(), r.getString("usuario"));
-								uDao.modificacion("usuario", u.getNombreUsuario(), r.getString("usuario"));						
+							if (!res.getString("usuario").equals(u.getNombreUsuario())) {
+								uDao.modificacionNombreUsuario(u.getNombreUsuario(), res.getString("usuario"));
+//								pDao.modificacion("usuario", u.getNombreUsuario(), res.getString("usuario"));
 							}
-							if (!r.getString("contrasenia").equals(u.getPassword())) {	
-								uDao.modificacion("contrasenia", u.getPassword(), r.getString("usuario"));							
+							if (!res.getString("contrasenia").equals(u.getPassword())) {	
+								uDao.modificacionContrasenia(u.getPassword(), res.getString("usuario"));							
 							}
-							if (!r.getString("pais").equals(p.getPais())){	
-								pDao.modificacion("pais", p.getPais(), r.getString("dni"));							
+							if (!res.getString("pais").equals(p.getPais())){	
+								pDao.modificacion("pais", p.getPais(), res.getString("dni"));
 							}
-							if (!r.getString("dni").equals(p.getDni())){
-								pDao.modificacion("dni", p.getDni(), r.getString("dni")); 						
+							if (!res.getString("dni").equals(p.getDni())){
+								pDao.modificacionDni("dni", p.getDni(), res.getString("dni"));
+								rVDao.modificacion(p.getDni(), dni);
 							}
 
 						}
@@ -579,10 +671,13 @@ public class DialogCambiarDatos extends JDialog {
 						JOptionPane.showMessageDialog(null, e1.getMessage());
 					} catch (SQLException e1){
 						JOptionPane.showMessageDialog(null, e1.getMessage());
-					}
-					finally {
+					} catch (PersonAlreadyExistsException e1) {
+						JOptionPane.showMessageDialog(null, e1.getMessage());
+					} catch (UserAlreadyExistsException e1) {
+						JOptionPane.showMessageDialog(null, e1.getMessage());
+					} finally {
 						try {
-							r.close();
+							res.close();
 						} catch (SQLException e1) {
 							// TODO Auto-generated catch block
 							JOptionPane.showMessageDialog(null, e1.getMessage());

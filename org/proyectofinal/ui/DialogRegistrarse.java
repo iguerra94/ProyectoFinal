@@ -22,19 +22,21 @@ import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
 import org.proyectofinal.bo.ex.PersonNotValidAgeException;
-import org.proyectofinal.bo.impl.PersonaBoImpl;
+import org.proyectofinal.bo.impl.PersonaRegistradaBoImpl;
 import org.proyectofinal.bo.impl.UsuarioBoImpl;
-import org.proyectofinal.bo.interfaces.PersonaBo;
+import org.proyectofinal.bo.interfaces.PersonaRegistradaBo;
 import org.proyectofinal.bo.interfaces.UsuarioBo;
+import org.proyectofinal.dao.ex.PersonAlreadyExistsException;
 import org.proyectofinal.dao.ex.PersonNotValidException;
+import org.proyectofinal.dao.ex.UserAlreadyExistsException;
 import org.proyectofinal.dao.ex.UserNotValidException;
-import org.proyectofinal.dao.impl.PersonaDaoImpl;
+import org.proyectofinal.dao.impl.PersonaRegistradaDaoImpl;
 import org.proyectofinal.dao.impl.UsuarioDaoImpl;
-import org.proyectofinal.dao.interfaces.PersonaDao;
+import org.proyectofinal.dao.interfaces.PersonaRegistradaDao;
 import org.proyectofinal.dao.interfaces.UsuarioDao;
-import org.proyectofinal.model.impl.PersonaImpl;
+import org.proyectofinal.model.impl.PersonaRegistradaImpl;
 import org.proyectofinal.model.impl.UsuarioImpl;
-import org.proyectofinal.model.interfaces.Persona;
+import org.proyectofinal.model.interfaces.PersonaRegistrada;
 import org.proyectofinal.model.interfaces.Usuario;
 
 import com.toedter.calendar.JDateChooser;
@@ -57,11 +59,11 @@ public class DialogRegistrarse extends JDialog {
 	private JPasswordField txtContrasea;
 	private JDateChooser birthDateChooser;
 	private Usuario u;
-	private Persona p;
+	private PersonaRegistrada p;
 	private UsuarioBo uBo;
-	private PersonaBo pBo;
+	private PersonaRegistradaBo pBo;
 	private UsuarioDao uDao;
-	private PersonaDao pDao;
+	private PersonaRegistradaDao pDao;
 	private JPanel panelDatosPersonales;
 
 	/**
@@ -73,27 +75,27 @@ public class DialogRegistrarse extends JDialog {
 		setBackground(SystemColor.window);
 		
 		u = new UsuarioImpl();
-		p = new PersonaImpl();
+		p = new PersonaRegistradaImpl();
 		
 		uBo = new UsuarioBoImpl();
-		pBo = new PersonaBoImpl();
+		pBo = new PersonaRegistradaBoImpl();
 		
 		uDao = new UsuarioDaoImpl();
-		pDao = new PersonaDaoImpl();
+		pDao = new PersonaRegistradaDaoImpl();
 		
 		setResizable(false);
 		setTitle("Registrarse");
 		setModal(true);
-		setBounds(100, 100, 400, 464);
+		setBounds(100, 100, 410, 464);
 		getContentPane().setLayout(null);
 		
 		birthDateChooser = new JDateChooser();
-		birthDateChooser.setBounds(171, 145, 177, 20);
+		birthDateChooser.setBounds(186, 150, 170, 20);
 		
 		panelDatosPersonales = new JPanel();
 		panelDatosPersonales.setBackground(SystemColor.window);
 		panelDatosPersonales.setBorder(new TitledBorder(null, "Datos personales", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(59, 59, 59)));
-		panelDatosPersonales.setBounds(12, 12, 376, 280);
+		panelDatosPersonales.setBounds(12, 12, 390, 280);
 		panelDatosPersonales.add(birthDateChooser);
 		getContentPane().add(panelDatosPersonales);
 		panelDatosPersonales.setLayout(null);
@@ -151,7 +153,7 @@ public class DialogRegistrarse extends JDialog {
 				}
 			}
 		});
-		txtDni.setBounds(171, 82, 177, 20);
+		txtDni.setBounds(186, 90, 170, 20);
 		panelDatosPersonales.add(txtDni);
 		txtDni.setColumns(10);
 	
@@ -177,7 +179,7 @@ public class DialogRegistrarse extends JDialog {
 			}
 		});
 		txtNombre.setColumns(10);
-		txtNombre.setBounds(171, 22, 177, 20);
+		txtNombre.setBounds(186, 30, 170, 20);
 		panelDatosPersonales.add(txtNombre);
 	
 		txtApellido = new JTextField();
@@ -202,7 +204,7 @@ public class DialogRegistrarse extends JDialog {
 			}
 		});
 		txtApellido.setColumns(10);
-		txtApellido.setBounds(171, 51, 177, 20);
+		txtApellido.setBounds(186, 60, 170, 20);
 		panelDatosPersonales.add(txtApellido);		
 		
 		txtEmail = new JTextField();
@@ -216,7 +218,7 @@ public class DialogRegistrarse extends JDialog {
 			}
 		});
 		txtEmail.setColumns(10);
-		txtEmail.setBounds(171, 115, 177, 20);
+		txtEmail.setBounds(186, 120, 170, 20);
 		panelDatosPersonales.add(txtEmail);
 
 		txtTelefono = new JTextField();
@@ -238,7 +240,7 @@ public class DialogRegistrarse extends JDialog {
 			}
 		});
 		txtTelefono.setColumns(10);
-		txtTelefono.setBounds(171, 175, 177, 20);
+		txtTelefono.setBounds(186, 180, 170, 20);
 		panelDatosPersonales.add(txtTelefono);
 
 		txtPais = new JTextField();
@@ -260,7 +262,7 @@ public class DialogRegistrarse extends JDialog {
 			}
 		});
 		txtPais.setColumns(10);
-		txtPais.setBounds(171, 205, 177, 20);
+		txtPais.setBounds(186, 210, 170, 20);
 		panelDatosPersonales.add(txtPais);
 			
 		txtCiudad = new JTextField();
@@ -282,7 +284,7 @@ public class DialogRegistrarse extends JDialog {
 			}
 		});
 		txtCiudad.setColumns(10);
-		txtCiudad.setBounds(171, 235, 177, 20);
+		txtCiudad.setBounds(186, 240, 170, 20);
 		panelDatosPersonales.add(txtCiudad);
 		
 		JButton button = new JButton("<html><strong>?</strong></html>");
@@ -290,13 +292,13 @@ public class DialogRegistrarse extends JDialog {
 		button.setForeground(Color.BLUE);
 		button.setContentAreaFilled(false);
 		button.setBorderPainted(false);
-		button.setBounds(345, 145, 20, 24);
+		button.setBounds(353, 150, 31, 24);
 		panelDatosPersonales.add(button);
 		
 		JPanel panelDatosUsuario = new JPanel();
 		panelDatosUsuario.setBackground(SystemColor.window);
 		panelDatosUsuario.setBorder(new TitledBorder(null, "Datos del usuario", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelDatosUsuario.setBounds(12, 304, 376, 95);
+		panelDatosUsuario.setBounds(12, 304, 390, 95);
 		getContentPane().add(panelDatosUsuario);
 		panelDatosUsuario.setLayout(null);
 			
@@ -315,7 +317,7 @@ public class DialogRegistrarse extends JDialog {
 			}
 		});
 		txtNombreUsuario.setColumns(10);
-		txtNombreUsuario.setBounds(174, 30, 177, 20);
+		txtNombreUsuario.setBounds(186, 30, 170, 20);
 		panelDatosUsuario.add(txtNombreUsuario);
 	
 		JLabel lblContrasea = new JLabel("* Contraseña: ");
@@ -335,7 +337,7 @@ public class DialogRegistrarse extends JDialog {
 				
 			}
 		});
-		txtContrasea.setBounds(174, 60, 177, 20);
+		txtContrasea.setBounds(186, 60, 170, 20);
 		panelDatosUsuario.add(txtContrasea);
 	
 		final JButton btnRegistrarse = new JButton("Registrarse");
@@ -364,7 +366,7 @@ public class DialogRegistrarse extends JDialog {
 						pBo.verificarEdad(p);
 						
 						uDao.alta(u);
-						pDao.alta(p);
+						pDao.altaPersonaRegistrada(p);
 						
 						JOptionPane.showMessageDialog(null, "Se ha registrado el usuario con exito!"); 
 						setVisible(false);
@@ -375,6 +377,12 @@ public class DialogRegistrarse extends JDialog {
 					} catch (SQLException e1) {
 						e1.printStackTrace();
 						limpiar();
+					} catch (PersonAlreadyExistsException e1) {
+						JOptionPane.showMessageDialog(null, e1.getMessage());
+						limpiarPersona();
+					} catch (UserAlreadyExistsException e1) {
+						JOptionPane.showMessageDialog(null, e1.getMessage());
+						limpiarUsuario();
 					} catch (UserNotValidException e1) {
 						JOptionPane.showMessageDialog(null, e1.getMessage());
 						limpiarUsuario();

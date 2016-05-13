@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -15,9 +16,15 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
+import org.proyectofinal.dao.impl.ReservaViajeDaoImpl;
+import org.proyectofinal.dao.interfaces.ReservaViajeDao;
 import org.proyectofinal.model.interfaces.Usuario;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 
 public class panelUsuario extends JPanel {
 
@@ -34,9 +41,10 @@ public class panelUsuario extends JPanel {
 	private JPanel panelHistorialReservas;
 	private JButton btnReservarBoleto;
 	private JTable table;
-	private JLabel lblCantidadDeReservas;
+	private JLabel lblCant;
 	private JScrollPane sPaneHistorialReservas;
 	private JLabel lblBienvenido;
+	private ReservaViajeDao rVDao;
 	
 	@SuppressWarnings("serial")
 	public panelUsuario(final Usuario u) {
@@ -81,6 +89,58 @@ public class panelUsuario extends JPanel {
 //		add(lblBienvenido);
 //		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				
+				JTabbedPane sourceTabbedPane = (JTabbedPane) e.getSource();
+		        
+				if (sourceTabbedPane.getSelectedIndex() == 1){
+				
+					rVDao = new ReservaViajeDaoImpl();
+					
+					DefaultTableModel model = (DefaultTableModel) table.getModel();
+	
+					try {
+						
+						int a = model.getRowCount() - 1;
+						
+						for(int i = a; i >= 0; i--){
+							model.removeRow(0);
+						}
+						
+						Object[] fila = new Object[5];
+					
+						rVDao.conectar();
+	
+						ResultSet res = rVDao.consultarPorPersonaQueReserva(lblDni.getText());
+						
+						while (res.next()){
+							fila[0] = res.getInt("codViaje");
+							fila[1] = res.getString("dniPasajero");
+							fila[2] = res.getTimestamp("fechaReserva");
+							fila[3] = res.getInt("asiento");
+							fila[4] = res.getFloat("precio");
+							
+							model.addRow(fila);
+						}
+					
+						rVDao.desconectar();
+						
+						Integer cantFilas = model.getRowCount();
+						
+						lblCant.setText(cantFilas.toString());
+						
+					} catch (ClassNotFoundException e1) {
+						// TODO Auto-generated catch block
+						JOptionPane.showMessageDialog(null, e1.getMessage());
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						JOptionPane.showMessageDialog(null, e1.getMessage());
+					}
+				}
+				
+			}
+		});
 		tabbedPane.setBounds(30, 30, 700, 399);
 		add(tabbedPane);
 		
@@ -175,6 +235,12 @@ public class panelUsuario extends JPanel {
 		panelHistorialReservas.add(sPaneHistorialReservas);
 		
 		table = new JTable();
+		table.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				System.out.println();
+			}
+		});
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
@@ -200,10 +266,15 @@ public class panelUsuario extends JPanel {
 		table.getColumnModel().getColumn(4).setPreferredWidth(71);
 		sPaneHistorialReservas.setViewportView(table);
 		
-		lblCantidadDeReservas = new JLabel("Cantidad de Reservas: ");
+		JLabel lblCantidadDeReservas = new JLabel("Cantidad de Reservas: ");
 		lblCantidadDeReservas.setFont(new Font("Dialog", Font.BOLD, 14));
-		lblCantidadDeReservas.setBounds(40, 12, 347, 46);
+		lblCantidadDeReservas.setBounds(40, 12, 183, 46);
 		panelHistorialReservas.add(lblCantidadDeReservas);
+		
+		lblCant = new JLabel("");
+		lblCant.setFont(new Font("Dialog", Font.BOLD, 14));
+		lblCant.setBounds(224, 12, 55, 46);
+		panelHistorialReservas.add(lblCant);
 		
 //		btnCambiarDatosPersonales = new JButton("<html><center>Cambiar<br />datos<br />personales<center></html>");
 //		btnCambiarDatosPersonales.setBounds(780, 130, 180, 70);
@@ -228,13 +299,15 @@ public class panelUsuario extends JPanel {
 					});
 					ui.remove(ui.getBtnAgregar());
 					
+					ui.setDni(lblDni.getText());
 					ui.getContentPane().add(ui.getBtnContinuar());
 					
-					ui.setSize(970, 527);
+//					ui.setResizable(true);
+					ui.setSize(995, 520);
 					
 					ui.setLocationRelativeTo(null);
-//					ui.setResizable(false);
-//					
+					ui.setResizable(false);
+					
 					ui.validate();
 					ui.repaint();
 

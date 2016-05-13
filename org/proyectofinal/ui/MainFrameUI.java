@@ -10,12 +10,14 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.Console;
+import java.security.Permissions;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -43,18 +45,16 @@ import org.proyectofinal.bo.interfaces.UsuarioBo;
 import org.proyectofinal.dao.ex.UserNotCorrectException;
 import org.proyectofinal.dao.ex.UserNotExistsException;
 import org.proyectofinal.dao.ex.UserNotValidException;
-import org.proyectofinal.dao.impl.PersonaDaoImpl;
+import org.proyectofinal.dao.impl.PersonaRegistradaDaoImpl;
 import org.proyectofinal.dao.impl.UsuarioDaoImpl;
 import org.proyectofinal.dao.impl.ViajeCabeceraDaoImpl;
-import org.proyectofinal.dao.interfaces.PersonaDao;
+import org.proyectofinal.dao.interfaces.PersonaRegistradaDao;
 import org.proyectofinal.dao.interfaces.UsuarioDao;
 import org.proyectofinal.dao.interfaces.ViajeCabeceraDao;
 import org.proyectofinal.model.impl.UsuarioImpl;
 import org.proyectofinal.model.interfaces.Usuario;
 import org.proyectofinal.ui.util.AccionTableCellRenderer;
 import org.proyectofinal.ui.util.CeldaAccionEditor;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 public class MainFrameUI extends JFrame {
 
@@ -71,7 +71,7 @@ public class MainFrameUI extends JFrame {
 	private JComboBox cmbTipoUsuario;
 	private UsuarioBo uBo;
 	private UsuarioDao uDao;
-	private PersonaDao pDao;
+	private PersonaRegistradaDao pDao;
 	private ResultSet persona;
 	private Usuario u;
 	private ResultSet r;
@@ -120,7 +120,7 @@ public class MainFrameUI extends JFrame {
 		u = new UsuarioImpl();
 		uBo = new UsuarioBoImpl();
 		uDao = new UsuarioDaoImpl();
-		pDao = new PersonaDaoImpl();
+		pDao = new PersonaRegistradaDaoImpl();
 		
 		addWindowFocusListener(new WindowFocusListener() {
 			public void windowGainedFocus(WindowEvent arg0) {
@@ -336,10 +336,10 @@ public class MainFrameUI extends JFrame {
 						vCDao.desconectar();
 					
 						if (u.getTipoUsuario() == 0){
-							ui.setSize(970,380);
+							ui.setSize(970,430);
 						}else if (u.getTipoUsuario() == 1){
 							ui.remove(ui.getBtnAgregar());
-							ui.setSize(970,330);
+							ui.setSize(970,360);
 						}
 						
 						ui.setLocationRelativeTo(null);
@@ -653,9 +653,9 @@ public class MainFrameUI extends JFrame {
 				
 				if (e.getSource() == btnCambiarDatosPersonales){
 					
-					dCD = new DialogCambiarDatos(u);
-	
 					try {
+
+						dCD = new DialogCambiarDatos();
 						
 						persona = pDao.consultarPorUsuario(u);
 						
@@ -682,8 +682,7 @@ public class MainFrameUI extends JFrame {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 //						JOptionPane.showMessageDialog(null, e1.getMessage());
-					} 
-					finally {
+					} finally {
 						try {
 							if (persona != null){
 								persona.close();

@@ -34,6 +34,8 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 	
 	public ResultSet consultar() throws ClassNotFoundException, SQLException {
 		
+		conectar();
+		
 		PreparedStatement sentencia = getConexion().prepareStatement("SELECT * FROM ViajeCabecera");
 		
 		ResultSet resultado = sentencia.executeQuery();
@@ -54,9 +56,24 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 	
 	public ResultSet consultarPorCodigoViaje(Integer codViaje) throws SQLException, ClassNotFoundException {
 		
+		conectar();
+		
 		PreparedStatement sentencia = getConexion().prepareStatement("SELECT * FROM ViajeCabecera WHERE codViaje = ?");
 		
 		sentencia.setInt(1, codViaje);
+		
+		ResultSet resultado = sentencia.executeQuery();
+		
+		return resultado;
+	}
+	
+	public ResultSet consultarPorCodigoViaje(ViajeCabecera vC) throws SQLException, ClassNotFoundException {
+	
+		conectar();
+		
+		PreparedStatement sentencia = getConexion().prepareStatement("SELECT * FROM ViajeCabecera WHERE codViaje = ?");
+		
+		sentencia.setInt(1, vC.getCodigoViaje());
 		
 		ResultSet resultado = sentencia.executeQuery();
 		

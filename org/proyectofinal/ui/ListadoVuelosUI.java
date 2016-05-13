@@ -31,6 +31,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import org.proyectofinal.bo.impl.ViajeCabeceraBoImpl;
+import org.proyectofinal.bo.interfaces.ViajeCabeceraBo;
 import org.proyectofinal.dao.ex.NoFlightsFoundException;
 import org.proyectofinal.dao.impl.ViajeCabeceraDaoImpl;
 import org.proyectofinal.dao.interfaces.ViajeCabeceraDao;
@@ -45,6 +47,7 @@ import com.toedter.calendar.JDateChooser;
 public class ListadoVuelosUI extends JFrame {
 
 	private static final long serialVersionUID = -7151479179908930375L;
+	private String dni;
 	private JPanel contentPane;
 	private JTable table;
 	private JLabel lblOrigen;
@@ -57,6 +60,7 @@ public class ListadoVuelosUI extends JFrame {
 	@SuppressWarnings("rawtypes")
 	private JComboBox cmbDestino;
 	private JScrollPane scrollPane;
+	private ViajeCabeceraBo vCBo;
 	private ViajeCabeceraDao vCDao;
 //	private AbstractDao aDao;
 	private ViajeCabecera vC;
@@ -68,17 +72,18 @@ public class ListadoVuelosUI extends JFrame {
 	 */
 	@SuppressWarnings({ "rawtypes", "serial" })
 	public ListadoVuelosUI(final Usuario u) {
+//		setResizable(false);
 //		setBounds(new Rectangle(65, 24, 970, 380));
 		
 		vC = new ViajeCabeceraImpl();
 
 //		aDao = new ViajeCabeceraDaoImpl();
 
+		vCBo = new ViajeCabeceraBoImpl();
 		vCDao = new ViajeCabeceraDaoImpl();
 		
 		setTitle("Listado de Vuelos");
-////		
-		setResizable(false);
+//		setResizable(true);
 //		setSize(970, 500);
 		
 		addWindowFocusListener(new WindowFocusListener() {
@@ -327,13 +332,13 @@ public class ListadoVuelosUI extends JFrame {
 				
 			}
 		});
-		cmbOrigen.setBounds(100, 15, 210, 25);
+		cmbOrigen.setBounds(100, 15, 250, 25);
 		contentPane.add(cmbOrigen);
 		
 		lblDestino = new JLabel("Destino: ");
 		lblDestino.setHorizontalTextPosition(SwingConstants.LEADING);
 		lblDestino.setFont(new Font("Dialog", Font.BOLD, 14));
-		lblDestino.setBounds(330, 15, 80, 25);
+		lblDestino.setBounds(366, 15, 80, 25);
 		contentPane.add(lblDestino);
 
 		cmbDestino = new JComboBox();
@@ -350,7 +355,7 @@ public class ListadoVuelosUI extends JFrame {
 				
 			}
 		});
-		cmbDestino.setBounds(408, 15, 210, 25);
+		cmbDestino.setBounds(444, 15, 250, 25);
 		contentPane.add(cmbDestino);		
 		
 		lblFechaSalida = new JLabel("Fecha de Salida: ");
@@ -378,7 +383,7 @@ public class ListadoVuelosUI extends JFrame {
 		contentPane.add(dateChooserSalida);
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(30, 142, 907, 290);		
+		scrollPane.setBounds(30, 142, 940, 290);		
 		contentPane.add(scrollPane);
 
 		btnContinuar = new JButton("Continuar..");
@@ -414,7 +419,30 @@ public class ListadoVuelosUI extends JFrame {
 					}
 					
 					ui.getComboBox().setModel(new DefaultComboBoxModel(cantidad));
-										
+			
+//					System.out.println(vC.getCodigoViaje());
+//					
+//					try {
+//						vCDao.conectar();
+//						
+//						ResultSet res = vCDao.consultarPorCodigoViaje((Integer)table.getValueAt(filaSelecc, 0));
+//						
+//						while (res.next()){
+//							System.out.println(res.getInt("codViaje"));
+//						}
+//
+//						vCDao.desconectar();
+//					} catch (ClassNotFoundException e1) {
+//						// TODO Auto-generated catch block
+//						e1.printStackTrace();
+//					} catch (SQLException e1) {
+//						// TODO Auto-generated catch block
+//						e1.printStackTrace();
+//					}
+//					
+//					System.out.println(vCBo.retornarViaje(vCDao, vC));
+					ui.getrV().setViaje(vCBo.retornarViaje(vCDao, (Integer)table.getValueAt(filaSelecc, 0)));
+					ui.getrV().setDniPersona(getDni());
 				}
 			
 			}
@@ -450,7 +478,7 @@ public class ListadoVuelosUI extends JFrame {
 				return columnTypes[columnIndex];
 			}
 			boolean[] columnEditables = new boolean[] {
-				false, false, false, false, true, false, true
+				false, false, false, false, false, false, false
 			};
 			public boolean isCellEditable(int row, int column) {
 				return columnEditables[column];
@@ -459,17 +487,17 @@ public class ListadoVuelosUI extends JFrame {
 		table.getColumnModel().getColumn(0).setResizable(false);
 		table.getColumnModel().getColumn(0).setPreferredWidth(89);
 		table.getColumnModel().getColumn(1).setResizable(false);
-		table.getColumnModel().getColumn(1).setPreferredWidth(158);
+		table.getColumnModel().getColumn(1).setPreferredWidth(195);
 		table.getColumnModel().getColumn(2).setResizable(false);
-		table.getColumnModel().getColumn(2).setPreferredWidth(158);
+		table.getColumnModel().getColumn(2).setPreferredWidth(195);
 		table.getColumnModel().getColumn(3).setResizable(false);
 		table.getColumnModel().getColumn(3).setPreferredWidth(130);
 		table.getColumnModel().getColumn(4).setResizable(false);
 		table.getColumnModel().getColumn(4).setPreferredWidth(130);
 		table.getColumnModel().getColumn(5).setResizable(false);
-		table.getColumnModel().getColumn(5).setPreferredWidth(45);
+		table.getColumnModel().getColumn(5).setPreferredWidth(60);
 		table.getColumnModel().getColumn(6).setResizable(false);
-		table.getColumnModel().getColumn(6).setPreferredWidth(40);
+		table.getColumnModel().getColumn(6).setPreferredWidth(70);
 		
 		btnConsultar = new JButton("Consultar");
 		btnConsultar.addActionListener(new ActionListener() {
@@ -516,7 +544,6 @@ public class ListadoVuelosUI extends JFrame {
 						
 						vCDao.desconectar();
 					
-						
 					} catch (ClassNotFoundException e) {
 						JOptionPane.showMessageDialog(null, e.getMessage());
 					} catch (SQLException e) {
@@ -663,5 +690,13 @@ public class ListadoVuelosUI extends JFrame {
 
 	public void setBtnAgregar(JButton btnAgregar) {
 		this.btnAgregar = btnAgregar;
+	}
+
+	public String getDni() {
+		return dni;
+	}
+
+	public void setDni(String dni) {
+		this.dni = dni;
 	}
 }

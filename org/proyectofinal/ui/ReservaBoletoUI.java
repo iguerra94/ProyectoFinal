@@ -29,15 +29,27 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
 
+import org.proyectofinal.bo.ex.NotValidPassengerException;
+import org.proyectofinal.bo.impl.PasajeroBoImpl;
+import org.proyectofinal.bo.interfaces.PasajeroBo;
+import org.proyectofinal.dao.impl.PasajeroDaoImpl;
+import org.proyectofinal.dao.impl.ReservaViajeDaoImpl;
+import org.proyectofinal.dao.interfaces.PasajeroDao;
+import org.proyectofinal.dao.interfaces.ReservaViajeDao;
+import org.proyectofinal.model.impl.PasajeroImpl;
+import org.proyectofinal.model.impl.ReservaViajeImpl;
+import org.proyectofinal.model.interfaces.Pasajero;
+import org.proyectofinal.model.interfaces.ReservaViaje;
 import org.proyectofinal.ui.botones.BotonPasajero;
-import org.proyectofinal.ui.util.Pasajero;
-import org.proyectofinal.ui.util.ReservaPasajero;
-import org.proyectofinal.ui.util.ex.NotValidPassengerException;
+import org.proyectofinal.ui.util.Reservas;
 
 import javax.swing.border.TitledBorder;
 import javax.swing.JTextField;
 import java.awt.event.WindowFocusListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowAdapter;
 
 public class ReservaBoletoUI extends JFrame implements MouseListener {
 
@@ -62,20 +74,72 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 	private JButton btnAnterior;
 	private JButton btnSiguiente;
 	private List<BotonPasajero> botones;
-	private List<BotonPasajero> botonesSeleccionados = new ArrayList<>();
+	private List<BotonPasajero> botonesSeleccionados = new ArrayList<BotonPasajero>();
+	private List<BotonPasajero> botonesOcupados = new ArrayList<BotonPasajero>();
 	private int a = 1;
 	private Object opcion;
+//	private ViajeCabecera vC;
+//	private ViajeCabeceraBo vCBo;
 	private Pasajero pasajero;
+	private PasajeroBo pBo;
+	private PasajeroDao pDao;
 	private Boolean estadoAnterior = false;
 	private BotonPasajero b;
 //	private List<Pasajero> lista;
-	private ReservaPasajero reserva;
+	private Reservas reservas;
+	private ReservaViaje rV;
+	private ReservaViajeDao rVDao;
 	
 	/**
 	 * Create the frame.
 	 */
 	@SuppressWarnings("rawtypes")
 	public ReservaBoletoUI() {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowOpened(WindowEvent e) {
+				
+				try {
+					
+					rVDao.conectar();
+					
+					ResultSet res = rVDao.consultarAsientosPorViaje(rV.getViaje().getCodigoViaje());
+
+					while (res.next()) {
+						botonesOcupados.add(botones.get(res.getInt("asiento")-1));
+					}
+					
+					rVDao.desconectar();
+						
+					for (BotonPasajero boton: botonesOcupados){
+						boton.setEstadoAsiento("OCUPADO");
+						boton.setToolTipText("OCUPADO");
+						boton.setContentAreaFilled(true);
+						boton.setBackground(Color.BLACK);
+						boton.setForeground(Color.WHITE);
+						boton.setEnabled(false);
+						boton.validate();
+						boton.repaint();
+					}
+					
+					for (int i = 0; i < botonesOcupados.size(); i++){	
+						botones.remove(botonesOcupados.get(i));
+					}
+					
+					for(BotonPasajero boton: botones){
+						boton.setToolTipText("DISPONIBLE");
+					}
+					
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+			}
+		});
 		
 		final JLabel lblSeleccioneCantPasajeros = new JLabel("  Seleccione la cantidad de pasajeros");
 		lblSeleccioneCantPasajeros.setIcon(new ImageIcon(ReservaBoletoUI.class.getResource("/imagenes/flecha_derecha.png")));
@@ -85,6 +149,12 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
+				
+				if (txtDni.getText().trim().length() > 0){
+					pasajero.setDni(txtDni.getText());
+				}else{
+					pasajero.setDni("-1");
+				}
 				
 				if (txtNombre.getText().trim().length() > 0){
 					pasajero.setNombre(txtNombre.getText());
@@ -98,27 +168,20 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 					pasajero.setApellido("");
 				}
 				
-				if (txtDni.getText().trim().length() > 0){
-					pasajero.setDni(Integer.parseInt(txtDni.getText()));
-				}else{
-					pasajero.setDni(-1);
-				}
+//				pasajero.setAsientoPasajero(b);
 				
-				pasajero.setAsientoPasajero(b);
-				
-				if (pasajero.getAsientoPasajero() != null){
+//				if (pasajero.getAsientoPasajero() != null){
 					
-					if (txtAsiento.getText().length() > 0){
-						pasajero.getAsientoPasajero().setAsiento(txtAsiento.getText());
-						pasajero.getAsientoPasajero().setPrecio(Float.parseFloat(txtPrecio.getText()));
-					}
-					if (txtAsiento.getText().length() == 0){
-						pasajero.setAsientoPasajero(null);
-						pasajero.getAsientoPasajero().setAsiento("");
-						pasajero.getAsientoPasajero().setPrecio(-1f);
-					}
-					
+				if (txtAsiento.getText().length() > 0){
+					rV.setAsiento(Integer.parseInt(txtAsiento.getText()));
+					rV.setPrecio(Float.parseFloat(txtPrecio.getText()));
 				}
+				if (txtAsiento.getText().length() == 0){
+					rV.setAsiento(-1);
+					rV.setPrecio(-1f);
+				}
+//					
+//				}
 				
 			}
 		});
@@ -152,9 +215,18 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 				}
 				
 				if (txtDni.getText().trim().length() == 0){
-					pasajero.setDni(-1);
+					pasajero.setDni("-1");
 				}else{
-					pasajero.setDni(Integer.parseInt(txtDni.getText()));
+					pasajero.setDni(txtDni.getText());
+				}
+				
+				if (txtAsiento.getText().length() > 0){
+					rV.setAsiento(Integer.parseInt(txtAsiento.getText()));
+					rV.setPrecio(Float.parseFloat(txtPrecio.getText()));
+				}
+				if (txtAsiento.getText().length() == 0){
+					rV.setAsiento(-1);
+					rV.setPrecio(-1f);
 				}
 				
 //				if (txtAsiento.getText().trim().length() == 0){
@@ -175,9 +247,15 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 			}
 		});
 		
-		pasajero = new Pasajero();
+		pasajero = new PasajeroImpl();
+		
+		rV = new ReservaViajeImpl();
+		
+		pBo = new PasajeroBoImpl();
+		pDao = new PasajeroDaoImpl();
 		
 //		reserva = new ReservaPasajero();
+		rVDao = new ReservaViajeDaoImpl();
 		
 		botones = new ArrayList<BotonPasajero>();
 		
@@ -205,6 +283,43 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		panelInfoVuelo.setLayout(null);
 		getContentPane().add(panelInfoVuelo);
 		
+		JButton btnAsientoDisp = new JButton("");
+		btnAsientoDisp.setContentAreaFilled(false);
+		btnAsientoDisp.setMargin(new Insets(2, 0, 2, 0));
+		btnAsientoDisp.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnAsientoDisp.setBorder(new LineBorder(Color.DARK_GRAY, 2));
+		btnAsientoDisp.setBackground(Color.WHITE);
+		btnAsientoDisp.setBounds(397, 142, 25, 36);
+		panelAsientos.add(btnAsientoDisp);
+		
+		JLabel lblAsientoDisp = new JLabel("<html><center>Asiento Disponible</center></html>");
+		lblAsientoDisp.setBounds(429, 142, 93, 36);
+		panelAsientos.add(lblAsientoDisp);
+		
+		JButton btnAsientoSelec = new JButton("");
+		btnAsientoSelec.setBounds(397, 190, 25, 36);
+		btnAsientoSelec.setMargin(new Insets(2, 0, 2, 0));
+		btnAsientoSelec.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnAsientoSelec.setBorder(new LineBorder(Color.DARK_GRAY, 2));
+		btnAsientoSelec.setBackground(new Color(0, 128, 0));
+		panelAsientos.add(btnAsientoSelec);
+		
+		JLabel lblAsientoSelecc = new JLabel("<html><center>Asiento Seleccionado</center></html>");
+		lblAsientoSelecc.setBounds(429, 190, 93, 36);
+		panelAsientos.add(lblAsientoSelecc);
+		
+		JButton btnAsientoOcup = new JButton("");
+		btnAsientoOcup.setMargin(new Insets(2, 0, 2, 0));
+		btnAsientoOcup.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnAsientoOcup.setBorder(new LineBorder(Color.DARK_GRAY, 2));
+		btnAsientoOcup.setBackground(Color.GRAY);
+		btnAsientoOcup.setBounds(397, 238, 25, 36);
+		panelAsientos.add(btnAsientoOcup);
+		
+		JLabel lblAsientoOcup = new JLabel("<html><center>Asiento Ocupado</center></html>");
+		lblAsientoOcup.setBounds(429, 238, 93, 36);
+		panelAsientos.add(lblAsientoOcup);
+		
 		lblAsientosDisp = new JLabel("");
 		lblAsientosDisp.setBounds(109, 12, 40, 44);
 		panelAsientos.add(lblAsientosDisp);
@@ -223,7 +338,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		panel1.setOpaque(false);
 		panel1.setLayout(new GridLayout(3, 2, 0, 7));
 	
-		final BotonPasajero btnNro1 = new BotonPasajero("1", 180f);			
+		final BotonPasajero btnNro1 = new BotonPasajero(1, 180f);			
 		btnNro1.setName("btnNro1");
 		btnNro1.addMouseListener(this);
 		btnNro1.setBackground(new Color(0, 128, 0));
@@ -233,9 +348,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro1.setMargin(new Insets(2, 0, 2, 0));
 		panel1.add(btnNro1);
 		
-		botones.add(btnNro1);
-		
-		final BotonPasajero btnNro2 = new BotonPasajero("2", 180f);		
+		final BotonPasajero btnNro2 = new BotonPasajero(2, 180f);		
 		btnNro2.setName("btnNro2");
 		btnNro2.addMouseListener(this);
 		btnNro2.setBackground(new Color(0, 128, 0));
@@ -244,10 +357,8 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro2.setMargin(new Insets(2, 0, 2, 0));
 		btnNro2.setHorizontalTextPosition(SwingConstants.CENTER);
 		panel1.add(btnNro2);
-
-		botones.add(btnNro2);
 		
-		final BotonPasajero btnNro7 = new BotonPasajero("7", 180f);
+		final BotonPasajero btnNro7 = new BotonPasajero(7, 180f);
 		btnNro7.setName("btnNro7");
 		btnNro7.addMouseListener(this);
 		btnNro7.setBackground(new Color(0, 128, 0));
@@ -256,10 +367,8 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro7.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro7.setMargin(new Insets(2, 0, 2, 0));
 		panel1.add(btnNro7);
-
-		botones.add(btnNro7);
 		
-		final BotonPasajero btnNro8 = new BotonPasajero("8", 180f);
+		final BotonPasajero btnNro8 = new BotonPasajero(8, 180f);
 		btnNro8.setName("btnNro8");
 		btnNro8.addMouseListener(this);
 		btnNro8.setBackground(new Color(0, 128, 0));
@@ -268,10 +377,8 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro8.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro8.setMargin(new Insets(2, 0, 2, 0));
 		panel1.add(btnNro8);
-
-		botones.add(btnNro8);
 		
-		final BotonPasajero btnNro13 = new BotonPasajero("13", 180f);
+		final BotonPasajero btnNro13 = new BotonPasajero(13, 180f);
 		btnNro13.setName("btnNro13");
 		btnNro13.addMouseListener(this);
 		btnNro13.setBackground(new Color(0, 128, 0));
@@ -280,10 +387,8 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro13.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro13.setMargin(new Insets(2, 0, 2, 0));
 		panel1.add(btnNro13);
-
-		botones.add(btnNro13);
 		
-		final BotonPasajero btnNro14 = new BotonPasajero("14", 180f);
+		final BotonPasajero btnNro14 = new BotonPasajero(14, 180f);
 		btnNro14.setName("btnNro14");
 		btnNro14.addMouseListener(this);
 		btnNro14.setBackground(new Color(0, 128, 0));
@@ -292,8 +397,6 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro14.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro14.setMargin(new Insets(2, 0, 2, 0));
 		panel1.add(btnNro14);
-
-		botones.add(btnNro14);
 		
 		JPanel panel2 = new JPanel();
 		panel2.setBounds(237, 142, 58, 124);
@@ -301,7 +404,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		panel2.setOpaque(false);
 		panel2.setLayout(new GridLayout(3, 2, 0, 7));
 		
-		final BotonPasajero btnNro3 = new BotonPasajero("3", 180f);
+		final BotonPasajero btnNro3 = new BotonPasajero(3, 180f);
 		btnNro3.setName("btnNro3");
 		btnNro3.addMouseListener(this);
 		btnNro3.setBackground(new Color(0, 128, 0));
@@ -311,9 +414,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro3.setMargin(new Insets(2, 0, 2, 0));
 		panel2.add(btnNro3);
 
-		botones.add(btnNro3);
-		
-		final BotonPasajero btnNro4 = new BotonPasajero("4", 180f);
+		final BotonPasajero btnNro4 = new BotonPasajero(4, 180f);
 		btnNro4.setName("btnNro4");
 		btnNro4.addMouseListener(this);
 		btnNro4.setBackground(new Color(0, 128, 0));
@@ -322,10 +423,8 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro4.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro4.setMargin(new Insets(2, 0, 2, 0));
 		panel2.add(btnNro4);
-
-		botones.add(btnNro4);
 		
-		final BotonPasajero btnNro9 = new BotonPasajero("9", 180f);
+		final BotonPasajero btnNro9 = new BotonPasajero(9, 180f);
 		btnNro9.setName("btnNro9");
 		btnNro9.addMouseListener(this);
 		btnNro9.setBackground(new Color(0, 128, 0));
@@ -334,10 +433,8 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro9.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro9.setMargin(new Insets(2, 0, 2, 0));
 		panel2.add(btnNro9);
-
-		botones.add(btnNro9);
 		
-		final BotonPasajero btnNro10 = new BotonPasajero("10", 180f);
+		final BotonPasajero btnNro10 = new BotonPasajero(10, 180f);
 		btnNro10.setName("btnNro10");
 		btnNro10.addMouseListener(this);
 		btnNro10.setBackground(new Color(0, 128, 0));
@@ -347,9 +444,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro10.setMargin(new Insets(2, 0, 2, 0));
 		panel2.add(btnNro10);
 
-		botones.add(btnNro10);
-		
-		final BotonPasajero btnNro15 = new BotonPasajero("15", 180f);
+		final BotonPasajero btnNro15 = new BotonPasajero(15, 180f);
 		btnNro15.setName("btnNro15");
 		btnNro15.addMouseListener(this);
 		btnNro15.setBackground(new Color(0, 128, 0));
@@ -358,10 +453,8 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro15.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro15.setMargin(new Insets(2, 0, 2, 0));
 		panel2.add(btnNro15);
-
-		botones.add(btnNro15);
 		
-		final BotonPasajero btnNro16 = new BotonPasajero("16", 180f);
+		final BotonPasajero btnNro16 = new BotonPasajero(16, 180f);
 		btnNro16.setName("btnNro16");
 		btnNro16.addMouseListener(this);
 		btnNro16.setBackground(new Color(0, 128, 0));
@@ -370,8 +463,6 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro16.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro16.setMargin(new Insets(2, 0, 2, 0));
 		panel2.add(btnNro16);
-
-		botones.add(btnNro16);
 		
 		JPanel panel3 = new JPanel();
 		panel3.setBounds(307, 142, 57, 124);
@@ -379,7 +470,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		panel3.setOpaque(false);
 		panel3.setLayout(new GridLayout(3, 2, 0, 7));
 		
-		final BotonPasajero btnNro5 = new BotonPasajero("5", 180f);
+		final BotonPasajero btnNro5 = new BotonPasajero(5, 180f);
 		btnNro5.setName("btnNro5");
 		btnNro5.addMouseListener(this);
 		btnNro5.setBackground(new Color(0, 128, 0));
@@ -388,10 +479,8 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro5.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro5.setMargin(new Insets(2, 0, 2, 0));
 		panel3.add(btnNro5);
-
-		botones.add(btnNro5);
 		
-		final BotonPasajero btnNro6 = new BotonPasajero("6", 180f);
+		final BotonPasajero btnNro6 = new BotonPasajero(6, 180f);
 		btnNro6.setName("btnNro6");
 		btnNro6.addMouseListener(this);
 		btnNro6.setBackground(new Color(0, 128, 0));
@@ -400,10 +489,8 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro6.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro6.setMargin(new Insets(2, 2, 2, 2));
 		panel3.add(btnNro6);
-
-		botones.add(btnNro6);
 		
-		final BotonPasajero btnNro11 = new BotonPasajero("11", 180f);
+		final BotonPasajero btnNro11 = new BotonPasajero(11, 180f);
 		btnNro11.setName("btnNro11");
 		btnNro11.addMouseListener(this);
 		btnNro11.setBackground(new Color(0, 128, 0));
@@ -413,9 +500,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro11.setMargin(new Insets(2, 0, 2, 0));
 		panel3.add(btnNro11);
 
-		botones.add(btnNro11);
-		
-		final BotonPasajero btnNro12 = new BotonPasajero("12", 180f);
+		final BotonPasajero btnNro12 = new BotonPasajero(12, 180f);
 		btnNro12.setName("btnNro12");
 		btnNro12.addMouseListener(this);
 		btnNro12.setBackground(new Color(0, 128, 0));
@@ -424,10 +509,8 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro12.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro12.setMargin(new Insets(2, 0, 2, 0));
 		panel3.add(btnNro12);
-
-		botones.add(btnNro12);
 		
-		final BotonPasajero btnNro17 = new BotonPasajero("17", 180f);
+		final BotonPasajero btnNro17 = new BotonPasajero(17, 180f);
 		btnNro17.setName("btnNro17");
 		btnNro17.addMouseListener(this);
 		btnNro17.setBackground(new Color(0, 128, 0));
@@ -436,10 +519,8 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro17.setMargin(new Insets(2, 0, 2, 0));
 		btnNro17.setHorizontalTextPosition(SwingConstants.CENTER);
 		panel3.add(btnNro17);
-
-		botones.add(btnNro17);
 		
-		final BotonPasajero btnNro18 = new BotonPasajero("18", 180f);
+		final BotonPasajero btnNro18 = new BotonPasajero(18, 180f);
 		btnNro18.setName("btnNro18");
 		btnNro18.addMouseListener(this);
 		btnNro18.setBackground(new Color(0, 128, 0));
@@ -448,8 +529,6 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro18.setMargin(new Insets(2, 0, 2, 0));
 		btnNro18.setHorizontalTextPosition(SwingConstants.CENTER);
 		panel3.add(btnNro18);
-
-		botones.add(btnNro18);
 		
 		JPanel panel4 = new JPanel();
 		panel4.setBounds(173, 281, 51, 292);
@@ -457,7 +536,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		panel4.setOpaque(false);
 		panel4.setLayout(new GridLayout(8, 2, 0, 7));
 		
-		final BotonPasajero btnNro19 = new BotonPasajero("19", 90f);
+		final BotonPasajero btnNro19 = new BotonPasajero(19, 90f);
 		btnNro19.setName("btnNro19");
 		btnNro19.addMouseListener(this);
 		btnNro19.setBackground(new Color(0, 128, 0));
@@ -467,9 +546,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro19.setMargin(new Insets(2, 0, 2, 0));
 		panel4.add(btnNro19);
 
-		botones.add(btnNro19);
-		
-		final BotonPasajero btnNro20 = new BotonPasajero("20", 90f);
+		final BotonPasajero btnNro20 = new BotonPasajero(20, 90f);
 		btnNro20.setName("btnNro20");
 		btnNro20.addMouseListener(this);
 		btnNro20.setBackground(new Color(0, 128, 0));
@@ -479,9 +556,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro20.setMargin(new Insets(2, 0, 2, 0));
 		panel4.add(btnNro20);
 
-		botones.add(btnNro20);
-		
-		final BotonPasajero btnNro25 = new BotonPasajero("25", 90f);
+		final BotonPasajero btnNro25 = new BotonPasajero(25, 90f);
 		btnNro25.setName("btnNro25");
 		btnNro25.addMouseListener(this);
 		btnNro25.setBackground(new Color(0, 128, 0));
@@ -490,10 +565,8 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro25.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro25.setMargin(new Insets(2, 0, 2, 0));
 		panel4.add(btnNro25);
-
-		botones.add(btnNro25);
 		
-		final BotonPasajero btnNro26 = new BotonPasajero("26", 90f);
+		final BotonPasajero btnNro26 = new BotonPasajero(26, 90f);
 		btnNro26.setName("btnNro26");
 		btnNro26.addMouseListener(this);
 		btnNro26.setBackground(new Color(0, 128, 0));
@@ -503,9 +576,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro26.setMargin(new Insets(2, 0, 2, 0));
 		panel4.add(btnNro26);
 
-		botones.add(btnNro26);
-		
-		final BotonPasajero btnNro31 = new BotonPasajero("31", 90f);
+		final BotonPasajero btnNro31 = new BotonPasajero(31, 90f);
 		btnNro31.setName("btnNro31");
 		btnNro31.addMouseListener(this);
 		btnNro31.setBackground(new Color(0, 128, 0));
@@ -515,9 +586,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro31.setMargin(new Insets(2, 0, 2, 0));
 		panel4.add(btnNro31);
 
-		botones.add(btnNro31);
-		
-		final BotonPasajero btnNro32 = new BotonPasajero("32", 90f);
+		final BotonPasajero btnNro32 = new BotonPasajero(32, 90f);
 		btnNro32.setName("btnNro32");
 		btnNro32.addMouseListener(this);
 		btnNro32.setBackground(new Color(0, 128, 0));
@@ -527,9 +596,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro32.setMargin(new Insets(2, 0, 2, 0));
 		panel4.add(btnNro32);
 
-		botones.add(btnNro32);
-		
-		final BotonPasajero btnNro37 = new BotonPasajero("37", 90f);
+		final BotonPasajero btnNro37 = new BotonPasajero(37, 90f);
 		btnNro37.setName("btnNro37");
 		btnNro37.addMouseListener(this);
 		btnNro37.setBackground(new Color(0, 128, 0));
@@ -539,9 +606,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro37.setMargin(new Insets(2, 0, 2, 0));
 		panel4.add(btnNro37);
 
-		botones.add(btnNro37);
-		
-		final BotonPasajero btnNro38 = new BotonPasajero("38", 90f);
+		final BotonPasajero btnNro38 = new BotonPasajero(38, 90f);
 		btnNro38.setName("btnNro38");
 		btnNro38.addMouseListener(this);
 		btnNro38.setBackground(new Color(0, 128, 0));
@@ -550,10 +615,8 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro38.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro38.setMargin(new Insets(2, 0, 2, 0));
 		panel4.add(btnNro38);
-
-		botones.add(btnNro38);
 		
-		final BotonPasajero btnNro43 = new BotonPasajero("43", 90f);
+		final BotonPasajero btnNro43 = new BotonPasajero(43, 90f);
 		btnNro43.setName("btnNro43");
 		btnNro43.addMouseListener(this);
 		btnNro43.setBackground(new Color(0, 128, 0));
@@ -563,9 +626,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro43.setMargin(new Insets(2, 0, 2, 0));
 		panel4.add(btnNro43);
 
-		botones.add(btnNro43);
-		
-		final BotonPasajero btnNro44 = new BotonPasajero("44", 90f);
+		final BotonPasajero btnNro44 = new BotonPasajero(44, 90f);
 		btnNro44.setName("btnNro44");
 		btnNro44.addMouseListener(this);
 		btnNro44.setBackground(new Color(0, 128, 0));
@@ -574,10 +635,8 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro44.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro44.setMargin(new Insets(2, 0, 2, 0));
 		panel4.add(btnNro44);
-
-		botones.add(btnNro44);
 		
-		final BotonPasajero btnNro49 = new BotonPasajero("49", 90f);
+		final BotonPasajero btnNro49 = new BotonPasajero(49, 90f);
 		btnNro49.setName("btnNro49");
 		btnNro49.addMouseListener(this);
 		btnNro49.setBackground(new Color(0, 128, 0));
@@ -587,9 +646,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro49.setMargin(new Insets(2, 0, 2, 0));
 		panel4.add(btnNro49);
 
-		botones.add(btnNro49);
-		
-		final BotonPasajero btnNro50 = new BotonPasajero("50", 90f);
+		final BotonPasajero btnNro50 = new BotonPasajero(50, 90f);
 		btnNro50.setName("btnNro50");
 		btnNro50.addMouseListener(this);
 		btnNro50.setBackground(new Color(0, 128, 0));
@@ -599,9 +656,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro50.setMargin(new Insets(2, 0, 2, 0));
 		panel4.add(btnNro50);
 
-		botones.add(btnNro50);
-		
-		final BotonPasajero btnNro55 = new BotonPasajero("55", 90f);
+		final BotonPasajero btnNro55 = new BotonPasajero(55, 90f);
 		btnNro55.setName("btnNro55");
 		btnNro55.addMouseListener(this);
 		btnNro55.setBackground(new Color(0, 128, 0));
@@ -610,10 +665,8 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro55.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro55.setMargin(new Insets(2, 0, 2, 0));
 		panel4.add(btnNro55);
-
-		botones.add(btnNro55);
 		
-		final BotonPasajero btnNro56 = new BotonPasajero("56", 90f);
+		final BotonPasajero btnNro56 = new BotonPasajero(56, 90f);
 		btnNro56.setName("btnNro56");
 		btnNro56.addMouseListener(this);
 		btnNro56.setBackground(new Color(0, 128, 0));
@@ -622,10 +675,8 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro56.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro56.setMargin(new Insets(2, 0, 2, 0));
 		panel4.add(btnNro56);
-
-		botones.add(btnNro56);
 		
-		final BotonPasajero btnNro61 = new BotonPasajero("61", 90f);
+		final BotonPasajero btnNro61 = new BotonPasajero(61, 90f);
 		btnNro61.setName("btnNro61");
 		btnNro61.addMouseListener(this);
 		btnNro61.setBackground(new Color(0, 128, 0));
@@ -635,9 +686,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro61.setMargin(new Insets(2, 0, 2, 0));
 		panel4.add(btnNro61);
 
-		botones.add(btnNro61);
-		
-		final BotonPasajero btnNro62 = new BotonPasajero("62", 90f);
+		final BotonPasajero btnNro62 = new BotonPasajero(62, 90f);
 		btnNro62.setName("btnNro62");
 		btnNro62.addMouseListener(this);
 		btnNro62.setBackground(new Color(0, 128, 0));
@@ -647,15 +696,13 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro62.setMargin(new Insets(2, 0, 2, 0));
 		panel4.add(btnNro62);
 
-		botones.add(btnNro62);
-		
 		JPanel panel5 = new JPanel();
 		panel5.setBounds(237, 281, 58, 292);
 		panelAsientos.add(panel5);
 		panel5.setOpaque(false);
 		panel5.setLayout(new GridLayout(8, 2, 0, 7));
 		
-		final BotonPasajero btnNro21 = new BotonPasajero("21", 90f);
+		final BotonPasajero btnNro21 = new BotonPasajero(21, 90f);
 		btnNro21.setName("btnNro21");
 		btnNro21.addMouseListener(this);
 		btnNro21.setBackground(new Color(0, 128, 0));
@@ -664,10 +711,8 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro21.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro21.setMargin(new Insets(2, 0, 2, 0));
 		panel5.add(btnNro21);
-
-		botones.add(btnNro21);
 		
-		final BotonPasajero btnNro22 = new BotonPasajero("22", 90f);
+		final BotonPasajero btnNro22 = new BotonPasajero(22, 90f);
 		btnNro22.setName("btnNro22");
 		btnNro22.addMouseListener(this);
 		btnNro22.setBackground(new Color(0, 128, 0));
@@ -677,9 +722,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro22.setMargin(new Insets(2, 0, 2, 0));
 		panel5.add(btnNro22);
 
-		botones.add(btnNro22);
-		
-		final BotonPasajero btnNro27 = new BotonPasajero("27", 90f);
+		final BotonPasajero btnNro27 = new BotonPasajero(27, 90f);
 		btnNro27.setName("btnNro27");
 		btnNro27.addMouseListener(this);
 		btnNro27.setBackground(new Color(0, 128, 0));
@@ -689,9 +732,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro27.setMargin(new Insets(2, 0, 2, 0));
 		panel5.add(btnNro27);
 
-		botones.add(btnNro27);
-		
-		final BotonPasajero btnNro28 = new BotonPasajero("28", 90f);
+		final BotonPasajero btnNro28 = new BotonPasajero(28, 90f);
 		btnNro28.setName("btnNro28");
 		btnNro28.addMouseListener(this);
 		btnNro28.setBackground(new Color(0, 128, 0));
@@ -701,9 +742,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro28.setMargin(new Insets(2, 0, 2, 0));
 		panel5.add(btnNro28);
 
-		botones.add(btnNro28);
-		
-		final BotonPasajero btnNro33 = new BotonPasajero("33", 90f);
+		final BotonPasajero btnNro33 = new BotonPasajero(33, 90f);
 		btnNro33.setName("btnNro33");
 		btnNro33.addMouseListener(this);
 		btnNro33.setBackground(new Color(0, 128, 0));
@@ -713,9 +752,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro33.setMargin(new Insets(2, 0, 2, 0));
 		panel5.add(btnNro33);
 
-		botones.add(btnNro33);
-		
-		final BotonPasajero btnNro34 = new BotonPasajero("34", 90f);
+		final BotonPasajero btnNro34 = new BotonPasajero(34, 90f);
 		btnNro34.setName("btnNro34");
 		btnNro34.addMouseListener(this);
 		btnNro34.setBackground(new Color(0, 128, 0));
@@ -724,10 +761,8 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro34.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro34.setMargin(new Insets(2, 0, 2, 0));
 		panel5.add(btnNro34);
-
-		botones.add(btnNro34);
 		
-		final BotonPasajero btnNro39 = new BotonPasajero("39", 90f);
+		final BotonPasajero btnNro39 = new BotonPasajero(39, 90f);
 		btnNro39.setName("btnNro39");
 		btnNro39.addMouseListener(this);
 		btnNro39.setBackground(new Color(0, 128, 0));
@@ -736,10 +771,8 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro39.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro39.setMargin(new Insets(2, 0, 2, 0));
 		panel5.add(btnNro39);
-
-		botones.add(btnNro39);
 		
-		final BotonPasajero btnNro40 = new BotonPasajero("40", 90f);
+		final BotonPasajero btnNro40 = new BotonPasajero(40, 90f);
 		btnNro40.setName("btnNro40");
 		btnNro40.addMouseListener(this);
 		btnNro40.setBackground(new Color(0, 128, 0));
@@ -748,10 +781,8 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro40.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro40.setMargin(new Insets(2, 0, 2, 0));
 		panel5.add(btnNro40);
-
-		botones.add(btnNro40);
 		
-		final BotonPasajero btnNro45 = new BotonPasajero("45", 90f);
+		final BotonPasajero btnNro45 = new BotonPasajero(45, 90f);
 		btnNro45.setName("btnNro45");
 		btnNro45.addMouseListener(this);
 		btnNro45.setBackground(new Color(0, 128, 0));
@@ -761,9 +792,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro45.setMargin(new Insets(2, 0, 2, 0));
 		panel5.add(btnNro45);
 
-		botones.add(btnNro45);
-		
-		final BotonPasajero btnNro46 = new BotonPasajero("46", 90f);
+		final BotonPasajero btnNro46 = new BotonPasajero(46, 90f);
 		btnNro46.setName("btnNro46");
 		btnNro46.addMouseListener(this);
 		btnNro46.setBackground(new Color(0, 128, 0));
@@ -773,9 +802,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro46.setMargin(new Insets(2, 0, 2, 0));
 		panel5.add(btnNro46);
 
-		botones.add(btnNro46);
-		
-		final BotonPasajero btnNro51 = new BotonPasajero("51", 90f);
+		final BotonPasajero btnNro51 = new BotonPasajero(51, 90f);
 		btnNro51.setName("btnNro51");
 		btnNro51.addMouseListener(this);
 		btnNro51.setBackground(new Color(0, 128, 0));
@@ -784,10 +811,8 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro51.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro51.setMargin(new Insets(2, 0, 2, 0));
 		panel5.add(btnNro51);
-
-		botones.add(btnNro51);
 		
-		final BotonPasajero btnNro52 = new BotonPasajero("52", 90f);
+		final BotonPasajero btnNro52 = new BotonPasajero(52, 90f);
 		btnNro52.setName("btnNro52");
 		btnNro52.addMouseListener(this);
 		btnNro52.setBackground(new Color(0, 128, 0));
@@ -797,9 +822,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro52.setMargin(new Insets(2, 0, 2, 0));
 		panel5.add(btnNro52);
 
-		botones.add(btnNro52);
-		
-		final BotonPasajero btnNro57 = new BotonPasajero("57", 90f);
+		final BotonPasajero btnNro57 = new BotonPasajero(57, 90f);
 		btnNro57.setName("btnNro57");
 		btnNro57.addMouseListener(this);
 		btnNro57.setBackground(new Color(0, 128, 0));
@@ -809,9 +832,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro57.setMargin(new Insets(2, 0, 2, 0));
 		panel5.add(btnNro57);
 
-		botones.add(btnNro57);
-		
-		final BotonPasajero btnNro58 = new BotonPasajero("58", 90f);
+		final BotonPasajero btnNro58 = new BotonPasajero(58, 90f);
 		btnNro58.setName("btnNro58");
 		btnNro58.addMouseListener(this);
 		btnNro58.setBackground(new Color(0, 128, 0));
@@ -821,9 +842,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro58.setMargin(new Insets(2, 0, 2, 0));
 		panel5.add(btnNro58);
 
-		botones.add(btnNro58);
-		
-		final BotonPasajero btnNro63 = new BotonPasajero("63", 90f);
+		final BotonPasajero btnNro63 = new BotonPasajero(63, 90f);
 		btnNro63.setName("btnNro63");
 		btnNro63.addMouseListener(this);
 		btnNro63.setBackground(new Color(0, 128, 0));
@@ -832,10 +851,8 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro63.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro63.setMargin(new Insets(2, 0, 2, 0));
 		panel5.add(btnNro63);
-
-		botones.add(btnNro63);
 		
-		final BotonPasajero btnNro64 = new BotonPasajero("64", 90f);
+		final BotonPasajero btnNro64 = new BotonPasajero(64, 90f);
 		btnNro64.setName("btnNro64");
 		btnNro64.addMouseListener(this);
 		btnNro64.setBackground(new Color(0, 128, 0));
@@ -844,8 +861,6 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro64.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro64.setMargin(new Insets(2, 0, 2, 0));
 		panel5.add(btnNro64);
-
-		botones.add(btnNro64);
 		
 		JPanel panel6 = new JPanel();
 		panel6.setBounds(306, 281, 58, 292);
@@ -853,7 +868,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		panel6.setOpaque(false);
 		panel6.setLayout(new GridLayout(8, 2, 0, 7));
 		
-		final BotonPasajero btnNro23 = new BotonPasajero("23", 90f);
+		final BotonPasajero btnNro23 = new BotonPasajero(23, 90f);
 		btnNro23.setName("btnNro23");
 		btnNro23.addMouseListener(this);
 		btnNro23.setBackground(new Color(0, 128, 0));
@@ -863,9 +878,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro23.setMargin(new Insets(2, 0, 2, 0));
 		panel6.add(btnNro23);
 		
-		botones.add(btnNro23);
-		
-		final BotonPasajero btnNro24 = new BotonPasajero("24", 90f);
+		final BotonPasajero btnNro24 = new BotonPasajero(24, 90f);
 		btnNro24.setName("btnNro24");
 		btnNro24.addMouseListener(this);
 		btnNro24.setBackground(new Color(0, 128, 0));
@@ -874,10 +887,8 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro24.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro24.setMargin(new Insets(2, 0, 2, 0));
 		panel6.add(btnNro24);
-				
-		botones.add(btnNro24);
 		
-		final BotonPasajero btnNro29 = new BotonPasajero("29", 90f);
+		final BotonPasajero btnNro29 = new BotonPasajero(29, 90f);
 		btnNro29.setName("btnNro29");
 		btnNro29.addMouseListener(this);
 		btnNro29.setBackground(new Color(0, 128, 0));
@@ -887,9 +898,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro29.setMargin(new Insets(2, 0, 2, 0));
 		panel6.add(btnNro29);
 		
-		botones.add(btnNro29);
-		
-		final BotonPasajero btnNro30 = new BotonPasajero("30", 90f);
+		final BotonPasajero btnNro30 = new BotonPasajero(30, 90f);
 		btnNro30.setName("btnNro30");
 		btnNro30.addMouseListener(this);
 		btnNro30.setBackground(new Color(0, 128, 0));
@@ -898,10 +907,8 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro30.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro30.setMargin(new Insets(2, 0, 2, 0));
 		panel6.add(btnNro30);
-									
-		botones.add(btnNro30);
 		
-		final BotonPasajero btnNro35 = new BotonPasajero("35", 90f);
+		final BotonPasajero btnNro35 = new BotonPasajero(35, 90f);
 		btnNro35.setName("btnNro35");
 		btnNro35.addMouseListener(this);
 		btnNro35.setBackground(new Color(0, 128, 0));
@@ -910,10 +917,8 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro35.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro35.setMargin(new Insets(2, 0, 2, 0));
 		panel6.add(btnNro35);
-											
-		botones.add(btnNro35);
-		
-		final BotonPasajero btnNro36 = new BotonPasajero("36", 90f);
+
+		final BotonPasajero btnNro36 = new BotonPasajero(36, 90f);
 		btnNro36.setName("btnNro36");
 		btnNro36.addMouseListener(this);
 		btnNro36.setBackground(new Color(0, 128, 0));
@@ -922,10 +927,8 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro36.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro36.setMargin(new Insets(2, 0, 2, 0));
 		panel6.add(btnNro36);
-											
-		botones.add(btnNro36);
 		
-		final BotonPasajero btnNro41 = new BotonPasajero("41", 90f);
+		final BotonPasajero btnNro41 = new BotonPasajero(41, 90f);
 		btnNro41.setName("btnNro41");
 		btnNro41.addMouseListener(this);
 		btnNro41.setBackground(new Color(0, 128, 0));
@@ -934,10 +937,8 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro41.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro41.setMargin(new Insets(2, 0, 2, 0));
 		panel6.add(btnNro41);
-														
-		botones.add(btnNro41);
 		
-		final BotonPasajero btnNro42 = new BotonPasajero("42", 90f);
+		final BotonPasajero btnNro42 = new BotonPasajero(42, 90f);
 		btnNro42.setName("btnNro42");
 		btnNro42.addMouseListener(this);
 		btnNro42.setBackground(new Color(0, 128, 0));
@@ -946,10 +947,8 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro42.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro42.setMargin(new Insets(2, 0, 2, 0));
 		panel6.add(btnNro42);
-																
-		botones.add(btnNro42);
 		
-		final BotonPasajero btnNro47 = new BotonPasajero("47", 90f);
+		final BotonPasajero btnNro47 = new BotonPasajero(47, 90f);
 		btnNro47.setName("btnNro47");
 		btnNro47.addMouseListener(this);
 		btnNro47.setBackground(new Color(0, 128, 0));
@@ -958,10 +957,8 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro47.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro47.setMargin(new Insets(2, 0, 2, 0));
 		panel6.add(btnNro47);
-																		
-		botones.add(btnNro47);
 		
-		final BotonPasajero btnNro48 = new BotonPasajero("48", 90f);
+		final BotonPasajero btnNro48 = new BotonPasajero(48, 90f);
 		btnNro48.setName("btnNro48");
 		btnNro48.addMouseListener(this);
 		btnNro48.setBackground(new Color(0, 128, 0));
@@ -970,10 +967,8 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro48.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro48.setMargin(new Insets(2, 0, 2, 0));
 		panel6.add(btnNro48);
-																				
-		botones.add(btnNro48);
 		
-		final BotonPasajero btnNro53 = new BotonPasajero("53", 90f);
+		final BotonPasajero btnNro53 = new BotonPasajero(53, 90f);
 		btnNro53.setName("btnNro53");
 		btnNro53.addMouseListener(this);
 		btnNro53.setBackground(new Color(0, 128, 0));
@@ -982,10 +977,8 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro53.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro53.setMargin(new Insets(2, 0, 2, 0));
 		panel6.add(btnNro53);
-																						
-		botones.add(btnNro53);
 		
-		final BotonPasajero btnNro54 = new BotonPasajero("54", 90f);
+		final BotonPasajero btnNro54 = new BotonPasajero(54, 90f);
 		btnNro54.setName("btnNro54");
 		btnNro54.addMouseListener(this);
 		btnNro54.setBackground(new Color(0, 128, 0));
@@ -995,9 +988,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro54.setMargin(new Insets(2, 0, 2, 0));
 		panel6.add(btnNro54);
 		
-		botones.add(btnNro54);
-		
-		final BotonPasajero btnNro59 = new BotonPasajero("59", 90f);
+		final BotonPasajero btnNro59 = new BotonPasajero(59, 90f);
 		btnNro59.setName("btnNro59");
 		btnNro59.addMouseListener(this);
 		btnNro59.setBackground(new Color(0, 128, 0));
@@ -1007,9 +998,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro59.setMargin(new Insets(2, 0, 2, 0));
 		panel6.add(btnNro59);
 
-		botones.add(btnNro59);
-		
-		final BotonPasajero btnNro60 = new BotonPasajero("60", 90f);
+		final BotonPasajero btnNro60 = new BotonPasajero(60, 90f);
 		btnNro60.setName("btnNro60");
 		btnNro60.addMouseListener(this);
 		btnNro60.setBackground(new Color(0, 128, 0));
@@ -1018,10 +1007,8 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro60.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro60.setMargin(new Insets(2, 0, 2, 0));
 		panel6.add(btnNro60);
-																										
-		botones.add(btnNro60);
 		
-		final BotonPasajero btnNro65 = new BotonPasajero("65", 90f);
+		final BotonPasajero btnNro65 = new BotonPasajero(65, 90f);
 		btnNro65.setName("btnNro65");
 		btnNro65.addMouseListener(this);
 		btnNro65.setBackground(new Color(0, 128, 0));
@@ -1030,10 +1017,8 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro65.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro65.setMargin(new Insets(2, 0, 2, 0));
 		panel6.add(btnNro65);
-																												
-		botones.add(btnNro65);
 		
-		final BotonPasajero btnNro66 = new BotonPasajero("66", 90f);
+		final BotonPasajero btnNro66 = new BotonPasajero(66, 90f);
 		btnNro66.setName("btnNro66");
 		btnNro66.addMouseListener(this);
 		btnNro66.setBackground(new Color(0, 128, 0));
@@ -1042,7 +1027,72 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnNro66.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnNro66.setMargin(new Insets(2, 0, 2, 0));
 		panel6.add(btnNro66);
-																												
+
+		botones.add(btnNro1);
+		botones.add(btnNro2);
+		botones.add(btnNro3);
+		botones.add(btnNro4);
+		botones.add(btnNro5);
+		botones.add(btnNro6);
+		botones.add(btnNro7);
+		botones.add(btnNro8);
+		botones.add(btnNro9);
+		botones.add(btnNro10);
+		botones.add(btnNro11);
+		botones.add(btnNro12);
+		botones.add(btnNro13);
+		botones.add(btnNro14);
+		botones.add(btnNro15);
+		botones.add(btnNro16);
+		botones.add(btnNro17);
+		botones.add(btnNro18);
+		botones.add(btnNro19);
+		botones.add(btnNro20);
+		botones.add(btnNro21);
+		botones.add(btnNro22);
+		botones.add(btnNro23);
+		botones.add(btnNro24);
+		botones.add(btnNro25);
+		botones.add(btnNro26);
+		botones.add(btnNro27);
+		botones.add(btnNro28);
+		botones.add(btnNro29);
+		botones.add(btnNro30);
+		botones.add(btnNro31);
+		botones.add(btnNro32);
+		botones.add(btnNro33);
+		botones.add(btnNro34);
+		botones.add(btnNro35);
+		botones.add(btnNro36);
+		botones.add(btnNro37);
+		botones.add(btnNro38);
+		botones.add(btnNro39);
+		botones.add(btnNro40);
+		botones.add(btnNro41);
+		botones.add(btnNro42);
+		botones.add(btnNro43);
+		botones.add(btnNro44);
+		botones.add(btnNro45);
+		botones.add(btnNro46);
+		botones.add(btnNro47);
+		botones.add(btnNro48);
+		botones.add(btnNro49);
+		botones.add(btnNro50);
+		botones.add(btnNro51);
+		botones.add(btnNro52);
+		botones.add(btnNro53);
+		botones.add(btnNro54);
+		botones.add(btnNro55);
+		botones.add(btnNro56);
+		botones.add(btnNro57);
+		botones.add(btnNro58);
+		botones.add(btnNro59);
+		botones.add(btnNro60);
+		botones.add(btnNro61);
+		botones.add(btnNro62);
+		botones.add(btnNro63);
+		botones.add(btnNro64);
+		botones.add(btnNro65);
 		botones.add(btnNro66);
 		
 		JLabel lblAvion = new JLabel("");
@@ -1104,40 +1154,35 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 					if (estadoAnterior){
 						for (BotonPasajero boton: botones){
 							if (boton.getEstadoAsiento().equals("SELECCIONADO")){
-								System.out.println(boton.getText());
+//								System.out.println(boton.getText());
 								pasajero.setNombre(txtNombre.getText());
 								pasajero.setApellido(txtApellido.getText());
-								pasajero.setDni(Integer.parseInt(txtDni.getText()));
-								pasajero.setAsientoPasajero(boton);
-								pasajero.getAsientoPasajero().setAsiento(boton.getAsiento());
-								pasajero.getAsientoPasajero().setPrecio(boton.getPrecio());
+								pasajero.setDni(txtDni.getText());
+								rV.setAsiento(Integer.parseInt(boton.getText()));
+								rV.setPrecio(Float.parseFloat(boton.getText()));							
 							}
 						}
 						estadoAnterior = false;
 					}else{
 						
 						//Setear el asiento del pasajero seleccionado
-						pasajero.setAsientoPasajero(b);
-						
-						if (pasajero.getAsientoPasajero() != null){
-	
+//						pasajero.setAsientoPasajero(b);
+//						
+//						if (pasajero.getAsientoPasajero() != null){
+//	
 							//Colocar texto en campos de asiento y precio
 							if (txtAsiento.getText().trim().length() > 0){
-								pasajero.getAsientoPasajero().setAsiento(txtAsiento.getText());
+								rV.setAsiento(Integer.parseInt(txtAsiento.getText()));
+								rV.setPrecio(Float.parseFloat(txtPrecio.getText()));
 							}else{
-								pasajero.getAsientoPasajero().setAsiento("");
+								rV.setAsiento(-1);
+								rV.setPrecio(-1f);
 							}
-							
-							if (txtPrecio.getText().trim().length() > 0){
-								pasajero.getAsientoPasajero().setPrecio(Float.parseFloat(txtPrecio.getText()));
-							}else{
-								pasajero.getAsientoPasajero().setPrecio(-1f);
-							}
-						}
+//						}
 					}
 					
 					//Verifico que los datos del pasajero sean correctos y sino lanza excepcion 
-					pasajero.verificarDatosPasajero(pasajero);
+					pBo.verificarDatosPasajero(pasajero);
 				
 //					if (a > 1 && reserva.getListPasajeros().get(a).getDni() != null){
 //						System.out.println("a");
@@ -1190,13 +1235,15 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 						txtAsiento.getText().length() > 0 && 
 						txtPrecio.getText().length() > 0){
 
-						reserva.agregarPasajero(pasajero);
-
-						pasajero.getAsientoPasajero().setContentAreaFilled(true);
-						pasajero.getAsientoPasajero().setBackground(Color.WHITE);
-						pasajero.getAsientoPasajero().setEnabled(false);
+						rV.setPasajero(pasajero);
 						
-						botonesSeleccionados.add(pasajero.getAsientoPasajero());
+						reservas.agregarReserva(rV);
+
+						b.setContentAreaFilled(true);
+						b.setBackground(Color.WHITE);
+						b.setEnabled(false);
+						
+						botonesSeleccionados.add(b);
 						
 //						for (BotonPasajero botonSelec : botonesSeleccionados){
 //							
@@ -1206,13 +1253,38 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 						
 						if (a > (Integer)opcion){
 
+							ResultSet res = null;
+							
 							//Generar PDF
 							
 							//....
 							
-							for (int i = 0; i < reserva.getListPasajeros().size(); i++){
-								JOptionPane.showMessageDialog(null, reserva.getListPasajeros().get(i));
-							}
+							
+								try {
+									for (int i = 0; i < reservas.getListReservas().size(); i++){									
+										
+										res = pDao.consultarPorDni(reservas.getListReservas().get(i).getPasajero());
+										
+										if (!res.next()){
+//											System.out.println("NO");
+											pDao.altaPasajero(reservas.getListReservas().get(i).getPasajero());
+										}
+//										else{
+//											System.out.println("SI");
+//										}
+										rVDao.alta(reservas.getListReservas().get(i));
+										
+//										System.out.println(reservas.getListReservas().get(i));
+										res = null;
+									}
+								} catch (ClassNotFoundException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								} catch (SQLException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+							
 							
 							dispose();
 						}
@@ -1224,7 +1296,11 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 //						b = null;
 						txtPrecio.setText("");		
 						
-						pasajero = new Pasajero();
+						pasajero = new PasajeroImpl();
+
+						rV = new ReservaViajeImpl();
+						rV.setViaje(reservas.getListReservas().get(0).getViaje());
+						rV.setDniPersona(reservas.getListReservas().get(0).getDniPersona());
 					}
 				}
 			}
@@ -1249,9 +1325,9 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 					botonAnterior.setContentAreaFilled(true);
 					botonAnterior.setEstadoAsiento("SELECCIONADO");
 				
-					txtNombre.setText(reserva.getListPasajeros().get(a-1).getNombre());
-					txtApellido.setText(reserva.getListPasajeros().get(a-1).getApellido());
-					txtDni.setText(reserva.getListPasajeros().get(a-1).getDni().toString());
+					txtNombre.setText(reservas.getListReservas().get(a-1).getPasajero().getNombre());
+					txtApellido.setText(reservas.getListReservas().get(a-1).getPasajero().getApellido());
+					txtDni.setText(reservas.getListReservas().get(a-1).getPasajero().getDni());
 					
 					botonesSeleccionados.remove(a-1);
 
@@ -1260,10 +1336,10 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 //					txtAsiento.setText(reserva.getListPasajeros().get(a-1).getAsientoPasajero().getAsiento());
 //					txtPrecio.setText(reserva.getListPasajeros().get(a-1).getAsientoPasajero().getPrecio().toString());
 
-					txtAsiento.setText(botonAnterior.getAsiento());
+					txtAsiento.setText(botonAnterior.getAsiento().toString());
 					txtPrecio.setText(botonAnterior.getPrecio().toString());
 					
-					reserva.eliminarPasajero(a-1);
+					reservas.eliminarReserva(a-1);
 					
 					estadoAnterior = true;
 					
@@ -1298,7 +1374,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				
-				reserva = null;
+				reservas = null;
 				
 				for (int i = 0; i < botonesSeleccionados.size(); i++) {
 					botonesSeleccionados.remove(i);
@@ -1315,7 +1391,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 				
 				if (cmbCantPasajeros.getSelectedIndex() > 0){
 					
-					reserva = new ReservaPasajero();
+					reservas = new Reservas();
 					
 					a = 1;
 					opcion = cmbCantPasajeros.getSelectedItem();
@@ -1361,7 +1437,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 					panelPasajeros.remove(btnSiguiente);
 					panelPasajeros.remove(btnAnterior);
 					
-					reserva = null;
+					reservas = null;
 					
 					for (int i = 0; i < botonesSeleccionados.size(); i++) {
 						botonesSeleccionados.remove(i);
@@ -1492,9 +1568,9 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 			public void focusLost(FocusEvent e) {
 					
 				if (txtDni.getText().trim().length() > 0){
-					pasajero.setDni(Integer.parseInt(txtDni.getText()));
+					pasajero.setDni(txtDni.getText());
 				}else{
-					pasajero.setDni(-1);
+					pasajero.setDni("-1");
 				}
 				
 			}
@@ -1504,9 +1580,9 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 			public void keyReleased(KeyEvent e) {
 				
 				if (txtDni.getText().trim().length() > 0){
-					pasajero.setDni(Integer.parseInt(txtDni.getText()));
+					pasajero.setDni(txtDni.getText());
 				}else{
-					pasajero.setDni(-1);
+					pasajero.setDni("-1");
 				}
 			
 			}
@@ -1584,6 +1660,14 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		this.lblAsientosDisp = lblAsientosDisp;
 	}
 
+	public ReservaViaje getrV() {
+		return rV;
+	}
+
+	public void setrV(ReservaViaje rV) {
+		this.rV = rV;
+	}
+
 	@SuppressWarnings("rawtypes")
 	public JComboBox getComboBox() {
 		return cmbCantPasajeros;
@@ -1603,6 +1687,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
+//		System.out.println("Hola");
 		
 	}
 
@@ -1633,6 +1718,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 						txtAsiento.setText(txtAsiento.getText());
 						txtPrecio.setText(txtPrecio.getText());
 						botonSelec.setContentAreaFilled(true);
+						
 						botonSelec.setBackground(Color.WHITE);
 						botonSelec.setEnabled(false);
 					}else if (b.getName() != botonSelec.getName()){
@@ -1640,6 +1726,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 						for (BotonPasajero boton : botones){
 							if (boton.getName() != b.getName()){
 								boton.setContentAreaFilled(false);
+								boton.setToolTipText("DISPONIBLE");
 							}
 						}
 						
@@ -1650,7 +1737,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 						}
 						
 						if (b.getEstadoAsiento().equals("SELECCIONADO")){
-							txtAsiento.setText(b.getAsiento());
+							txtAsiento.setText(b.getAsiento().toString());
 							txtPrecio.setText(b.getPrecio().toString());
 						}else{
 							txtAsiento.setText("");
@@ -1668,6 +1755,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 				for (BotonPasajero boton : botones){
 					if (boton.getName() != b.getName()){
 						boton.setContentAreaFilled(false);
+						boton.setToolTipText("DISPONIBLE");
 					}
 					
 //					if (boton.getEstadoAsiento() == "SELECCIONADO" && estadoAnterior){ 
@@ -1683,11 +1771,17 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 				}
 				
 				if (b.getEstadoAsiento().equals("SELECCIONADO")){
-					txtAsiento.setText(b.getAsiento());
+					txtAsiento.setText(b.getAsiento().toString());
 					txtPrecio.setText(b.getPrecio().toString());
-				}else{
+				} else {
+				    
 					txtAsiento.setText("");
 					txtPrecio.setText("");
+
+					if (b.getEstadoAsiento().equals("OCUPADO")){
+					
+					}
+				    
 				}
 			}
 
@@ -1696,20 +1790,4 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		}
 		
 	}
-
-//	private void focalizarCampo(){
-//		
-//		JOptionPane.showMessageDialog(null, "Hola");
-//		if (txtNombre.getText().equals("")){
-//			txtNombre.requestFocus();
-//		}
-//		
-//		if (txtApellido.getText().equals("")){
-//			txtApellido.requestFocus();
-//		}
-//		
-//		if (txtDni.getText().length() == 1){
-//			txtDni.requestFocus();
-//		}
-//	}
 }

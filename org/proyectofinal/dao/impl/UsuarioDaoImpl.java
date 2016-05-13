@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.proyectofinal.dao.abstracts.AbstractDao;
+import org.proyectofinal.dao.ex.UserAlreadyExistsException;
 import org.proyectofinal.dao.ex.UserNotExistsException;
 import org.proyectofinal.dao.interfaces.UsuarioDao;
 import org.proyectofinal.model.interfaces.Usuario;
@@ -50,19 +51,31 @@ public class UsuarioDaoImpl extends AbstractDao implements UsuarioDao {
 		return resultado;
 	}
 
-	public void alta(Usuario u) throws SQLException, ClassNotFoundException{
+	public void alta(Usuario u) throws SQLException, ClassNotFoundException, UserAlreadyExistsException{
 		
 		conectar();
 		
-		PreparedStatement sentencia = getConexion().prepareStatement("insert into Usuario (usuario, contrasenia, tipoUsuario, fechaInicio) values (?,?, 1, ?)");
-		
-		sentencia.setString(1, u.getNombreUsuario());
-		sentencia.setString(2, u.getPassword());
-		sentencia.setTimestamp(3, u.getFechaInicio());
-		
-		sentencia.executeUpdate();
-		
-		desconectar();
+		try {
+			ResultSet res = this.consultarPorUsuario(u);
+			
+			if (!res.next()){
+				PreparedStatement sentencia = getConexion().prepareStatement("insert into Usuario (usuario, contrasenia, tipoUsuario, fechaInicio) values (?,?, 1, ?)");
+				
+				sentencia.setString(1, u.getNombreUsuario());
+				sentencia.setString(2, u.getPassword());
+				sentencia.setTimestamp(3, u.getFechaInicio());
+				
+				sentencia.executeUpdate();
+				
+				desconectar();
+			}else{
+				throw new UserAlreadyExistsException();
+			}
+		} catch (UserNotExistsException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
 	}
 
 	public void baja(Usuario u) throws SQLException, ClassNotFoundException {
@@ -78,17 +91,42 @@ public class UsuarioDaoImpl extends AbstractDao implements UsuarioDao {
 		desconectar();
 	}
 
-	public void modificacion(String atr, String valor, String user) throws SQLException, ClassNotFoundException{
+	public void modificacionNombreUsuario(String valor, String user) throws SQLException, ClassNotFoundException, UserAlreadyExistsException{
+	
+		conectar();
+		
+		PreparedStatement sentencia = null;
+
+		ResultSet res = null;
+		
+		try {
+			res = consultarPorUsuario(valor);
+		} catch (UserNotExistsException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		
+		if (res.next()){
+			throw new UserAlreadyExistsException();
+		}else {
+			sentencia = getConexion().prepareStatement("update Usuario set usuario = ? where usuario = ?");
+		}
+		
+		sentencia.setString(1, valor);
+		sentencia.setString(2, user);
+		
+		sentencia.executeUpdate();
+		
+		desconectar();
+	}
+	
+	public void modificacionContrasenia(String valor, String user) throws SQLException, ClassNotFoundException {
 		
 		conectar();
 		
 		PreparedStatement sentencia = null;
 
-		if (atr.equals("usuario")){
-			sentencia = getConexion().prepareStatement("update Usuario set usuario = ? where usuario = ?");
-		} else if (atr.equals("contrasenia")) {
-			sentencia = getConexion().prepareStatement("update Usuario set contrasenia = ? where usuario = ?");
-		}
+		sentencia = getConexion().prepareStatement("update Usuario set contrasenia = ? where usuario = ?");
 		
 		sentencia.setString(1, valor);
 		sentencia.setString(2, user);
