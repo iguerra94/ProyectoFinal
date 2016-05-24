@@ -524,9 +524,9 @@ public class ListadoVuelosUI extends JFrame {
 						ResultSet res = vCDao.consultarVuelos(vC);
 						
 						String fecha = "";
-
-						while (res.next()){
-
+						
+						if (res.next()){
+							
 							fila[0] = res.getInt("codViaje");
 							fila[1] = res.getString("ciudadOrigen") + ", " + res.getString("paisOrigen");
 							fila[2] = res.getString("ciudadDestino") + ", " + res.getString("paisDestino");							
@@ -542,6 +542,26 @@ public class ListadoVuelosUI extends JFrame {
 							fila[5] = res.getInt("cupo");
 							
 							model.addRow(fila);					
+							
+							while (res.next()){
+								fila[0] = res.getInt("codViaje");
+								fila[1] = res.getString("ciudadOrigen") + ", " + res.getString("paisOrigen");
+								fila[2] = res.getString("ciudadDestino") + ", " + res.getString("paisDestino");							
+							
+								fecha = res.getDate("fechaSalida").toString().substring(8, 10) + "-" + res.getDate("fechaSalida").toString().substring(5, 7) + "-" + res.getDate("fechaSalida").toString().substring(0, 4);
+								
+								fila[3] = fecha + " " + res.getTime("horaSalida").toString().substring(0, 5);
+								
+								fecha = res.getDate("fechaLlegada").toString().substring(8, 10) + "-" + res.getDate("fechaLlegada").toString().substring(5, 7) + "-" + res.getDate("fechaLlegada").toString().substring(0, 4);
+								
+								fila[4] = fecha + " " + res.getTime("horaLlegada").toString().substring(0, 5);
+								
+								fila[5] = res.getInt("cupo");
+								
+								model.addRow(fila);					
+							}
+						}else{
+							throw new NoFlightsFoundException();
 						}
 						
 						vCDao.desconectar();
@@ -551,7 +571,7 @@ public class ListadoVuelosUI extends JFrame {
 					} catch (SQLException e) {
 						JOptionPane.showMessageDialog(null, e.getMessage());
 					} catch (NoFlightsFoundException e) {
-						JOptionPane.showMessageDialog(null, e.getMessage());						
+						JOptionPane.showMessageDialog(null, e.getMessage());
 					}
 
 				}

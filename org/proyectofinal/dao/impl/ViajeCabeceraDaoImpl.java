@@ -98,7 +98,7 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		return resultado;
 	}
 	
-	public ResultSet consultarVuelos(ViajeCabecera vC) throws ClassNotFoundException, SQLException, NoFlightsFoundException {
+	public ResultSet consultarVuelos(ViajeCabecera vC) throws ClassNotFoundException, SQLException{
 		
 		PreparedStatement sentencia = getConexion().prepareStatement("SELECT * FROM ViajeCabecera where ciudadOrigen = ? and paisOrigen = ? and ciudadDestino = ? and paisDestino = ? and date(fechaSalida) = ?");
 		
@@ -113,11 +113,7 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		
 		ResultSet resultado = sentencia.executeQuery();
 		
-//		if (resultado.next())
-			
-			return resultado; 
-//		else throw new NoFlightsFoundException();
-				
+		return resultado;
 	}
 
 	public void alta(ViajeCabecera vC) throws SQLException, ClassNotFoundException{
