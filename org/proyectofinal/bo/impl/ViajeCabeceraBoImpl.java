@@ -40,8 +40,10 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 			while (res.next()) {
 				vC.setCodigoViaje(res.getInt("codViaje"));
 				vC.setCiudadOrigen(res.getString("ciudadOrigen"));
+				vC.setShortPaisOrigen(res.getString("shortPaisOrigen"));
 				vC.setPaisOrigen(res.getString("paisOrigen"));
 				vC.setCiudadDestino(res.getString("ciudadDestino"));
+				vC.setShortPaisDestino(res.getString("shortPaisDestino"));
 				vC.setPaisDestino(res.getString("paisDestino"));
 				vC.setFechaSalida(res.getDate("fechaSalida"));
 				vC.setHoraSalida(res.getTime("horaSalida"));

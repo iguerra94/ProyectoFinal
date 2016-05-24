@@ -31,21 +31,35 @@ import javax.swing.border.LineBorder;
 
 import org.proyectofinal.bo.ex.NotValidPassengerException;
 import org.proyectofinal.bo.impl.PasajeroBoImpl;
+import org.proyectofinal.bo.impl.PersonaRegistradaBoImpl;
+import org.proyectofinal.bo.impl.ReservaViajeBoImpl;
 import org.proyectofinal.bo.interfaces.PasajeroBo;
+import org.proyectofinal.bo.interfaces.PersonaRegistradaBo;
+import org.proyectofinal.bo.interfaces.ReservaViajeBo;
 import org.proyectofinal.dao.impl.PasajeroDaoImpl;
+import org.proyectofinal.dao.impl.PersonaRegistradaDaoImpl;
 import org.proyectofinal.dao.impl.ReservaViajeDaoImpl;
+import org.proyectofinal.dao.impl.ViajeCabeceraDaoImpl;
 import org.proyectofinal.dao.interfaces.PasajeroDao;
+import org.proyectofinal.dao.interfaces.PersonaRegistradaDao;
 import org.proyectofinal.dao.interfaces.ReservaViajeDao;
+import org.proyectofinal.dao.interfaces.ViajeCabeceraDao;
 import org.proyectofinal.model.impl.PasajeroImpl;
 import org.proyectofinal.model.impl.ReservaViajeImpl;
 import org.proyectofinal.model.interfaces.Pasajero;
 import org.proyectofinal.model.interfaces.ReservaViaje;
 import org.proyectofinal.ui.botones.BotonPasajero;
+import org.proyectofinal.ui.util.Boleto;
+import org.proyectofinal.ui.util.BoletoEmail;
+import org.proyectofinal.ui.util.DialogEnviando;
 import org.proyectofinal.ui.util.Reservas;
+
+import com.itextpdf.text.DocumentException;
 
 import javax.swing.border.TitledBorder;
 import javax.swing.JTextField;
 import java.awt.event.WindowFocusListener;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.awt.event.WindowEvent;
@@ -73,6 +87,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 	private JTextField txtPrecio;
 	private JButton btnAnterior;
 	private JButton btnSiguiente;
+//	private JLabel lblEnviando;
 	private List<BotonPasajero> botones;
 	private List<BotonPasajero> botonesSeleccionados = new ArrayList<BotonPasajero>();
 	private List<BotonPasajero> botonesOcupados = new ArrayList<BotonPasajero>();
@@ -88,7 +103,11 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 //	private List<Pasajero> lista;
 	private Reservas reservas;
 	private ReservaViaje rV;
+	private ReservaViajeBo rVBo;
+	private PersonaRegistradaBo pRBo;
+	private PersonaRegistradaDao pRDao;
 	private ReservaViajeDao rVDao;
+	private ViajeCabeceraDao vCDao;
 	
 	/**
 	 * Create the frame.
@@ -153,7 +172,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 				if (txtDni.getText().trim().length() > 0){
 					pasajero.setDni(txtDni.getText());
 				}else{
-					pasajero.setDni("-1");
+					pasajero.setDni("");
 				}
 				
 				if (txtNombre.getText().trim().length() > 0){
@@ -215,7 +234,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 				}
 				
 				if (txtDni.getText().trim().length() == 0){
-					pasajero.setDni("-1");
+					pasajero.setDni("");
 				}else{
 					pasajero.setDni(txtDni.getText());
 				}
@@ -253,8 +272,10 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		
 		pBo = new PasajeroBoImpl();
 		pDao = new PasajeroDaoImpl();
+		vCDao = new ViajeCabeceraDaoImpl();
 		
 //		reserva = new ReservaPasajero();
+		rVBo = new ReservaViajeBoImpl();
 		rVDao = new ReservaViajeDaoImpl();
 		
 		botones = new ArrayList<BotonPasajero>();
@@ -312,7 +333,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		btnAsientoOcup.setMargin(new Insets(2, 0, 2, 0));
 		btnAsientoOcup.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnAsientoOcup.setBorder(new LineBorder(Color.DARK_GRAY, 2));
-		btnAsientoOcup.setBackground(Color.GRAY);
+		btnAsientoOcup.setBackground(Color.BLACK);
 		btnAsientoOcup.setBounds(397, 238, 25, 36);
 		panelAsientos.add(btnAsientoOcup);
 		
@@ -1183,7 +1204,10 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 					
 					//Verifico que los datos del pasajero sean correctos y sino lanza excepcion 
 					pBo.verificarDatosPasajero(pasajero);
-				
+					
+					rVBo.verificarReserva(rV);
+					
+					
 //					if (a > 1 && reserva.getListPasajeros().get(a).getDni() != null){
 //						System.out.println("a");
 //						txtNombre.setText(reserva.getListPasajeros().get(a).getNombre());
@@ -1227,7 +1251,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 					// TODO Auto-generated catch block
 					JOptionPane.showMessageDialog(null, e1.getMessage());
 					
-				}finally{
+				} finally{
 				
 					if (txtNombre.getText().length() > 0 && 
 						txtApellido.getText().length() > 0 && 
@@ -1252,41 +1276,79 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 //						}
 						
 						if (a > (Integer)opcion){
-
+							
 							ResultSet res = null;
+							
+							try {
+								for (int i = 0; i < reservas.getListReservas().size(); i++){									
+									
+									res = pDao.consultarPorDni(reservas.getListReservas().get(i).getPasajero());
+									
+									if (!res.next()){
+//										System.out.println("NO");
+										pDao.altaPasajero(reservas.getListReservas().get(i).getPasajero());
+									}
+//									else{
+//										System.out.println("SI");
+//									}
+									rVDao.alta(reservas.getListReservas().get(i));
+									
+//									System.out.println(reservas.getListReservas().get(i));
+									res = null;
+								}
+
+								vCDao.actualizarCupo(reservas.getListReservas().get(0).getViaje());
+
+//								System.out.println(reservas.getListReservas().get(0).getViaje().getShortPaisDestino());
+							} catch (ClassNotFoundException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							} catch (SQLException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+							
 							
 							//Generar PDF
 							
-							//....
+							Boleto boleto = new Boleto();
+							
+							BoletoEmail bE = new BoletoEmail();
+						
+//							DialogEnviando d = new DialogEnviando();
+							
+							pRBo = new PersonaRegistradaBoImpl();
+
+							pRDao = new PersonaRegistradaDaoImpl();
+							
+							String email = pRBo.retornarEmail(pRDao, reservas.getListReservas().get(0).getDniPersona());
+							
+							try {
+								boleto.crearBoleto(reservas);
+								dispose();
+								JOptionPane.showMessageDialog(null, "Se esta enviando un mail a su correo con su boleto.");
+								bE.enviarMail(email, boleto.retornarBoleto());
+							} catch (IOException e2) {
+								// TODO Auto-generated catch block
+								e2.printStackTrace();
+							} catch (DocumentException e2) {
+								// TODO Auto-generated catch block
+								e2.printStackTrace();
+							} finally {
+//								panelPasajeros.add(lblEnviando);
+//								panelPasajeros.remove(panelDatosPasajeros);
+//								panelPasajeros.remove(btnAnterior);
+//								panelPasajeros.remove(btnSiguiente);
+//								panelPasajeros.validate();
+//								panelPasajeros.repaint();
+								
+								JOptionPane.showMessageDialog(null, "Se ha enviado un mail a " + email + " con el boleto para que este disponible para su descarga cuando lo requiera. Gracias.");
+//								panelPasajeros.remove(lblEnviando);
+								
+								boleto.abrirBoleto();
+							}
 							
 							
-								try {
-									for (int i = 0; i < reservas.getListReservas().size(); i++){									
-										
-										res = pDao.consultarPorDni(reservas.getListReservas().get(i).getPasajero());
-										
-										if (!res.next()){
-//											System.out.println("NO");
-											pDao.altaPasajero(reservas.getListReservas().get(i).getPasajero());
-										}
-//										else{
-//											System.out.println("SI");
-//										}
-										rVDao.alta(reservas.getListReservas().get(i));
-										
-//										System.out.println(reservas.getListReservas().get(i));
-										res = null;
-									}
-								} catch (ClassNotFoundException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
-								} catch (SQLException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
-								}
-							
-							
-							dispose();
 						}
 						
 						txtNombre.setText("");
@@ -1465,6 +1527,13 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		lblinformacinSobrePasajeros.setBounds(0, 0, 374, 50);
 		panelPasajeros.add(lblinformacinSobrePasajeros);
 		
+//		lblEnviando = new JLabel("");
+//		lblEnviando.setBackground(Color.BLACK);
+//		lblEnviando.setHorizontalAlignment(SwingConstants.CENTER);
+////		lblEnviando.setIcon(new ImageIcon(ReservaBoletoUI.class.getResource("/imagenes/enviando-mensaje.gif")));
+//		lblEnviando.setBounds(15, 253, 211, 61);
+//		panelPasajeros.add(lblEnviando);
+		
 		JLabel lblNombre = new JLabel("Nombre:");
 		lblNombre.setBounds(20, 25, 116, 20);
 		panelDatosPasajeros.add(lblNombre);
@@ -1570,7 +1639,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 				if (txtDni.getText().trim().length() > 0){
 					pasajero.setDni(txtDni.getText());
 				}else{
-					pasajero.setDni("-1");
+					pasajero.setDni("");
 				}
 				
 			}
@@ -1582,7 +1651,7 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 				if (txtDni.getText().trim().length() > 0){
 					pasajero.setDni(txtDni.getText());
 				}else{
-					pasajero.setDni("-1");
+					pasajero.setDni("");
 				}
 			
 			}

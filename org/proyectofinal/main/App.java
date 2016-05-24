@@ -9,7 +9,7 @@ public class App {
 		
 		MainFrameUI ui = new MainFrameUI();
 		ui.setVisible(true);
-
+	
 	}
 
 }

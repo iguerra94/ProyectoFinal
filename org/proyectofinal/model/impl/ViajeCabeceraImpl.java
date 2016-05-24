@@ -9,8 +9,10 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 	
 	private Integer codigoViaje = null;
 	private String ciudadOrigen = null;
+	private String shortPaisOrigen = null;
 	private String paisOrigen = null;
 	private String ciudadDestino = null;
+	private String shortPaisDestino = null;
 	private String paisDestino = null;
 	private Date fechaSalida = null;
 	private Time horaSalida = null;
@@ -109,9 +111,9 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 		
 		res += "Codigo Viaje: " + getCodigoViaje() + "\n";
 		res += "Ciudad de origen: " + getCiudadOrigen() + "\n";
-		res += "Pais de origen: " + getPaisOrigen() + "\n";
+		res += "Pais de origen: " + getPaisOrigen() + "( " + getShortPaisOrigen() + ")" + "\n";
 		res += "Ciudad de destino: " + getCiudadDestino() + "\n";
-		res += "Pais de destino: " + getPaisDestino() + "\n";
+		res += "Pais de destino: " + getPaisDestino() + "( " + getShortPaisDestino() + ")" + "\n";
 		res += "Fecha de Salida: " + getFechaSalida() + "\n";
 		res += "Hora de Salida: " + getHoraSalida() + "\n";
 		res += "Fecha de Llegada: " + getFechaLlegada() + "\n";
@@ -216,6 +218,22 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 		} else if (!paisOrigen.equals(other.paisOrigen))
 			return false;
 		return true;
+	}
+
+	public String getShortPaisOrigen() {
+		return shortPaisOrigen;
+	}
+
+	public void setShortPaisOrigen(String shortPaisOrigen) {
+		this.shortPaisOrigen = shortPaisOrigen;
+	}
+
+	public String getShortPaisDestino() {
+		return shortPaisDestino;
+	}
+
+	public void setShortPaisDestino(String shortPaisDestino) {
+		this.shortPaisDestino = shortPaisDestino;
 	}
 	
 }

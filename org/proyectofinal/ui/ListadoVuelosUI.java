@@ -397,6 +397,8 @@ public class ListadoVuelosUI extends JFrame {
 					
 					ReservaBoletoUI ui = new ReservaBoletoUI();
 					
+					dispose();
+					
 					ui.setVisible(true);
 					
 					ui.getLblNumeroDeViaje().setText(ui.getLblNumeroDeViaje().getText() + table.getValueAt(filaSelecc, 0));

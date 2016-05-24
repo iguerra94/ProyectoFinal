@@ -122,9 +122,9 @@ public class PanelAccion extends JPanel {
 				
 				dLF.getTxtCodigoViaje().setText(dLF.getTxtCodigoViaje().getText() + res.getInt("codViaje"));
 				dLF.getTxtCiudadOrigen().setText(dLF.getTxtCiudadOrigen().getText() + res.getString("ciudadOrigen"));
-				dLF.getTxtPaisOrigen().setText(dLF.getTxtPaisOrigen().getText() + res.getString("paisOrigen"));
+//				dLF.getTxtPaisOrigen().setText(dLF.getTxtPaisOrigen().getText() + res.getString("paisOrigen"));
 				dLF.getTxtCiudadDestino().setText(dLF.getTxtCiudadDestino().getText() + res.getString("ciudadDestino"));
-				dLF.getTxtPaisDestino().setText(dLF.getTxtPaisDestino().getText() + res.getString("paisDestino"));
+//				dLF.getTxtPaisDestino().setText(dLF.getTxtPaisDestino().getText() + res.getString("paisDestino"));
 				dLF.getDateChooserFechaSalida().setDate(res.getDate("fechaSalida"));
 				dLF.getTxtHoraSalida().setText(dLF.getTxtHoraSalida().getText() + res.getTime("horaSalida"));
 				dLF.getDateChooserFechaLlegada().setDate(res.getDate("fechaLlegada"));

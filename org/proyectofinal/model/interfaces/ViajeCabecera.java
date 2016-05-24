@@ -11,11 +11,17 @@ public interface ViajeCabecera extends Cloneable {
 	public String getCiudadOrigen();
 	public void setCiudadOrigen(String ciudadOrigen);
 	
+	public String getShortPaisOrigen();
+	public void setShortPaisOrigen(String shortPaisOrigen);
+	
 	public String getPaisOrigen();
 	public void setPaisOrigen(String paisOrigen);
 	
 	public String getCiudadDestino();
 	public void setCiudadDestino(String ciudadDestino);
+
+	public String getShortPaisDestino();
+	public void setShortPaisDestino(String shortPaisDestino);
 	
 	public String getPaisDestino();
 	public void setPaisDestino(String paisDestino);

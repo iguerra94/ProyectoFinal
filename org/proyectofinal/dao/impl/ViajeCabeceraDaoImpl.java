@@ -113,27 +113,31 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		
 		ResultSet resultado = sentencia.executeQuery();
 		
-//		if (!resultado.next()) throw new NoFlightsFoundException();
-
-		return resultado;		
+//		if (resultado.next())
+			
+			return resultado; 
+//		else throw new NoFlightsFoundException();
+				
 	}
 
 	public void alta(ViajeCabecera vC) throws SQLException, ClassNotFoundException{
 		
 		conectar();
 		
-		PreparedStatement sentencia = getConexion().prepareStatement("INSERT INTO ViajeCabecera VALUES (?,?,?,?,?,?,?,?,?,?)");
+		PreparedStatement sentencia = getConexion().prepareStatement("INSERT INTO ViajeCabecera VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
 		
 		sentencia.setInt(1, vC.getCodigoViaje());
 		sentencia.setString(2, vC.getCiudadOrigen());
 		sentencia.setString(3, vC.getPaisOrigen());
-		sentencia.setString(4, vC.getCiudadDestino());
-		sentencia.setString(5, vC.getPaisDestino());
-		sentencia.setDate(6, vC.getFechaSalida());
-		sentencia.setTime(7, vC.getHoraSalida());
-		sentencia.setDate(8, vC.getFechaLlegada());
-		sentencia.setTime(9, vC.getHoraLlegada());
-		sentencia.setInt(10, vC.getCupo());
+		sentencia.setString(4, vC.getShortPaisOrigen());
+		sentencia.setString(5, vC.getCiudadDestino());
+		sentencia.setString(6, vC.getPaisDestino());
+		sentencia.setString(7, vC.getShortPaisDestino());
+		sentencia.setDate(8, vC.getFechaSalida());
+		sentencia.setTime(9, vC.getHoraSalida());
+		sentencia.setDate(10, vC.getFechaLlegada());
+		sentencia.setTime(11, vC.getHoraLlegada());
+		sentencia.setInt(12, vC.getCupo());
 		
 		sentencia.executeUpdate();
 
@@ -153,6 +157,21 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		desconectar();
 	}
 
+	public void actualizarCupo(ViajeCabecera vC) throws SQLException, ClassNotFoundException{
+		
+		conectar();			
+		
+		PreparedStatement sentencia = null;
+		
+		sentencia = getConexion().prepareStatement("update ViajeCabecera set cupo = cupo -1 where codViaje = ?");
+		
+		sentencia.setInt(1, vC.getCodigoViaje());
+		
+		sentencia.executeUpdate();
+		
+		desconectar();
+	}
+	
 	public void modificacion(ViajeCabecera vC) throws SQLException, ClassNotFoundException{
 		
 		conectar();			

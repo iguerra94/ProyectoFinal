@@ -1,6 +1,5 @@
 package org.proyectofinal.ui;
 
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
@@ -27,11 +26,18 @@ import org.proyectofinal.dao.impl.ViajeCabeceraDaoImpl;
 import org.proyectofinal.dao.interfaces.ViajeCabeceraDao;
 import org.proyectofinal.model.impl.ViajeCabeceraImpl;
 import org.proyectofinal.model.interfaces.ViajeCabecera;
+import org.proyectofinal.ui.util.ListaPaises;
+import org.proyectofinal.ui.util.PaisUtil;
+
 import com.toedter.calendar.JDateChooser;
 import java.awt.event.WindowFocusListener;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import javax.swing.JComboBox;
+import java.awt.event.WindowAdapter;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 public class DialogLoadFlight extends JDialog {
 
@@ -44,9 +50,9 @@ public class DialogLoadFlight extends JDialog {
 	 */
 	private JTextField txtCodigoViaje;
 	private JTextField txtCiudadOrigen;
-	private JTextField txtPaisOrigen;
+	private JComboBox cmbPaisOrigen;
 	private JTextField txtCiudadDestino;
-	private JTextField txtPaisDestino;
+	private JComboBox cmbPaisDestino;
 	private JDateChooser dateChooserFechaSalida;
 	private JDateChooser dateChooserFechaLlegada;
 	private JTextField txtHoraSalida;
@@ -57,11 +63,26 @@ public class DialogLoadFlight extends JDialog {
 	private ViajeCabeceraBo vCBo;
 	private ViajeCabeceraDao vCDao;
 	private List<Integer> codigos;
+	private ListaPaises listaPaises;
 	
 	/**
 	 * Create the dialog.
 	 */
 	public DialogLoadFlight() {
+		addWindowListener(new WindowAdapter() {
+			@SuppressWarnings("unchecked")
+			@Override
+			public void windowOpened(WindowEvent e) {
+				
+				listaPaises = new ListaPaises();
+				
+				for (PaisUtil p : listaPaises.getListaPaises()) {
+					cmbPaisOrigen.addItem(p);
+					cmbPaisDestino.addItem(p);
+				}
+				
+			}
+		});
 		addWindowFocusListener(new WindowFocusListener() {
 			public void windowGainedFocus(WindowEvent e) {
 				
@@ -77,10 +98,9 @@ public class DialogLoadFlight extends JDialog {
 					vC.setCiudadOrigen("");
 				}
 				
-				if (txtPaisOrigen.getText().trim().length() > 0){
-					vC.setPaisOrigen(txtPaisOrigen.getText());
-				}else {
-					vC.setPaisOrigen("");
+				if (cmbPaisOrigen.getSelectedIndex() == 0){
+					vC.setPaisOrigen(listaPaises.getListaPaises().get(0).getPais());
+					vC.setShortPaisOrigen(listaPaises.getListaPaises().get(0).getShortPais());
 				}
 				
 				if (txtCiudadDestino.getText().trim().length() > 0){
@@ -89,10 +109,9 @@ public class DialogLoadFlight extends JDialog {
 					vC.setCiudadDestino("");					
 				}
 				
-				if (txtPaisDestino.getText().trim().length() > 0){
-					vC.setPaisDestino(txtPaisDestino.getText());
-				}else{
-					vC.setPaisDestino("");
+				if (cmbPaisDestino.getSelectedIndex() == 0){
+					vC.setPaisDestino(listaPaises.getListaPaises().get(0).getPais());
+					vC.setShortPaisDestino(listaPaises.getListaPaises().get(0).getShortPais());
 				}
 				
 				if (dateChooserFechaSalida.getDate() != null){
@@ -165,6 +184,7 @@ public class DialogLoadFlight extends JDialog {
 		vCBo = new ViajeCabeceraBoImpl();
 		vCDao = new ViajeCabeceraDaoImpl();
 		
+		
 		setTitle("Cargar Vuelo..");
 		setBounds(100, 100, 635, 331);
 		setLocationRelativeTo(null);
@@ -172,7 +192,7 @@ public class DialogLoadFlight extends JDialog {
 		getContentPane().setLayout(null);
 		
 		JLabel lblCodigoDeViaje = new JLabel("Codigo de Viaje: ");
-		lblCodigoDeViaje.setBounds(15, 15, 119, 15);
+		lblCodigoDeViaje.setBounds(15, 18, 119, 15);
 		getContentPane().add(lblCodigoDeViaje);
 		
 		JLabel lblCiudadDeOrigen = new JLabel("Ciudad de Origen: ");
@@ -196,7 +216,7 @@ public class DialogLoadFlight extends JDialog {
 		getContentPane().add(lblFechaDeSalida);
 		
 		JLabel lblHoraDeSalida = new JLabel("Hora de Salida: ");
-		lblHoraDeSalida.setBounds(330, 165, 130, 15);
+		lblHoraDeSalida.setBounds(340, 165, 130, 15);
 		getContentPane().add(lblHoraDeSalida);
 		
 		JLabel lblFechaDeLlegada = new JLabel("Fecha de Llegada: ");
@@ -204,7 +224,7 @@ public class DialogLoadFlight extends JDialog {
 		getContentPane().add(lblFechaDeLlegada);
 		
 		JLabel lblHoraDeLlegada = new JLabel("Hora de Llegada: ");
-		lblHoraDeLlegada.setBounds(330, 195, 137, 15);
+		lblHoraDeLlegada.setBounds(340, 195, 137, 15);
 		getContentPane().add(lblHoraDeLlegada);
 		
 		JLabel lblCupo = new JLabel("Cupo: ");
@@ -253,7 +273,7 @@ public class DialogLoadFlight extends JDialog {
 				}
 			}
 		});
-		txtCodigoViaje.setBounds(160, 15, 151, 19);
+		txtCodigoViaje.setBounds(160, 15, 165, 19);
 		getContentPane().add(txtCodigoViaje);
 		txtCodigoViaje.setColumns(10);
 		
@@ -289,43 +309,8 @@ public class DialogLoadFlight extends JDialog {
 			}
 		});
 		txtCiudadOrigen.setColumns(10);
-		txtCiudadOrigen.setBounds(160, 45, 151, 19);
+		txtCiudadOrigen.setBounds(160, 45, 165, 19);
 		getContentPane().add(txtCiudadOrigen);
-		
-		txtPaisOrigen = new JTextField();
-		txtPaisOrigen.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				
-				if (txtPaisOrigen.getText().trim().length() > 0){
-					vC.setPaisOrigen(txtPaisOrigen.getText());
-				}else {
-					vC.setPaisOrigen("");
-				}				
-			}
-		});
-		txtPaisOrigen.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent e) {
-		
-				char c = e.getKeyChar();
-				
-				if ((c < 'a' || c > 'z') && (c < 'A' || c > 'Z') && (c != KeyEvent.VK_KP_LEFT) && c != (KeyEvent.VK_KP_RIGHT) && (c != KeyEvent.VK_SPACE) && (c != KeyEvent.VK_BACK_SPACE)){
-					e.consume();
-				}
-			}
-			@Override
-			public void keyReleased(KeyEvent e) {
-				if (txtPaisOrigen.getText().trim().length() > 0){
-					vC.setPaisOrigen(txtPaisOrigen.getText());
-				}else {
-					vC.setPaisOrigen("");
-				}
-			}
-		});
-		txtPaisOrigen.setColumns(10);
-		txtPaisOrigen.setBounds(160, 75, 151, 19);
-		getContentPane().add(txtPaisOrigen);
 		
 		txtCiudadDestino = new JTextField();
 		txtCiudadDestino.addFocusListener(new FocusAdapter() {
@@ -358,62 +343,76 @@ public class DialogLoadFlight extends JDialog {
 				}
 			}
 		});
+		
+		cmbPaisOrigen = new JComboBox();
+		cmbPaisOrigen.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				
+				if (cmbPaisOrigen.getSelectedIndex() == 0){
+					vC.setPaisOrigen(listaPaises.getListaPaises().get(0).getPais());
+					vC.setShortPaisOrigen(listaPaises.getListaPaises().get(0).getShortPais());
+				}else if (cmbPaisOrigen.getSelectedIndex() == 1){
+					vC.setPaisOrigen(listaPaises.getListaPaises().get(1).getPais());
+					vC.setShortPaisOrigen(listaPaises.getListaPaises().get(1).getShortPais());
+				}else if (cmbPaisOrigen.getSelectedIndex() == 2){
+					vC.setPaisOrigen(listaPaises.getListaPaises().get(2).getPais());
+					vC.setShortPaisOrigen(listaPaises.getListaPaises().get(2).getShortPais());
+				}else if (cmbPaisOrigen.getSelectedIndex() == 3){
+					vC.setPaisOrigen(listaPaises.getListaPaises().get(3).getPais());
+					vC.setShortPaisOrigen(listaPaises.getListaPaises().get(3).getShortPais());
+				}
+				
+			}
+		});
+		cmbPaisOrigen.setBounds(160, 73, 165, 22);
+		getContentPane().add(cmbPaisOrigen);
 		txtCiudadDestino.setColumns(10);
-		txtCiudadDestino.setBounds(160, 105, 151, 19);
+		txtCiudadDestino.setBounds(160, 105, 165, 19);
 		getContentPane().add(txtCiudadDestino);
 		
-		txtPaisDestino = new JTextField();
-		txtPaisDestino.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
+		
+		cmbPaisDestino = new JComboBox();
+		cmbPaisDestino.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
 				
-				if (txtPaisDestino.getText().trim().length() > 0){
-					vC.setPaisDestino(txtPaisDestino.getText());
-				}else{
-					vC.setPaisDestino("");
+				if (cmbPaisDestino.getSelectedIndex() == 0){
+					vC.setPaisDestino(listaPaises.getListaPaises().get(0).getPais());
+					vC.setShortPaisDestino(listaPaises.getListaPaises().get(0).getShortPais());
+				}else if (cmbPaisDestino.getSelectedIndex() == 1){
+					vC.setPaisDestino(listaPaises.getListaPaises().get(1).getPais());
+					vC.setShortPaisDestino(listaPaises.getListaPaises().get(1).getShortPais());
+				}else if (cmbPaisDestino.getSelectedIndex() == 2){
+					vC.setPaisDestino(listaPaises.getListaPaises().get(2).getPais());
+					vC.setShortPaisDestino(listaPaises.getListaPaises().get(2).getShortPais());
+				}else if (cmbPaisDestino.getSelectedIndex() == 3){
+					vC.setPaisDestino(listaPaises.getListaPaises().get(3).getPais());
+					vC.setShortPaisDestino(listaPaises.getListaPaises().get(3).getShortPais());
 				}
+				
+	
 			}
 		});
-		txtPaisDestino.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent e) {
-		
-				char c = e.getKeyChar();
-				
-				if ((c < 'a' || c > 'z') && (c < 'A' || c > 'Z') && (c != KeyEvent.VK_KP_LEFT) && c != (KeyEvent.VK_KP_RIGHT) && (c != KeyEvent.VK_SPACE) && (c != KeyEvent.VK_BACK_SPACE)){
-					e.consume();
-				}
-			}
-			@Override
-			public void keyReleased(KeyEvent e) {
-				if (txtPaisDestino.getText().trim().length() > 0){
-					vC.setPaisDestino(txtPaisDestino.getText());
-				}else{
-					vC.setPaisDestino("");
-				}
-			}
-		});
-		txtPaisDestino.setColumns(10);
-		txtPaisDestino.setBounds(160, 135, 151, 19);
-		getContentPane().add(txtPaisDestino);
-		
-		java.util.Date now = new java.util.Date();
+		cmbPaisDestino.setBounds(160, 130, 165, 22);
+		getContentPane().add(cmbPaisDestino);
 
 		dateChooserFechaLlegada = new JDateChooser();
-		dateChooserFechaLlegada.setBounds(160, 191, 151, 19);
+		dateChooserFechaLlegada.setBounds(160, 191, 165, 19);
 		getContentPane().add(dateChooserFechaLlegada);
-
+		
+		java.util.Date now = new java.util.Date();
+		
 		dateChooserFechaSalida = new JDateChooser();
+		dateChooserFechaSalida.setDate(now);
 		dateChooserFechaSalida.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
 			
 				if (dateChooserFechaSalida.getDate() != null){
-				
+					
 					dateChooserFechaLlegada.setDate(dateChooserFechaSalida.getDate());
 					dateChooserFechaLlegada.setMinSelectableDate(dateChooserFechaSalida.getDate());
 					
-					dateChooserFechaSalida.validate();
-					dateChooserFechaSalida.repaint();
+					dateChooserFechaLlegada.validate();
+					dateChooserFechaLlegada.repaint();
 				}
 				
 			}
@@ -432,10 +431,9 @@ public class DialogLoadFlight extends JDialog {
 				dateChooserFechaLlegada.repaint();
 			}
 		});
-		dateChooserFechaSalida.setBounds(160, 161, 151, 19);
-		dateChooserFechaSalida.setDate(now);
+		dateChooserFechaSalida.setBounds(160, 161, 165, 19);
 		getContentPane().add(dateChooserFechaSalida);
-		
+
 		txtHoraSalida = new JTextField();
 		txtHoraSalida.addFocusListener(new FocusAdapter() {
 			@Override
@@ -539,7 +537,7 @@ public class DialogLoadFlight extends JDialog {
 			}
 		});
 		txtCupo.setColumns(10);
-		txtCupo.setBounds(160, 225, 151, 19);
+		txtCupo.setBounds(160, 225, 165, 19);
 		getContentPane().add(txtCupo);
 		
 		btnRealizarCambios = new JButton("");
@@ -579,7 +577,8 @@ public class DialogLoadFlight extends JDialog {
 						JOptionPane.showMessageDialog(null, e1.getMessage());
 					}
 					
-					JOptionPane.showMessageDialog(null, "Se ha cargado el vuelo con exito!");
+					JOptionPane.showMessageDialog(null, "Se ha cargado el vuelo con exito!\n"+vC);
+					
 				}
 				
 				if (getBtnRealizarCambios().getText() == "Guardar cambios"){
@@ -631,14 +630,6 @@ public class DialogLoadFlight extends JDialog {
 		this.txtCiudadOrigen = txtCiudadOrigen;
 	}
 
-	public JTextField getTxtPaisOrigen() {
-		return txtPaisOrigen;
-	}
-
-	public void setTxtPaisOrigen(JTextField txtPaisOrigen) {
-		this.txtPaisOrigen = txtPaisOrigen;
-	}
-
 	public JTextField getTxtCiudadDestino() {
 		return txtCiudadDestino;
 	}
@@ -685,14 +676,6 @@ public class DialogLoadFlight extends JDialog {
 
 	public void setTxtCupo(JTextField txtCupo) {
 		this.txtCupo = txtCupo;
-	}
-
-	public JTextField getTxtPaisDestino() {
-		return txtPaisDestino;
-	}
-
-	public void setTxtPaisDestino(JTextField txtPaisDestino) {
-		this.txtPaisDestino = txtPaisDestino;
 	}
 
 	public JButton getBtnRealizarCambios() {

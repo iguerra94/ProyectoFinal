@@ -32,6 +32,8 @@ public interface ViajeCabeceraDao {
 	public void alta(ViajeCabecera vC) throws SQLException, ClassNotFoundException;
 	
 	public void baja(Integer codigoViaje) throws SQLException, ClassNotFoundException;
+
+	public void actualizarCupo(ViajeCabecera vC) throws SQLException, ClassNotFoundException;
 	
 	public void modificacion(ViajeCabecera vC) throws SQLException, ClassNotFoundException;
 }
