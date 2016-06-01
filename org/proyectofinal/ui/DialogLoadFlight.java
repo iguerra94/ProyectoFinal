@@ -35,9 +35,9 @@ import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 import javax.swing.JComboBox;
-import java.awt.event.WindowAdapter;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
+import javax.swing.DefaultComboBoxModel;
 
 public class DialogLoadFlight extends JDialog {
 
@@ -50,13 +50,21 @@ public class DialogLoadFlight extends JDialog {
 	 */
 	private JTextField txtCodigoViaje;
 	private JTextField txtCiudadOrigen;
+	@SuppressWarnings("rawtypes")
 	private JComboBox cmbPaisOrigen;
 	private JTextField txtCiudadDestino;
+	@SuppressWarnings("rawtypes")
 	private JComboBox cmbPaisDestino;
 	private JDateChooser dateChooserFechaSalida;
 	private JDateChooser dateChooserFechaLlegada;
-	private JTextField txtHoraSalida;
-	private JTextField txtHoraLlegada;
+	@SuppressWarnings("rawtypes")
+	private JComboBox cmbHoraSalida;
+	@SuppressWarnings("rawtypes")
+	private JComboBox cmbMinutoSalida;
+	@SuppressWarnings("rawtypes")
+	private JComboBox cmbHoraLlegada;
+	@SuppressWarnings("rawtypes")
+	private JComboBox cmbMinutoLlegada;
 	private JTextField txtCupo;
 	private JButton btnRealizarCambios;
 	private ViajeCabecera vC;
@@ -64,25 +72,14 @@ public class DialogLoadFlight extends JDialog {
 	private ViajeCabeceraDao vCDao;
 	private List<Integer> codigos;
 	private ListaPaises listaPaises;
+	private PaisUtil[] modelPaises = new PaisUtil[4];
+	
 	
 	/**
 	 * Create the dialog.
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public DialogLoadFlight() {
-		addWindowListener(new WindowAdapter() {
-			@SuppressWarnings("unchecked")
-			@Override
-			public void windowOpened(WindowEvent e) {
-				
-				listaPaises = new ListaPaises();
-				
-				for (PaisUtil p : listaPaises.getListaPaises()) {
-					cmbPaisOrigen.addItem(p);
-					cmbPaisDestino.addItem(p);
-				}
-				
-			}
-		});
 		addWindowFocusListener(new WindowFocusListener() {
 			public void windowGainedFocus(WindowEvent e) {
 				
@@ -121,11 +118,11 @@ public class DialogLoadFlight extends JDialog {
 					vC.setFechaSalida(null);
 				}
 				
-				if (txtHoraSalida.getText().trim().length() == 8){
-					vC.setHoraSalida(Time.valueOf(txtHoraSalida.getText()));
-				}else{
-					vC.setHoraSalida(Time.valueOf("00:00:00"));
-				}
+//				if (txtHoraSalida.getText().trim().length() == 8){
+//					vC.setHoraSalida(Time.valueOf(txtHoraSalida.getText()));
+//				}else{
+//					vC.setHoraSalida(Time.valueOf("00:00:00"));
+//				}
 				
 				if (dateChooserFechaLlegada.getDate() != null){
 					Date llegada = new Date(dateChooserFechaLlegada.getDate().getTime());
@@ -134,11 +131,11 @@ public class DialogLoadFlight extends JDialog {
 					vC.setFechaLlegada(null);
 				}
 				
-				if (txtHoraLlegada.getText().trim().length() == 8){
-					vC.setHoraLlegada(Time.valueOf(txtHoraLlegada.getText()));
-				}else{
-					vC.setHoraLlegada(Time.valueOf("00:00:00"));
-				}
+//				if (txtHoraLlegada.getText().trim().length() == 8){
+//					vC.setHoraLlegada(Time.valueOf(txtHoraLlegada.getText()));
+//				}else{
+//					vC.setHoraLlegada(Time.valueOf("00:00:00"));
+//				}
 				
 				if (txtCupo.getText().trim().length() > 0){
 					vC.setCupo(Integer.parseInt(txtCupo.getText()));
@@ -184,6 +181,17 @@ public class DialogLoadFlight extends JDialog {
 		vCBo = new ViajeCabeceraBoImpl();
 		vCDao = new ViajeCabeceraDaoImpl();
 		
+		listaPaises = new ListaPaises();
+		
+		int i = 0;
+		
+		for (PaisUtil p : listaPaises.getListaPaises()) {
+			modelPaises[i] = p;
+			i++;
+		}
+		
+		String[] modelHora = new String[] {"00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"};
+		String[] modelMinuto = new String[] {"00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"};
 		
 		setTitle("Cargar Vuelo..");
 		setBounds(100, 100, 635, 331);
@@ -216,7 +224,7 @@ public class DialogLoadFlight extends JDialog {
 		getContentPane().add(lblFechaDeSalida);
 		
 		JLabel lblHoraDeSalida = new JLabel("Hora de Salida: ");
-		lblHoraDeSalida.setBounds(340, 165, 130, 15);
+		lblHoraDeSalida.setBounds(371, 162, 130, 15);
 		getContentPane().add(lblHoraDeSalida);
 		
 		JLabel lblFechaDeLlegada = new JLabel("Fecha de Llegada: ");
@@ -224,7 +232,7 @@ public class DialogLoadFlight extends JDialog {
 		getContentPane().add(lblFechaDeLlegada);
 		
 		JLabel lblHoraDeLlegada = new JLabel("Hora de Llegada: ");
-		lblHoraDeLlegada.setBounds(340, 195, 137, 15);
+		lblHoraDeLlegada.setBounds(371, 192, 137, 15);
 		getContentPane().add(lblHoraDeLlegada);
 		
 		JLabel lblCupo = new JLabel("Cupo: ");
@@ -273,7 +281,7 @@ public class DialogLoadFlight extends JDialog {
 				}
 			}
 		});
-		txtCodigoViaje.setBounds(160, 15, 165, 19);
+		txtCodigoViaje.setBounds(160, 15, 188, 19);
 		getContentPane().add(txtCodigoViaje);
 		txtCodigoViaje.setColumns(10);
 		
@@ -309,7 +317,7 @@ public class DialogLoadFlight extends JDialog {
 			}
 		});
 		txtCiudadOrigen.setColumns(10);
-		txtCiudadOrigen.setBounds(160, 45, 165, 19);
+		txtCiudadOrigen.setBounds(160, 45, 188, 19);
 		getContentPane().add(txtCiudadOrigen);
 		
 		txtCiudadDestino = new JTextField();
@@ -345,6 +353,7 @@ public class DialogLoadFlight extends JDialog {
 		});
 		
 		cmbPaisOrigen = new JComboBox();
+		cmbPaisOrigen.setModel(new DefaultComboBoxModel(modelPaises));
 		cmbPaisOrigen.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				
@@ -364,14 +373,15 @@ public class DialogLoadFlight extends JDialog {
 				
 			}
 		});
-		cmbPaisOrigen.setBounds(160, 73, 165, 22);
+		cmbPaisOrigen.setBounds(160, 73, 188, 22);
 		getContentPane().add(cmbPaisOrigen);
 		txtCiudadDestino.setColumns(10);
-		txtCiudadDestino.setBounds(160, 105, 165, 19);
+		txtCiudadDestino.setBounds(160, 105, 188, 19);
 		getContentPane().add(txtCiudadDestino);
 		
 		
 		cmbPaisDestino = new JComboBox();
+		cmbPaisDestino.setModel(new DefaultComboBoxModel(modelPaises));
 		cmbPaisDestino.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				
@@ -392,11 +402,11 @@ public class DialogLoadFlight extends JDialog {
 	
 			}
 		});
-		cmbPaisDestino.setBounds(160, 130, 165, 22);
+		cmbPaisDestino.setBounds(160, 130, 188, 22);
 		getContentPane().add(cmbPaisDestino);
 
 		dateChooserFechaLlegada = new JDateChooser();
-		dateChooserFechaLlegada.setBounds(160, 191, 165, 19);
+		dateChooserFechaLlegada.setBounds(160, 191, 188, 19);
 		getContentPane().add(dateChooserFechaLlegada);
 		
 		java.util.Date now = new java.util.Date();
@@ -431,79 +441,28 @@ public class DialogLoadFlight extends JDialog {
 				dateChooserFechaLlegada.repaint();
 			}
 		});
-		dateChooserFechaSalida.setBounds(160, 161, 165, 19);
+		dateChooserFechaSalida.setBounds(160, 161, 188, 19);
 		getContentPane().add(dateChooserFechaSalida);
-
-		txtHoraSalida = new JTextField();
-		txtHoraSalida.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				
-				if (txtHoraSalida.getText().trim().length() == 8){
-					vC.setHoraSalida(Time.valueOf(txtHoraSalida.getText()));
-				}else{
-					vC.setHoraSalida(Time.valueOf("00:00:00"));
-				}
-			}
-		});
-		txtHoraSalida.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
-				if (txtHoraSalida.getText().trim().length() == 8){
-					vC.setHoraSalida(Time.valueOf(txtHoraSalida.getText()));
-				}else{
-					vC.setHoraSalida(Time.valueOf("00:00:00"));
-				}
-			}
-			@Override
-			public void keyTyped(KeyEvent e) {
-				char c = e.getKeyChar();
-				
-				if ((c < '0' || c > '9') && (c != KeyEvent.VK_KP_LEFT) && c != (KeyEvent.VK_KP_RIGHT) && (c != KeyEvent.VK_SPACE) && (c != KeyEvent.VK_BACK_SPACE) && (c != ':')){
-					e.consume();
-				}
-			}
-		});
-		txtHoraSalida.setToolTipText("Formato: HH:MM:SS");
-		txtHoraSalida.setBounds(469, 163, 151, 19);
-		getContentPane().add(txtHoraSalida);
-		txtHoraSalida.setColumns(10);
 		
-		txtHoraLlegada = new JTextField();
-		txtHoraLlegada.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				
-				if (txtHoraLlegada.getText().trim().length() == 8){
-					vC.setHoraLlegada(Time.valueOf(txtHoraLlegada.getText()));
-				}else{
-					vC.setHoraLlegada(Time.valueOf("00:00:00"));
-				}
-			}
-		});
-		txtHoraLlegada.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
-				if (txtHoraLlegada.getText().trim().length() == 8){
-					vC.setHoraLlegada(Time.valueOf(txtHoraLlegada.getText()));
-				}else{
-					vC.setHoraLlegada(Time.valueOf("00:00:00"));
-				}
-			}
-			@Override
-			public void keyTyped(KeyEvent e) {
-				
-				char c = e.getKeyChar();
-				
-				if ((c < '0' || c > '9') && (c != KeyEvent.VK_KP_LEFT) && c != (KeyEvent.VK_KP_RIGHT) && (c != KeyEvent.VK_SPACE) && (c != KeyEvent.VK_BACK_SPACE) && (c != ':')){
-					e.consume();
-				}
-			}
-		});
-		txtHoraLlegada.setToolTipText("Formato: HH:MM:SS");
-		txtHoraLlegada.setBounds(469, 193, 151, 19);
-		getContentPane().add(txtHoraLlegada);
-		txtHoraLlegada.setColumns(10);
+		cmbHoraSalida = new JComboBox();
+		cmbHoraSalida.setModel(new DefaultComboBoxModel(modelHora));
+		cmbHoraSalida.setBounds(499, 160, 49, 20);
+		getContentPane().add(cmbHoraSalida);
+		
+		cmbHoraLlegada = new JComboBox();
+		cmbHoraLlegada.setModel(new DefaultComboBoxModel(modelHora));
+		cmbHoraLlegada.setBounds(499, 190, 49, 20);
+		getContentPane().add(cmbHoraLlegada);
+		
+		cmbMinutoLlegada = new JComboBox();
+		cmbMinutoLlegada.setModel(new DefaultComboBoxModel(modelMinuto));
+		cmbMinutoLlegada.setBounds(568, 190, 49, 20);
+		getContentPane().add(cmbMinutoLlegada);
+		
+		cmbMinutoSalida = new JComboBox();
+		cmbMinutoSalida.setModel(new DefaultComboBoxModel(modelMinuto));
+		cmbMinutoSalida.setBounds(568, 160, 49, 20);
+		getContentPane().add(cmbMinutoSalida);
 		
 		txtCupo = new JTextField();
 		txtCupo.addFocusListener(new FocusAdapter() {
@@ -537,7 +496,7 @@ public class DialogLoadFlight extends JDialog {
 			}
 		});
 		txtCupo.setColumns(10);
-		txtCupo.setBounds(160, 225, 165, 19);
+		txtCupo.setBounds(160, 225, 188, 19);
 		getContentPane().add(txtCupo);
 		
 		btnRealizarCambios = new JButton("");
@@ -557,7 +516,13 @@ public class DialogLoadFlight extends JDialog {
 				}else{
 					vC.setFechaLlegada(null);
 				}
+			
+				String horaSalida = cmbHoraSalida.getSelectedItem() + ":" + cmbMinutoSalida.getSelectedItem() + ":00";
+				vC.setHoraSalida(Time.valueOf(horaSalida));
 				
+				String horaLlegada = cmbHoraLlegada.getSelectedItem() + ":" + cmbMinutoLlegada.getSelectedItem() + ":00";
+				vC.setHoraLlegada(Time.valueOf(horaLlegada));
+			
 				try {
 					vCBo.verificarTodos(vC);
 				} catch (ViajeCabeceraNotValidException e1) {
@@ -577,7 +542,7 @@ public class DialogLoadFlight extends JDialog {
 						JOptionPane.showMessageDialog(null, e1.getMessage());
 					}
 					
-					JOptionPane.showMessageDialog(null, "Se ha cargado el vuelo con exito!\n"+vC);
+					JOptionPane.showMessageDialog(null, "Se ha cargado el vuelo con exito!");
 					
 				}
 				
@@ -612,6 +577,14 @@ public class DialogLoadFlight extends JDialog {
 		});
 		btnCancelar.setBounds(500, 272, 117, 25);
 		getContentPane().add(btnCancelar);
+		
+		JLabel label1 = new JLabel(":");
+		label1.setBounds(556, 160, 19, 15);
+		getContentPane().add(label1);
+		
+		JLabel label2 = new JLabel(":");
+		label2.setBounds(556, 190, 19, 15);
+		getContentPane().add(label2);
 	}
 
 	public JTextField getTxtCodigoViaje() {
@@ -653,21 +626,45 @@ public class DialogLoadFlight extends JDialog {
 	public void setDateChooserFechaLlegada(JDateChooser dateChooserFechaLlegada) {
 		this.dateChooserFechaLlegada = dateChooserFechaLlegada;
 	}
-
-	public JTextField getTxtHoraSalida() {
-		return txtHoraSalida;
+	
+	@SuppressWarnings("rawtypes")
+	public JComboBox getCmbHoraSalida() {
+		return cmbHoraSalida;
 	}
 
-	public void setTxtHoraSalida(JTextField txtHoraSalida) {
-		this.txtHoraSalida = txtHoraSalida;
+	@SuppressWarnings("rawtypes")
+	public void setCmbHoraSalida(JComboBox cmbHoraSalida) {
+		this.cmbHoraSalida = cmbHoraSalida;
 	}
 
-	public JTextField getTxtHoraLlegada() {
-		return txtHoraLlegada;
+	@SuppressWarnings("rawtypes")
+	public JComboBox getCmbMinutoSalida() {
+		return cmbMinutoSalida;
 	}
 
-	public void setTxtHoraLlegada(JTextField txtHoraLlegada) {
-		this.txtHoraLlegada = txtHoraLlegada;
+	@SuppressWarnings("rawtypes")
+	public void setCmbMinutoSalida(JComboBox cmbMinutoSalida) {
+		this.cmbMinutoSalida = cmbMinutoSalida;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public JComboBox getCmbHoraLlegada() {
+		return cmbHoraLlegada;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public void setCmbHoraLlegada(JComboBox cmbHoraLlegada) {
+		this.cmbHoraLlegada = cmbHoraLlegada;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public JComboBox getCmbMinutoLlegada() {
+		return cmbMinutoLlegada;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public void setCmbMinutoLlegada(JComboBox cmbMinutoLlegada) {
+		this.cmbMinutoLlegada = cmbMinutoLlegada;
 	}
 
 	public JTextField getTxtCupo() {
@@ -684,5 +681,25 @@ public class DialogLoadFlight extends JDialog {
 
 	public void setBtnRealizarCambios(JButton btnRealizarCambios) {
 		this.btnRealizarCambios = btnRealizarCambios;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public JComboBox getCmbPaisOrigen() {
+		return cmbPaisOrigen;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public void setCmbPaisOrigen(JComboBox cmbPaisOrigen) {
+		this.cmbPaisOrigen = cmbPaisOrigen;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public JComboBox getCmbPaisDestino() {
+		return cmbPaisDestino;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public void setCmbPaisDestino(JComboBox cmbPaisDestino) {
+		this.cmbPaisDestino = cmbPaisDestino;
 	}
 }

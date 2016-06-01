@@ -1,6 +1,7 @@
 package org.proyectofinal.dao.interfaces;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -36,4 +37,6 @@ public interface ViajeCabeceraDao {
 	public void actualizarCupo(ViajeCabecera vC) throws SQLException, ClassNotFoundException;
 	
 	public void modificacion(ViajeCabecera vC) throws SQLException, ClassNotFoundException;
+
+	public ResultSet consultarPorFechaActualYFutura(Date fecha) throws SQLException, ClassNotFoundException;
 }

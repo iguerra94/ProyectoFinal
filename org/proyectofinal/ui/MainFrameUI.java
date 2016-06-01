@@ -17,7 +17,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.security.Permissions;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -295,6 +295,8 @@ public class MainFrameUI extends JFrame {
 						
 						Object[] fila = null;
 						
+						Date fechaActual = new Date(new java.util.Date().getTime());
+						
 						if (u.getTipoUsuario() == 0){
 							fila = new Object[8];
 						}else if (u.getTipoUsuario() == 1){
@@ -305,12 +307,17 @@ public class MainFrameUI extends JFrame {
 						
 						vCDao.conectar();
 
-						ResultSet res = vCDao.consultar();
+						ResultSet res = vCDao.consultarPorFechaActualYFutura(fechaActual);
 						
 						String fecha = "";
 
 						while (res.next()){
 
+							if (u.getTipoUsuario() == 0){
+								ui.getTable().getColumnModel().getColumn(6).setCellRenderer(new AccionTableCellRenderer());
+								ui.getTable().getColumnModel().getColumn(6).setCellEditor(new CeldaAccionEditor());
+							}
+							
 							fila[0] = res.getInt("codViaje");
 							fila[1] = res.getString("ciudadOrigen") + ", " + res.getString("paisOrigen");
 							fila[2] = res.getString("ciudadDestino") + ", " + res.getString("paisDestino");							
@@ -325,12 +332,8 @@ public class MainFrameUI extends JFrame {
 							
 							fila[5] = res.getInt("cupo");
 							
-							if (u.getTipoUsuario() == 0){
-								ui.getTable().getColumnModel().getColumn(6).setCellRenderer(new AccionTableCellRenderer());
-								ui.getTable().getColumnModel().getColumn(6).setCellEditor(new CeldaAccionEditor());
-							}
-							
 							model.addRow(fila);					
+							
 						}
 						
 						vCDao.desconectar();

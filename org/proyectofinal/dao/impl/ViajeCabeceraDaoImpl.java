@@ -1,6 +1,6 @@
 package org.proyectofinal.dao.impl;
 
-import java.sql.Connection;
+import java.sql.Connection; 
 import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -8,7 +8,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.proyectofinal.dao.abstracts.AbstractDao;
-import org.proyectofinal.dao.ex.NoFlightsFoundException;
 import org.proyectofinal.dao.interfaces.ViajeCabeceraDao;
 import org.proyectofinal.model.interfaces.ViajeCabecera;
 
@@ -74,6 +73,19 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		PreparedStatement sentencia = getConexion().prepareStatement("SELECT * FROM ViajeCabecera WHERE codViaje = ?");
 		
 		sentencia.setInt(1, vC.getCodigoViaje());
+		
+		ResultSet resultado = sentencia.executeQuery();
+		
+		return resultado;
+	}
+	
+	public ResultSet consultarPorFechaActualYFutura(Date fecha) throws SQLException, ClassNotFoundException {
+	
+		conectar();
+		
+		PreparedStatement sentencia = getConexion().prepareStatement("SELECT * FROM ViajeCabecera where DATE(fechaSalida) >= DATE(?)");
+		
+		sentencia.setDate(1, fecha);
 		
 		ResultSet resultado = sentencia.executeQuery();
 		

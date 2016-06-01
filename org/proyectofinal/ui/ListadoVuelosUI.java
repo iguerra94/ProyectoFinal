@@ -55,6 +55,7 @@ public class ListadoVuelosUI extends JFrame {
 	private JLabel lblFechaSalida;
 	private JButton btnConsultar;
 	private JDateChooser dateChooserSalida;
+	private Date datePosterior;
 	@SuppressWarnings("rawtypes")
 	private JComboBox cmbOrigen;
 	@SuppressWarnings("rawtypes")
@@ -368,6 +369,14 @@ public class ListadoVuelosUI extends JFrame {
 		Calendar date = new GregorianCalendar();
 		
 		dateChooserSalida = new JDateChooser();
+		dateChooserSalida.getCalendarButton().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {				
+				
+				java.util.Date now = new java.util.Date();
+				
+				dateChooserSalida.setMinSelectableDate(now);
+			}
+		});
 		dateChooserSalida.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent arg0) {
 				
@@ -376,6 +385,16 @@ public class ListadoVuelosUI extends JFrame {
 				Date dateSQL = new Date(date.getTime());
 				
 				vC.setFechaSalida(dateSQL);
+
+				Calendar cPosterior = Calendar.getInstance();
+				
+				cPosterior.add(Calendar.DATE, 5);
+				
+				java.util.Date datePosterior = cPosterior.getTime();
+				
+				Date datePosteriorSQL = new Date(datePosterior.getTime());
+				
+				setDatePosterior(datePosteriorSQL);
 			}
 		});
 		dateChooserSalida.setBounds(175, 55, 150, 25);
@@ -476,11 +495,12 @@ public class ListadoVuelosUI extends JFrame {
 			Class[] columnTypes = new Class[] {
 				Object.class, Object.class, Object.class, Object.class, Object.class, Object.class, PanelAccion.class
 			};
+			@SuppressWarnings("unchecked")
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}
 			boolean[] columnEditables = new boolean[] {
-				false, false, false, false, false, false, false
+				false, false, false, false, false, false, true
 			};
 			public boolean isCellEditable(int row, int column) {
 				return columnEditables[column];
@@ -508,6 +528,16 @@ public class ListadoVuelosUI extends JFrame {
 				if (e1.getSource() == btnConsultar){
 		
 					DefaultTableModel model = (DefaultTableModel) table.getModel();
+
+					ResultSet res = null;
+					
+					Date fechaSalida = vC.getFechaSalida();
+					
+					Calendar c = null;
+					
+					java.util.Date dateUtil = null; 
+					
+					Date dateSql = null;
 					
 					try {
 						
@@ -521,29 +551,16 @@ public class ListadoVuelosUI extends JFrame {
 						
 						vCDao.conectar();
 
-						ResultSet res = vCDao.consultarVuelos(vC);
+						int k = 6;
 						
-						String fecha = "";
-						
-						if (res.next()){
+						for (int i = 1; i <= k; i++){
 							
-							fila[0] = res.getInt("codViaje");
-							fila[1] = res.getString("ciudadOrigen") + ", " + res.getString("paisOrigen");
-							fila[2] = res.getString("ciudadDestino") + ", " + res.getString("paisDestino");							
-						
-							fecha = res.getDate("fechaSalida").toString().substring(8, 10) + "-" + res.getDate("fechaSalida").toString().substring(5, 7) + "-" + res.getDate("fechaSalida").toString().substring(0, 4);
+							res = vCDao.consultarVuelos(vC);	
 							
-							fila[3] = fecha + " " + res.getTime("horaSalida").toString().substring(0, 5);
-							
-							fecha = res.getDate("fechaLlegada").toString().substring(8, 10) + "-" + res.getDate("fechaLlegada").toString().substring(5, 7) + "-" + res.getDate("fechaLlegada").toString().substring(0, 4);
-							
-							fila[4] = fecha + " " + res.getTime("horaLlegada").toString().substring(0, 5);
-							
-							fila[5] = res.getInt("cupo");
-							
-							model.addRow(fila);					
-							
-							while (res.next()){
+							String fecha = "";
+
+							if (res.next()){
+								
 								fila[0] = res.getInt("codViaje");
 								fila[1] = res.getString("ciudadOrigen") + ", " + res.getString("paisOrigen");
 								fila[2] = res.getString("ciudadDestino") + ", " + res.getString("paisDestino");							
@@ -559,8 +576,42 @@ public class ListadoVuelosUI extends JFrame {
 								fila[5] = res.getInt("cupo");
 								
 								model.addRow(fila);					
-							}
-						}else{
+								
+								while (res.next()){
+								
+									fila[0] = res.getInt("codViaje");
+									fila[1] = res.getString("ciudadOrigen") + ", " + res.getString("paisOrigen");
+									fila[2] = res.getString("ciudadDestino") + ", " + res.getString("paisDestino");							
+								
+									fecha = res.getDate("fechaSalida").toString().substring(8, 10) + "-" + res.getDate("fechaSalida").toString().substring(5, 7) + "-" + res.getDate("fechaSalida").toString().substring(0, 4);
+									
+									fila[3] = fecha + " " + res.getTime("horaSalida").toString().substring(0, 5);
+									
+									fecha = res.getDate("fechaLlegada").toString().substring(8, 10) + "-" + res.getDate("fechaLlegada").toString().substring(5, 7) + "-" + res.getDate("fechaLlegada").toString().substring(0, 4);
+									
+									fila[4] = fecha + " " + res.getTime("horaLlegada").toString().substring(0, 5);
+									
+									fila[5] = res.getInt("cupo");
+									
+									model.addRow(fila);								
+								}
+							
+							}					
+
+							c = Calendar.getInstance();
+							
+							c.setTime(new java.util.Date(fechaSalida.getTime()));
+						
+							c.add(Calendar.DATE, i);
+							
+							dateUtil = c.getTime();
+							
+							dateSql = new Date(dateUtil.getTime());
+							
+							vC.setFechaSalida(dateSql);							
+						}
+						
+						if (model.getRowCount() == 0){	
 							throw new NoFlightsFoundException();
 						}
 						
@@ -588,6 +639,8 @@ public class ListadoVuelosUI extends JFrame {
 				DialogLoadFlight ui = new DialogLoadFlight();
 				
 				ui.getBtnRealizarCambios().setText("Cargar vuelo");
+				ui.getTxtCupo().setText("66");
+				ui.getTxtCupo().setEditable(false);
 				
 				ui.setVisible(true);
 			}
@@ -720,5 +773,13 @@ public class ListadoVuelosUI extends JFrame {
 
 	public void setDni(String dni) {
 		this.dni = dni;
+	}
+
+	public Date getDatePosterior() {
+		return datePosterior;
+	}
+
+	public void setDatePosterior(Date datePosterior) {
+		this.datePosterior = datePosterior;
 	}
 }

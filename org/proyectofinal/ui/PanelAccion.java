@@ -30,7 +30,6 @@ public class PanelAccion extends JPanel {
 	private JButton btnEliminar;
 	
 	public PanelAccion() {
-		setBackground(Color.WHITE);
 		initComponents();
 	}
 	
@@ -46,20 +45,21 @@ public class PanelAccion extends JPanel {
     }
     
     private void initComponents(){
-    	
+
+		setBackground(Color.WHITE);
     	setLayout(null);
 		
 		btnEditar = new JButton("");
-		btnEditar.setBorderPainted(false);
-		btnEditar.setContentAreaFilled(false);
-		btnEditar.setToolTipText("Editar vuelo..");
-		btnEditar.setIcon(new ImageIcon(PanelAccion.class.getResource("/imagenes/editar.png")));
 		btnEditar.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				btnEditarActionPerformed();
 			}
 		});
+		btnEditar.setBorderPainted(false);
+		btnEditar.setContentAreaFilled(false);
+		btnEditar.setToolTipText("Editar vuelo..");
+		btnEditar.setIcon(new ImageIcon(PanelAccion.class.getResource("/imagenes/editar.png")));
 		btnEditar.setBounds(0, 1, 30, 15);
 		add(btnEditar);
 		
@@ -89,7 +89,6 @@ public class PanelAccion extends JPanel {
 			
 			try {
 				vCDao.baja(codigo);
-				
 				JOptionPane.showMessageDialog(tabla, "El vuelo ha sido eliminado con exito!");
 			} catch (ClassNotFoundException e1) {
 				// TODO Auto-generated catch block
@@ -102,7 +101,8 @@ public class PanelAccion extends JPanel {
     }
     
     private void btnEditarActionPerformed(){
-		Integer codViaje = (Integer)tabla.getValueAt(tabla.getSelectedRow(), 0);
+		
+    	Integer codViaje = (Integer)tabla.getValueAt(tabla.getSelectedRow(), 0);
 		
 		ViajeCabeceraDao vCDao = new ViajeCabeceraDaoImpl();
 		
@@ -114,24 +114,52 @@ public class PanelAccion extends JPanel {
 		
 		try {
 			
+			Integer indiceMinutoSalida= null, indiceMinutoLlegada=null;
+			
 			vCDao.conectar();
 			
 			ResultSet res = vCDao.consultarPorCodigoViaje(codViaje);
 			
 			while(res.next()){
 				
+				indiceMinutoSalida = Integer.parseInt(res.getTime("horaSalida").toString().substring(3, 5)) - 4*Integer.parseInt(res.getTime("horaSalida").toString().substring(3, 5))/5;
+				indiceMinutoLlegada = Integer.parseInt(res.getTime("horaLlegada").toString().substring(3, 5)) - 4*Integer.parseInt(res.getTime("horaLlegada").toString().substring(3, 5))/5;
+				
 				dLF.getTxtCodigoViaje().setText(dLF.getTxtCodigoViaje().getText() + res.getInt("codViaje"));
 				dLF.getTxtCiudadOrigen().setText(dLF.getTxtCiudadOrigen().getText() + res.getString("ciudadOrigen"));
-//				dLF.getTxtPaisOrigen().setText(dLF.getTxtPaisOrigen().getText() + res.getString("paisOrigen"));
-				dLF.getTxtCiudadDestino().setText(dLF.getTxtCiudadDestino().getText() + res.getString("ciudadDestino"));
-//				dLF.getTxtPaisDestino().setText(dLF.getTxtPaisDestino().getText() + res.getString("paisDestino"));
-				dLF.getDateChooserFechaSalida().setDate(res.getDate("fechaSalida"));
-				dLF.getTxtHoraSalida().setText(dLF.getTxtHoraSalida().getText() + res.getTime("horaSalida"));
-				dLF.getDateChooserFechaLlegada().setDate(res.getDate("fechaLlegada"));
-				dLF.getTxtHoraLlegada().setText(dLF.getTxtHoraLlegada().getText() + res.getTime("horaLlegada"));
-				dLF.getTxtCupo().setText(dLF.getTxtCupo().getText() + res.getInt("cupo"));			
 
-				dLF.getTxtCodigoViaje().setEnabled(false);
+				if (res.getString("paisOrigen").substring(0, 1).equals("A")){
+					dLF.getCmbPaisOrigen().setSelectedIndex(0);				
+				} else if (res.getString("paisOrigen").substring(0, 1).equals("B")){
+					dLF.getCmbPaisOrigen().setSelectedIndex(1);
+				} else if (res.getString("paisOrigen").substring(0, 1).equals("E")){
+					dLF.getCmbPaisOrigen().setSelectedIndex(2);
+				} else if (res.getString("paisOrigen").substring(0, 1).equals("U")){
+					dLF.getCmbPaisOrigen().setSelectedIndex(3);
+				}
+				
+				dLF.getTxtCiudadDestino().setText(dLF.getTxtCiudadDestino().getText() + res.getString("ciudadDestino"));
+
+				if (res.getString("paisDestino").substring(0, 1).equals("A")){
+					dLF.getCmbPaisDestino().setSelectedIndex(0);
+				} else if (res.getString("paisDestino").substring(0, 1).equals("B")){
+					dLF.getCmbPaisDestino().setSelectedIndex(1);
+				} else if (res.getString("paisDestino").substring(0, 1).equals("E")){
+					dLF.getCmbPaisDestino().setSelectedIndex(2);
+				} else if (res.getString("paisDestino").substring(0, 1).equals("U")){
+					dLF.getCmbPaisDestino().setSelectedIndex(3);
+				}
+				
+				dLF.getDateChooserFechaSalida().setDate(res.getDate("fechaSalida"));
+				dLF.getCmbHoraSalida().setSelectedIndex(Integer.parseInt(res.getTime("horaSalida").toString().substring(0, 2)));
+				dLF.getCmbMinutoSalida().setSelectedIndex(indiceMinutoSalida);
+				dLF.getDateChooserFechaLlegada().setDate(res.getDate("fechaLlegada"));
+				dLF.getCmbHoraLlegada().setSelectedIndex(Integer.parseInt(res.getTime("horaLlegada").toString().substring(0, 2)));
+				dLF.getCmbMinutoLlegada().setSelectedIndex(indiceMinutoLlegada); 
+				dLF.getTxtCupo().setText(dLF.getTxtCupo().getText() + res.getInt("cupo"));			
+				
+				dLF.getTxtCodigoViaje().setEditable(false);
+				dLF.getTxtCupo().setEditable(false);
 			}
 			
 			vCDao.desconectar();
@@ -152,4 +180,6 @@ public class PanelAccion extends JPanel {
 		}
 		
     }
+
+	
 }
