@@ -1,7 +1,5 @@
 package org.proyectofinal.dao.impl;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,22 +10,12 @@ import org.proyectofinal.model.interfaces.ReservaViaje;
 
 public class ReservaViajeDaoImpl extends AbstractDao implements ReservaViajeDao {
 	
-	private Connection conexion = null;
-	
 	public void conectar() throws ClassNotFoundException, SQLException{
-		
-		Class.forName("com.mysql.jdbc.Driver");
-		
-//		this.conexion = DriverManager.getConnection("jdbc:mysql://localhost:3305/ReservasAvion", "root", "asd123");
-		this.conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/ReservasAvion", "root", "genius34");
+		super.conectar();
 	}
 	
 	public void desconectar() throws SQLException{
-		getConexion().close();
-	}
-	
-	public Connection getConexion() {
-		return this.conexion;
+		super.desconectar();
 	}
 	
 	public ResultSet consultar() throws ClassNotFoundException, SQLException{
@@ -38,8 +26,9 @@ public class ReservaViajeDaoImpl extends AbstractDao implements ReservaViajeDao 
 		
 		ResultSet resultado = sentencia.executeQuery();
 		
-		desconectar();
+//		desconectar();
 		
+//		sentencia.close();
 		return resultado;
 	}
 	
@@ -53,8 +42,9 @@ public class ReservaViajeDaoImpl extends AbstractDao implements ReservaViajeDao 
 		
 		ResultSet resultado = sentencia.executeQuery();
 		
-		desconectar();
-		
+//		desconectar();
+	
+//		sentencia.close();
 		return resultado;
 	}
 	
@@ -72,6 +62,7 @@ public class ReservaViajeDaoImpl extends AbstractDao implements ReservaViajeDao 
 		
 		ResultSet resultado = sentencia.executeQuery();
 		
+//		sentencia.close();
 		return resultado;
 	}
 	
@@ -81,11 +72,12 @@ public class ReservaViajeDaoImpl extends AbstractDao implements ReservaViajeDao 
 		
 		PreparedStatement sentencia = getConexion().prepareStatement("SELECT * FROM ReservaViaje WHERE codViaje = ?");
 		
-		sentencia.setInt(1, rV.getViaje().getCodigoViaje());
+		sentencia.setString(1, rV.getViaje().getCodigoViaje());
 		
 		ResultSet resultado = sentencia.executeQuery();
 		
-		desconectar();
+//		sentencia.close();
+//		desconectar();
 		
 		return resultado;
 	}
@@ -97,7 +89,7 @@ public class ReservaViajeDaoImpl extends AbstractDao implements ReservaViajeDao 
 		sentencia.setInt(1, codViaje);
 		
 		ResultSet resultado = sentencia.executeQuery();
-		
+//		sentencia.close();
 		return resultado;
 	}
 	
@@ -107,7 +99,7 @@ public class ReservaViajeDaoImpl extends AbstractDao implements ReservaViajeDao 
 		
 		PreparedStatement sentencia = getConexion().prepareStatement("INSERT INTO ReservaViaje (codViaje, dniPasajero, fechaReserva, dniPersona, asiento, precio) VALUES (?,?,?,?,?,?)");
 		
-		sentencia.setInt(1, rV.getViaje().getCodigoViaje());
+		sentencia.setString(1, rV.getViaje().getCodigoViaje());
 		sentencia.setString(2, rV.getPasajero().getDni());
 		sentencia.setTimestamp(3, rV.getFechaReserva());
 		sentencia.setString(4, rV.getDniPersona());
@@ -115,7 +107,7 @@ public class ReservaViajeDaoImpl extends AbstractDao implements ReservaViajeDao 
 		sentencia.setFloat(6, rV.getPrecio());
 		
 		sentencia.executeUpdate();
-		
+//		sentencia.close();
 		desconectar();
 	}
 	
@@ -124,12 +116,12 @@ public class ReservaViajeDaoImpl extends AbstractDao implements ReservaViajeDao 
 		
 		PreparedStatement sentencia = getConexion().prepareStatement("DELETE FROM ReservaViaje WHERE codViaje = ? AND dni = ? AND fechaReserva = ?");
 		
-		sentencia.setInt(1, rV.getViaje().getCodigoViaje());
+		sentencia.setString(1, rV.getViaje().getCodigoViaje());
 		sentencia.setString(2, rV.getPasajero().getDni());
 		sentencia.setTimestamp(3, rV.getFechaReserva());
 		
 		sentencia.executeUpdate();
-		
+//		sentencia.close();
 		desconectar();
 	}
 	
@@ -143,7 +135,7 @@ public class ReservaViajeDaoImpl extends AbstractDao implements ReservaViajeDao 
 		sentencia.setString(2, dniAnterior);
 		
 		sentencia.executeUpdate();
-		
+//		sentencia.close();
 		this.desconectar();
 	}	
 

@@ -9,6 +9,8 @@ import org.proyectofinal.model.interfaces.Usuario;
 
 public interface PersonaRegistradaDao {
 	
+	public void conectar() throws ClassNotFoundException, SQLException;
+	public void desconectar() throws SQLException;
 	public ResultSet consultar() throws SQLException, ClassNotFoundException;
 	public ResultSet consultarPorDni(PersonaRegistrada p) throws SQLException, ClassNotFoundException;
 	public ResultSet consultarPorUsuario(Usuario u) throws SQLException, ClassNotFoundException;

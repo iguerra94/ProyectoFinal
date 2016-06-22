@@ -110,7 +110,9 @@ public class PanelAccion extends JPanel {
 		
 		dLF.setTitle("Editar vuelo..");
 //		dLF.setBounds(15, 260, 171, 37);
-		dLF.getBtnRealizarCambios().setText("Guardar cambios");
+//		dLF.getBtnRealizarCambios().setText("Guardar cambios");
+		
+		ResultSet res = null;
 		
 		try {
 			
@@ -118,48 +120,48 @@ public class PanelAccion extends JPanel {
 			
 			vCDao.conectar();
 			
-			ResultSet res = vCDao.consultarPorCodigoViaje(codViaje);
-			
+//		    res = vCDao.consultarPorCodigoViaje(codViaje);
+//			
 			while(res.next()){
 				
 				indiceMinutoSalida = Integer.parseInt(res.getTime("horaSalida").toString().substring(3, 5)) - 4*Integer.parseInt(res.getTime("horaSalida").toString().substring(3, 5))/5;
 				indiceMinutoLlegada = Integer.parseInt(res.getTime("horaLlegada").toString().substring(3, 5)) - 4*Integer.parseInt(res.getTime("horaLlegada").toString().substring(3, 5))/5;
 				
-				dLF.getTxtCodigoViaje().setText(dLF.getTxtCodigoViaje().getText() + res.getInt("codViaje"));
-				dLF.getTxtCiudadOrigen().setText(dLF.getTxtCiudadOrigen().getText() + res.getString("ciudadOrigen"));
-
-				if (res.getString("paisOrigen").substring(0, 1).equals("A")){
-					dLF.getCmbPaisOrigen().setSelectedIndex(0);				
-				} else if (res.getString("paisOrigen").substring(0, 1).equals("B")){
-					dLF.getCmbPaisOrigen().setSelectedIndex(1);
-				} else if (res.getString("paisOrigen").substring(0, 1).equals("E")){
-					dLF.getCmbPaisOrigen().setSelectedIndex(2);
-				} else if (res.getString("paisOrigen").substring(0, 1).equals("U")){
-					dLF.getCmbPaisOrigen().setSelectedIndex(3);
-				}
-				
-				dLF.getTxtCiudadDestino().setText(dLF.getTxtCiudadDestino().getText() + res.getString("ciudadDestino"));
-
-				if (res.getString("paisDestino").substring(0, 1).equals("A")){
-					dLF.getCmbPaisDestino().setSelectedIndex(0);
-				} else if (res.getString("paisDestino").substring(0, 1).equals("B")){
-					dLF.getCmbPaisDestino().setSelectedIndex(1);
-				} else if (res.getString("paisDestino").substring(0, 1).equals("E")){
-					dLF.getCmbPaisDestino().setSelectedIndex(2);
-				} else if (res.getString("paisDestino").substring(0, 1).equals("U")){
-					dLF.getCmbPaisDestino().setSelectedIndex(3);
-				}
-				
-				dLF.getDateChooserFechaSalida().setDate(res.getDate("fechaSalida"));
-				dLF.getCmbHoraSalida().setSelectedIndex(Integer.parseInt(res.getTime("horaSalida").toString().substring(0, 2)));
-				dLF.getCmbMinutoSalida().setSelectedIndex(indiceMinutoSalida);
-				dLF.getDateChooserFechaLlegada().setDate(res.getDate("fechaLlegada"));
-				dLF.getCmbHoraLlegada().setSelectedIndex(Integer.parseInt(res.getTime("horaLlegada").toString().substring(0, 2)));
-				dLF.getCmbMinutoLlegada().setSelectedIndex(indiceMinutoLlegada); 
-				dLF.getTxtCupo().setText(dLF.getTxtCupo().getText() + res.getInt("cupo"));			
-				
-				dLF.getTxtCodigoViaje().setEditable(false);
-				dLF.getTxtCupo().setEditable(false);
+//				dLF.getTxtCodigoViaje().setText(dLF.getTxtCodigoViaje().getText() + res.getInt("codViaje"));
+//				dLF.getTxtCiudadOrigen().setText(dLF.getTxtCiudadOrigen().getText() + res.getString("ciudadOrigen"));
+//
+//				if (res.getString("paisOrigen").substring(0, 1).equals("A")){
+//					dLF.getCmbPaisOrigen().setSelectedIndex(0);				
+//				} else if (res.getString("paisOrigen").substring(0, 1).equals("B")){
+//					dLF.getCmbPaisOrigen().setSelectedIndex(1);
+//				} else if (res.getString("paisOrigen").substring(0, 1).equals("E")){
+//					dLF.getCmbPaisOrigen().setSelectedIndex(2);
+//				} else if (res.getString("paisOrigen").substring(0, 1).equals("U")){
+//					dLF.getCmbPaisOrigen().setSelectedIndex(3);
+//				}
+//				
+//				dLF.getTxtCiudadDestino().setText(dLF.getTxtCiudadDestino().getText() + res.getString("ciudadDestino"));
+//
+//				if (res.getString("paisDestino").substring(0, 1).equals("A")){
+//					dLF.getCmbPaisDestino().setSelectedIndex(0);
+//				} else if (res.getString("paisDestino").substring(0, 1).equals("B")){
+//					dLF.getCmbPaisDestino().setSelectedIndex(1);
+//				} else if (res.getString("paisDestino").substring(0, 1).equals("E")){
+//					dLF.getCmbPaisDestino().setSelectedIndex(2);
+//				} else if (res.getString("paisDestino").substring(0, 1).equals("U")){
+//					dLF.getCmbPaisDestino().setSelectedIndex(3);
+//				}
+//				
+//				dLF.getDateChooserFechaSalida().setDate(res.getDate("fechaSalida"));
+//				dLF.getCmbHoraSalida().setSelectedIndex(Integer.parseInt(res.getTime("horaSalida").toString().substring(0, 2)));
+//				dLF.getCmbMinutoSalida().setSelectedIndex(indiceMinutoSalida);
+//				dLF.getDateChooserFechaLlegada().setDate(res.getDate("fechaLlegada"));
+//				dLF.getCmbHoraLlegada().setSelectedIndex(Integer.parseInt(res.getTime("horaLlegada").toString().substring(0, 2)));
+//				dLF.getCmbMinutoLlegada().setSelectedIndex(indiceMinutoLlegada); 
+//				dLF.getTxtCupo().setText(dLF.getTxtCupo().getText() + res.getInt("cupo"));			
+//				
+//				dLF.getTxtCodigoViaje().setEditable(false);
+//				dLF.getTxtCupo().setEditable(false);
 			}
 			
 			vCDao.desconectar();
@@ -177,6 +179,13 @@ public class PanelAccion extends JPanel {
 			// TODO Auto-generated catch block
 //			e.printStackTrace();
 			JOptionPane.showMessageDialog(dLF, e.getMessage());
+		} finally {
+//			try {
+////				res.close();
+//			} catch (SQLException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 		}
 		
     }

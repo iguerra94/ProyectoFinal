@@ -1,6 +1,6 @@
 package org.proyectofinal.dao.interfaces;
 
-import java.sql.ResultSet;
+import java.sql.Connection;
 import java.sql.SQLException;
 
 public interface IDao {
@@ -9,5 +9,5 @@ public interface IDao {
 	
 	public void desconectar() throws SQLException;
 	
-	public ResultSet consultar() throws SQLException, ClassNotFoundException;
+	public Connection getConexion();
 }

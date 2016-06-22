@@ -6,9 +6,9 @@ import java.sql.SQLException;
 
 import org.proyectofinal.dao.interfaces.IDao;
 
-public abstract class AbstractDao implements IDao {
+public class AbstractDao implements IDao {
 	
-	private Connection conexion = null;
+	protected Connection conexion = null;
 	
 	public void conectar() throws ClassNotFoundException, SQLException{
 	

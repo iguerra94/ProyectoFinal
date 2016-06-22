@@ -1,7 +1,7 @@
 package org.proyectofinal.dao.impl;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
+//import java.sql.Connection;
+//import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,24 +14,14 @@ import org.proyectofinal.model.interfaces.Usuario;
 
 public class PersonaRegistradaDaoImpl extends AbstractDao implements PersonaRegistradaDao {
 	
-private Connection conexion = null;
-	
 	public void conectar() throws ClassNotFoundException, SQLException{
-	
-		Class.forName("com.mysql.jdbc.Driver");
-
-//		this.conexion = DriverManager.getConnection("jdbc:mysql://localhost:3305/ReservasAvion", "root", "asd123");
-		this.conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/ReservasAvion", "root", "genius34");
+		super.conectar();
 	}
 	
 	public void desconectar() throws SQLException{
-		getConexion().close();
+		super.desconectar();
 	}
-
-	public Connection getConexion() {
-		return this.conexion;
-	}		
-		
+	
 	public ResultSet consultar() throws SQLException, ClassNotFoundException {
 		
 		conectar();
@@ -40,7 +30,9 @@ private Connection conexion = null;
 		
 		ResultSet resultado = sentencia.executeQuery();
 
-		desconectar();
+//		sentencia.close();
+		
+//		desconectar();
 		
 		return resultado;
 	}
@@ -55,6 +47,7 @@ private Connection conexion = null;
 		
 		ResultSet resultado = sentencia.executeQuery();
 
+//		sentencia.close();
 //		desconectar();
 		
 		return resultado;
@@ -70,6 +63,7 @@ private Connection conexion = null;
 		
 		ResultSet resultado = sentencia.executeQuery();
 
+//		sentencia.close();
 //		desconectar();
 		
 		return resultado;
@@ -85,6 +79,7 @@ private Connection conexion = null;
 		
 		ResultSet resultado = sentencia.executeQuery();
 
+//		sentencia.close();
 //		desconectar();
 		
 		return resultado;
@@ -100,10 +95,12 @@ private Connection conexion = null;
 		
 		ResultSet resultado = sentencia.executeQuery();
 
+//		sentencia.close();
 //		desconectar();
 		
 		return resultado;
 	}
+	
 	public ResultSet consultarPorUsuario(Usuario u) throws SQLException, ClassNotFoundException {
 		
 		conectar();
@@ -114,6 +111,8 @@ private Connection conexion = null;
 
 		ResultSet resultado = sentencia.executeQuery();
 	
+//		sentencia.close();
+		
 		return resultado;
 	}
 
@@ -127,7 +126,8 @@ private Connection conexion = null;
 		
 		ResultSet resultado = sentencia.executeQuery();
 
-		desconectar();
+//		sentencia.close();
+//		desconectar();
 		
 		return resultado;
 	}
@@ -141,6 +141,8 @@ private Connection conexion = null;
 		sentencia.setString(1, dni);
 		
 		ResultSet resultado = sentencia.executeQuery();
+		
+//		sentencia.close();
 		
 		return resultado;
 	}
@@ -163,6 +165,7 @@ private Connection conexion = null;
 				sentencia1.setString(3, p.getApellido());
 				
 				sentencia1.executeUpdate();
+//				sentencia1.close();
 			}
 			
 			PreparedStatement sentencia2 = getConexion().prepareStatement("insert into PersonaRegistrada (dni, email, telefono, fechaNacimiento, pais, ciudad, usuario) VALUES (?,?,?,?,?,?,?)");
@@ -177,6 +180,11 @@ private Connection conexion = null;
 			
 			sentencia2.executeUpdate();
 
+//			sentencia2.close();
+			
+//			res1.close();
+//			res2.close();
+			
 			this.desconectar();
 		} else {
 			throw new PersonAlreadyExistsException();
@@ -193,18 +201,21 @@ private Connection conexion = null;
 		
 		sentencia.executeUpdate();
 		
+//		sentencia.close();
+		
 		this.desconectar();
 	}
 
 	public void modificacionDni(String atr, String valor, String dni) throws SQLException, ClassNotFoundException, PersonAlreadyExistsException {	
 		
-		this.conectar();			
+		this.conectar();	
 		
+		ResultSet res = null;
 		PreparedStatement sentencia = null;
 		
 		if (atr.equals("dni")) {
 
-			ResultSet res = this.consultarPersonaPorDni(valor);
+			res = this.consultarPersonaPorDni(valor);
 			
 			if (res.next()){
 				throw new PersonAlreadyExistsException();
@@ -218,7 +229,10 @@ private Connection conexion = null;
 		sentencia.setString(2, dni);
 		
 		sentencia.executeUpdate();
-
+		
+//		res.close();
+//		sentencia.close();
+		
 		this.desconectar();
 	}
 	
@@ -251,6 +265,8 @@ private Connection conexion = null;
 		
 		sentencia.executeUpdate();
 
+//		sentencia.close();
+		
 		this.desconectar();
 	}
 

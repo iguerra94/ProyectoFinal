@@ -1,6 +1,6 @@
 package org.proyectofinal.ui.util;
 
-import java.io.File;
+import java.io.File; 
 import java.util.Properties;
 
 import javax.activation.DataHandler;
@@ -16,13 +16,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import javax.swing.JOptionPane;
 
 public class BoletoEmail {
-	
-//	public static void main(String[] args){
-//		new BoletoEmail().enviarMail();
-//	}
 	
 	public BoletoEmail(){
 		

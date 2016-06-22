@@ -11,7 +11,7 @@ public class PaisUtil {
 	}
 	
 	public String getPais() {
-		return pais;
+		return this.pais;
 	}
 
 	public void setPais(String pais) {
@@ -19,7 +19,7 @@ public class PaisUtil {
 	}
 
 	public String getShortPais() {
-		return shortPais;
+		return this.shortPais;
 	}
 
 	public void setShortPais(String shortPais) {
@@ -27,7 +27,11 @@ public class PaisUtil {
 	}
 	
 	public String toString(){
-		return getPais().concat(" (").concat(getShortPais()).concat(")");
+		if (getPais().length() > 0){ 
+			return getPais().concat(" (").concat(getShortPais()).concat(")");
+		} else {
+			return "";
+		}
 	}
 
 }

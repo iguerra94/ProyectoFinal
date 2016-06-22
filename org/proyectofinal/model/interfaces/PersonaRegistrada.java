@@ -22,6 +22,9 @@ public interface PersonaRegistrada extends Cloneable {
 	public String getTelefono();
 	public void setTelefono(String telefono);
 	
+	public String getShortPais();
+	public void setShortPais(String shortPais);
+	
 	public String getPais();
 	public void setPais(String pais);
 	

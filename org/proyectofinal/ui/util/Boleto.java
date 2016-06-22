@@ -1,15 +1,24 @@
 package org.proyectofinal.ui.util;
 
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.JLabel;
 
-import org.icepdf.ri.common.SwingController;
-import org.icepdf.ri.common.SwingViewBuilder;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
 
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
@@ -29,21 +38,10 @@ public class Boleto {
 	
 	private FileOutputStream ficheroPdf = null;
 	private String path = null;
-//	public static void main(String[] args){
-//		
-//		for (Iterator i = FontFactory.getRegisteredFonts().iterator(); i.hasNext();) {
-//	        System.out.println(i.next());
-//	     }
-//		try {
-//			new Boleto().crearBoleto();
-//		} catch (IOException | DocumentException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	}
+	private List<String> ImagePaths = null;
 	
-	public Boleto(){	
-//		FontFactory.register(System.getProperty("file.separator")+"usr"+System.getProperty("file.separator")+"share"+System.getProperty("file.separator")+"fonts"+System.getProperty("file.separator")+"truetype"+System.getProperty("file.separator")+"mstcorefonts"+System.getProperty("file.separator")+"georgia.ttf", "Georgia");
+	public Boleto(){
+		ImagePaths = new ArrayList<String>();
 	}
 
 	public File retornarBoleto(){
@@ -53,37 +51,72 @@ public class Boleto {
 		return archivo;
 	}
 	
+	public void convertirAImagen(String path){
+		
+		try {
+			
+			PDDocument document = null;
+			
+			//se carga el documento
+			document = PDDocument.load(new File(path));
+			
+			//se obtiene el numero de paginas del PDF
+			int numero_paginas = document.getNumberOfPages();
+			
+			//Se capturan todas las paginas
+			List pages = document.getDocumentCatalog().getAllPages();
+			
+			//un ciclo repetitivo para crear todas las imagenes
+			for(int i = 0; i <= numero_paginas-1; i++){
+				
+				//se obtiene la pagina "i" de n paginas
+				PDPage page = (PDPage)pages.get(i);
+				
+				//se convierte la hoja pdf a imagen y se coloca en memoria
+				BufferedImage image = page.convertToImage();
+				
+				//ancho y alto de la pagina pdf
+				int w = (int) document.getPageFormat(i).getWidth();
+				int h = (int) document.getPageFormat(i).getHeight();
+				
+				//se crea una nueva imagen en memoria con el tamaño de la hoja pdf
+				BufferedImage escala = new BufferedImage(w,h, BufferedImage.TYPE_INT_RGB);
+				Graphics2D graphics2D = escala.createGraphics(); 
+				graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_BILINEAR); 
+				
+				//se añade la imagen
+				graphics2D.drawImage(image, 0, 0, w, h, null);
+				
+				// se escribe a imagen en disco
+				
+				ImagePaths.add(path.substring(0, path.length()-4) + "-" + i + ".png");
+				
+				ImageIO.write(escala, "png", new File(ImagePaths.get(i)));
+			}
+		
+			document.close();//cerramos el pdf
+
+		} catch (IOException ex) {
+			Logger.getLogger(Boleto.class.getName()).log(Level.SEVERE, null, ex);
+		}  
+	}
+	
 	public void abrirBoleto(){
 		
-        // build a controller
-        SwingController controller = new SwingController();
-
-	    // Build a SwingViewFactory configured with the controller
-        SwingViewBuilder factory = new SwingViewBuilder(controller);
-
-        JPanel viewerComponentPanel = factory.buildViewerPanel();
+		convertirAImagen(getPath());
         
-// 		add copy keyboard command
-//      ComponentKeyBinding.install(controller, viewerComponentPanel);
-//
-// 		add interactive mouse link annotation support via callback
-//
-//      controller.getDocumentViewController().setAnnotationCallback(new org.icepdf.ri.common.MyAnnotationCallback(controller.getDocumentViewController()));
-//		Use the factory to build a JPanel that is pre-configured with a complete, active Viewer UI.
-//
-// 		Create a JFrame to display the panel in
-
-        JFrame ventana = new JFrame("Boleto");
-
-        ventana.getContentPane().add(viewerComponentPanel);
-
-        ventana.pack();
-       
-        ventana.setVisible(true);
-
-  	   	// Open a PDF document to view
-           
-	    controller.openDocument(getPath());
+        for (int i = 0; i < ImagePaths.size(); i++) {     	
+        	JFrame ventana = new JFrame("Boleto " + (i+1));
+        	ImageIcon imagen = new ImageIcon(ImagePaths.get(i));
+        	JLabel etiqueta = new JLabel(imagen);
+        	ventana.getContentPane().add(etiqueta);
+        	ventana.setBounds(100 +(600*i), 50, 800, 800);
+            ventana.setResizable(false);
+            ventana.pack();
+            ventana.requestFocus();
+            ventana.setVisible(true);
+		}
+        
 	}
 	
 	public void crearBoleto(Reservas reserva) throws IOException, DocumentException {
@@ -98,14 +131,12 @@ public class Boleto {
 		Rectangle rect = new Rectangle(0, 0, 595, 420);
     	
     	Document document = new Document(rect, 0,0,0,0);
-
-//    	Date date = new Date();
     	
     	Random r = new Random();
     	
     	Integer num = (Integer) r.nextInt(1000);
     	
-    	path = "/home/ivang94/Escritorio/BoletoN°".concat(num.toString()).concat(".pdf");
+    	path = "/home/ivang94/Escritorio/BoletoN°".concat(num.toString()) + ".pdf";
     	
     	FileOutputStream ficheroPdf = new FileOutputStream(path);
     	
@@ -235,7 +266,5 @@ public class Boleto {
 	public void setPath(String path) {
 		this.path = path;
 	}
-	
-	
 
 }

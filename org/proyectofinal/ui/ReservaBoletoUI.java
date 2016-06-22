@@ -51,7 +51,6 @@ import org.proyectofinal.model.interfaces.ReservaViaje;
 import org.proyectofinal.ui.botones.BotonPasajero;
 import org.proyectofinal.ui.util.Boleto;
 import org.proyectofinal.ui.util.BoletoEmail;
-import org.proyectofinal.ui.util.DialogEnviando;
 import org.proyectofinal.ui.util.Reservas;
 
 import com.itextpdf.text.DocumentException;
@@ -118,18 +117,18 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 			@Override
 			public void windowOpened(WindowEvent e) {
 				
+				ResultSet res = null;
+				
 				try {
 					
 					rVDao.conectar();
 					
-					ResultSet res = rVDao.consultarAsientosPorViaje(rV.getViaje().getCodigoViaje());
+//					res = rVDao.consultarAsientosPorViaje(rV.getViaje().getCodigoViaje());
 
 					while (res.next()) {
 						botonesOcupados.add(botones.get(res.getInt("asiento")-1));
 					}
 					
-					rVDao.desconectar();
-						
 					for (BotonPasajero boton: botonesOcupados){
 						boton.setEstadoAsiento("OCUPADO");
 						boton.setToolTipText("OCUPADO");
@@ -155,6 +154,14 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+				} finally {
+					try {
+//						res.close();
+						rVDao.desconectar();
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 				
 			}
@@ -1294,7 +1301,6 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 									rVDao.alta(reservas.getListReservas().get(i));
 									
 //									System.out.println(reservas.getListReservas().get(i));
-									res = null;
 								}
 
 								vCDao.actualizarCupo(reservas.getListReservas().get(0).getViaje());
@@ -1306,6 +1312,13 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 							} catch (SQLException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
+							} finally {
+//								try {
+////									res.close();
+//								} catch (SQLException e1) {
+//									// TODO Auto-generated catch block
+//									e1.printStackTrace();
+//								}
 							}
 							
 							
@@ -1668,13 +1681,13 @@ public class ReservaBoletoUI extends JFrame implements MouseListener {
 		panelDatosPasajeros.add(txtDni);
 		
 		txtAsiento = new JTextField();
-		txtAsiento.setEnabled(false);
+		txtAsiento.setEditable(false);
 		txtAsiento.setColumns(10);
 		txtAsiento.setBounds(99, 115, 176, 20);
 		panelDatosPasajeros.add(txtAsiento);
 		
 		txtPrecio = new JTextField();
-		txtPrecio.setEnabled(false);
+		txtPrecio.setEditable(false);
 		txtPrecio.setColumns(10);
 		txtPrecio.setBounds(99, 145, 176, 20);
 		panelDatosPasajeros.add(txtPrecio);

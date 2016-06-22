@@ -1,8 +1,6 @@
 package org.proyectofinal.dao.impl;
 
-import java.sql.Connection; 
 import java.sql.Date;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,24 +11,14 @@ import org.proyectofinal.model.interfaces.ViajeCabecera;
 
 public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDao {
 	
-	private Connection conexion = null;
-	
 	public void conectar() throws ClassNotFoundException, SQLException{
-	
-		Class.forName("com.mysql.jdbc.Driver");
-
-//		this.conexion = DriverManager.getConnection("jdbc:mysql://localhost:3305/ReservasAvion", "root", "asd123");
-		this.conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/ReservasAvion", "root", "genius34");
+		super.conectar();
 	}
 	
 	public void desconectar() throws SQLException{
-		getConexion().close();
+		super.desconectar();
 	}
 
-	public Connection getConexion() {
-		return this.conexion;
-	}
-	
 	public ResultSet consultar() throws ClassNotFoundException, SQLException {
 		
 		conectar();
@@ -38,7 +26,7 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		PreparedStatement sentencia = getConexion().prepareStatement("SELECT * FROM ViajeCabecera");
 		
 		ResultSet resultado = sentencia.executeQuery();
-		
+	//	sentencia.close();
 		return resultado;
 	}
 	
@@ -50,18 +38,21 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		
 		ResultSet resultado = sentencia.executeQuery();
 		
+	//	sentencia.close();
+		
 		return resultado;
 	}
 	
-	public ResultSet consultarPorCodigoViaje(Integer codViaje) throws SQLException, ClassNotFoundException {
+	public ResultSet consultarPorCodigoViaje(String codViaje) throws SQLException, ClassNotFoundException {
 		
 		conectar();
 		
 		PreparedStatement sentencia = getConexion().prepareStatement("SELECT * FROM ViajeCabecera WHERE codViaje = ?");
 		
-		sentencia.setInt(1, codViaje);
+		sentencia.setString(1, codViaje);
 		
 		ResultSet resultado = sentencia.executeQuery();
+	//	sentencia.close();
 		
 		return resultado;
 	}
@@ -72,9 +63,10 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		
 		PreparedStatement sentencia = getConexion().prepareStatement("SELECT * FROM ViajeCabecera WHERE codViaje = ?");
 		
-		sentencia.setInt(1, vC.getCodigoViaje());
+		sentencia.setString(1, vC.getCodigoViaje());
 		
 		ResultSet resultado = sentencia.executeQuery();
+	//	sentencia.close();
 		
 		return resultado;
 	}
@@ -88,40 +80,49 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		sentencia.setDate(1, fecha);
 		
 		ResultSet resultado = sentencia.executeQuery();
+	//	sentencia.close();
 		
 		return resultado;
 	}
 	
 	public ResultSet consultarOrigenes() throws ClassNotFoundException, SQLException {
 		
-		PreparedStatement sentencia = getConexion().prepareStatement("SELECT DISTINCT ciudadOrigen, paisOrigen FROM ViajeCabecera");
+		PreparedStatement sentencia = getConexion().prepareStatement("SELECT DISTINCT ciudadOrigen, shortPaisOrigen FROM ViajeCabecera");
 		
 		ResultSet resultado = sentencia.executeQuery();
-		
+	
 		return resultado;		
 	}
 	
 	public ResultSet consultarDestinos() throws ClassNotFoundException, SQLException {
 		
-		PreparedStatement sentencia = getConexion().prepareStatement("SELECT DISTINCT ciudadDestino, paisDestino FROM ViajeCabecera");
+		PreparedStatement sentencia = getConexion().prepareStatement("SELECT DISTINCT ciudadDestino, shortPaisDestino FROM ViajeCabecera");
 		
 		ResultSet resultado = sentencia.executeQuery();
-
+		
 		return resultado;
 	}
 	
 	public ResultSet consultarVuelos(ViajeCabecera vC) throws ClassNotFoundException, SQLException{
 		
-		PreparedStatement sentencia = getConexion().prepareStatement("SELECT * FROM ViajeCabecera where ciudadOrigen = ? and paisOrigen = ? and ciudadDestino = ? and paisDestino = ? and date(fechaSalida) = ?");
+		PreparedStatement sentencia = getConexion().prepareStatement("SELECT * FROM ViajeCabecera where ciudadOrigen = ? and ciudadDestino = ? and date(fechaSalida) = ?");
 		
 		sentencia.setString(1, vC.getCiudadOrigen());
-		sentencia.setString(2, vC.getPaisOrigen());
-		sentencia.setString(3, vC.getCiudadDestino());
-		sentencia.setString(4, vC.getPaisDestino());
+		sentencia.setString(2, vC.getCiudadDestino());
+		sentencia.setDate(3, vC.getFechaSalida());
 		
-		Date date = new Date(vC.getFechaSalida().getTime());
+		ResultSet resultado = sentencia.executeQuery();
 		
-		sentencia.setDate(5, date);
+		return resultado;
+	}
+	
+	public ResultSet calcularDuracion(ViajeCabecera vC) throws SQLException{
+		
+		PreparedStatement sentencia = getConexion().prepareStatement("UPDATE ViajeCabecera SET duracion = timediff(?,?) where codViaje = ?");
+	
+		sentencia.setTime(1, vC.getHoraLlegada());
+		sentencia.setTime(2, vC.getHoraSalida());
+		sentencia.setString(3, vC.getCodigoViaje());
 		
 		ResultSet resultado = sentencia.executeQuery();
 		
@@ -132,9 +133,9 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		
 		conectar();
 		
-		PreparedStatement sentencia = getConexion().prepareStatement("INSERT INTO ViajeCabecera VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
+		PreparedStatement sentencia = getConexion().prepareStatement("INSERT INTO ViajeCabecera VALUES (?,?,?,?,?,?,?,date_format(?, '%d%m%Y'),?,date_format(?, '%d%m%Y'),?,?)");
 		
-		sentencia.setInt(1, vC.getCodigoViaje());
+		sentencia.setString(1, vC.getCodigoViaje());
 		sentencia.setString(2, vC.getCiudadOrigen());
 		sentencia.setString(3, vC.getPaisOrigen());
 		sentencia.setString(4, vC.getShortPaisOrigen());
@@ -148,7 +149,8 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		sentencia.setInt(12, vC.getCupo());
 		
 		sentencia.executeUpdate();
-
+	//	sentencia.close();
+		
 		desconectar();
 	}
 
@@ -161,7 +163,8 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		sentencia.setInt(1, codigoViaje);
 		
 		sentencia.executeUpdate();
-
+	//	sentencia.close();
+		
 		desconectar();
 	}
 
@@ -173,12 +176,15 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		
 		sentencia = getConexion().prepareStatement("update ViajeCabecera set cupo = cupo -1 where codViaje = ?");
 		
-		sentencia.setInt(1, vC.getCodigoViaje());
+		sentencia.setString(1, vC.getCodigoViaje());
 		
 		sentencia.executeUpdate();
+	//	sentencia.close();
 		
 		desconectar();
 	}
+	
+//	public void 
 	
 	public void modificacion(ViajeCabecera vC) throws SQLException, ClassNotFoundException{
 		
@@ -197,9 +203,10 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		sentencia.setDate(7, vC.getFechaLlegada());
 		sentencia.setTime(8, vC.getHoraLlegada());
 		sentencia.setInt(9, vC.getCupo());
-		sentencia.setInt(10, vC.getCodigoViaje());
+		sentencia.setString(10, vC.getCodigoViaje());
 		
 		sentencia.executeUpdate();
+	//	sentencia.close();
 		
 		desconectar();
 	}

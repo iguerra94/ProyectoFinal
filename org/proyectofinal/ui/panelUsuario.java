@@ -100,6 +100,8 @@ public class panelUsuario extends JPanel {
 					
 					DefaultTableModel model = (DefaultTableModel) table.getModel();
 	
+					ResultSet res = null;
+					
 					try {
 						
 						int a = model.getRowCount() - 1;
@@ -112,7 +114,7 @@ public class panelUsuario extends JPanel {
 					
 						rVDao.conectar();
 	
-						ResultSet res = rVDao.consultarPorPersonaQueReserva(lblDni.getText());
+						res = rVDao.consultarPorPersonaQueReserva(lblDni.getText());
 						
 						while (res.next()){
 							fila[0] = res.getInt("codViaje");
@@ -124,8 +126,6 @@ public class panelUsuario extends JPanel {
 							model.addRow(fila);
 						}
 					
-						rVDao.desconectar();
-						
 						Integer cantFilas = model.getRowCount();
 						
 						lblCant.setText(cantFilas.toString());
@@ -136,6 +136,14 @@ public class panelUsuario extends JPanel {
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						JOptionPane.showMessageDialog(null, e1.getMessage());
+					} finally {
+						try {
+//							res.close();
+							rVDao.desconectar();
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
 					}
 				}
 				
@@ -143,7 +151,7 @@ public class panelUsuario extends JPanel {
 		});
 		tabbedPane.setBounds(30, 30, 700, 399);
 		add(tabbedPane);
-		
+	
 		panelDatosPersonales = new JPanel();
 		tabbedPane.addTab("Datos Personales", null, panelDatosPersonales, null);
 		panelDatosPersonales.setLayout(null);
@@ -245,7 +253,7 @@ public class panelUsuario extends JPanel {
 			new Object[][] {
 			},
 			new String[] {
-				"Codigo Viaje", "Dni", "Fecha de Reserva", "Asiento", "Precio"
+				"Codigo Viaje", "Dni Pasajero", "Fecha de Reserva", "Asiento", "Precio"
 			}
 		) {
 			boolean[] columnEditables = new boolean[] {
@@ -286,32 +294,32 @@ public class panelUsuario extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 			
 				if (e.getSource() == btnReservarBoleto){
-					final ListadoVuelosUI ui = new ListadoVuelosUI(u);
-					
-					SwingUtilities.invokeLater(new Runnable() {
-					    @Override public void run() {
-					    	SwingUtilities.invokeLater(new Runnable() {
-							    @Override public void run() {
-							        ui.getTable().removeColumn(ui.getTable().getColumnModel().getColumn(6));
-							    }
-							});
-					    }
-					});
-					ui.remove(ui.getBtnAgregar());
-					
-					ui.setDni(lblDni.getText());
-					ui.getContentPane().add(ui.getBtnContinuar());
-					
+//					final ListadoVuelosUI ui = new ListadoVuelosUI(u);
+//					
+//					SwingUtilities.invokeLater(new Runnable() {
+//					    @Override public void run() {
+//					    	SwingUtilities.invokeLater(new Runnable() {
+//							    @Override public void run() {
+//							        ui.getTable().removeColumn(ui.getTable().getColumnModel().getColumn(6));
+//							    }
+//							});
+//					    }
+//					});
+//					ui.remove(ui.getBtnAgregar());
+//					
+//					ui.setDni(lblDni.getText());
+//					ui.getContentPane().add(ui.getBtnContinuar());
+//					
 //					ui.setResizable(true);
-					ui.setSize(995, 520);
-					
-					ui.setLocationRelativeTo(null);
-					ui.setResizable(false);
-					
-					ui.validate();
-					ui.repaint();
-
-					ui.setVisible(true);
+//					ui.setSize(995, 520);
+//					
+//					ui.setLocationRelativeTo(null);
+//					ui.setResizable(false);
+//					
+//					ui.validate();
+//					ui.repaint();
+//
+//					ui.setVisible(true);
 				}
 			}
 		});

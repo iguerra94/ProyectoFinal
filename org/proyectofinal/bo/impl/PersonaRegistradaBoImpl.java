@@ -6,12 +6,11 @@ import java.sql.SQLException;
 
 import org.proyectofinal.bo.ex.PersonNotValidAgeException;
 import org.proyectofinal.bo.interfaces.PersonaRegistradaBo;
+import org.proyectofinal.dao.ex.PersonAlreadyExistsException;
 import org.proyectofinal.dao.ex.PersonNotValidException;
+import org.proyectofinal.dao.impl.PersonaRegistradaDaoImpl;
 import org.proyectofinal.dao.interfaces.PersonaRegistradaDao;
-import org.proyectofinal.dao.interfaces.ViajeCabeceraDao;
-import org.proyectofinal.model.impl.ViajeCabeceraImpl;
 import org.proyectofinal.model.interfaces.PersonaRegistrada;
-import org.proyectofinal.model.interfaces.ViajeCabecera;
 
 public class PersonaRegistradaBoImpl implements PersonaRegistradaBo {
 	
@@ -64,6 +63,13 @@ public class PersonaRegistradaBoImpl implements PersonaRegistradaBo {
 			throw new PersonNotValidAgeException();
 		}
 
+	}
+	
+	public void registrarPersona(PersonaRegistrada p) throws ClassNotFoundException, SQLException, PersonAlreadyExistsException {
+		
+		PersonaRegistradaDao pDao = new PersonaRegistradaDaoImpl();
+		
+		pDao.altaPersonaRegistrada(p);
 	}
 	
 	public String retornarEmail(PersonaRegistradaDao pRDao, String dni){

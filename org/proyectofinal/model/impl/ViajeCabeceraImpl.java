@@ -6,29 +6,37 @@ import java.sql.Time;
 import org.proyectofinal.model.interfaces.ViajeCabecera;
 
 public class ViajeCabeceraImpl implements ViajeCabecera {
-	
-	private Integer codigoViaje = null;
+
+	private String codigoViaje = null;
 	private String ciudadOrigen = null;
-	private String shortPaisOrigen = null;
 	private String paisOrigen = null;
+	private String shortPaisOrigen = null;
+	private String plataformaOrigen = null;
 	private String ciudadDestino = null;
-	private String shortPaisDestino = null;
 	private String paisDestino = null;
+	private String shortPaisDestino = null;
+	private String plataformaDestino = null;
+	private Float distancia = null;
 	private Date fechaSalida = null;
 	private Time horaSalida = null;
 	private Date fechaLlegada = null;
 	private Time horaLlegada = null;
+	private Time duracion = null;
+	private Float precioClaseTur = null;
+	private Float precioClasePrim = null;
+	private String imagen1 = null;
+	private String imagen2 = null;
 	private Integer cupo = null;
 	
 	public ViajeCabeceraImpl(){
 		
 	}
-
-	public Integer getCodigoViaje() {
+	
+	public String getCodigoViaje() {
 		return codigoViaje;
 	}
 
-	public void setCodigoViaje(Integer codigoViaje) {
+	public void setCodigoViaje(String codigoViaje) {
 		this.codigoViaje = codigoViaje;
 	}
 
@@ -48,6 +56,22 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 		this.paisOrigen = paisOrigen;
 	}
 
+	public String getShortPaisOrigen() {
+		return shortPaisOrigen;
+	}
+
+	public void setShortPaisOrigen(String shortPaisOrigen) {
+		this.shortPaisOrigen = shortPaisOrigen;
+	}
+
+	public String getPlataformaOrigen() {
+		return plataformaOrigen;
+	}
+
+	public void setPlataformaOrigen(String plataformaOrigen) {
+		this.plataformaOrigen = plataformaOrigen;
+	}
+
 	public String getCiudadDestino() {
 		return ciudadDestino;
 	}
@@ -62,6 +86,30 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 
 	public void setPaisDestino(String paisDestino) {
 		this.paisDestino = paisDestino;
+	}
+
+	public String getShortPaisDestino() {
+		return shortPaisDestino;
+	}
+
+	public void setShortPaisDestino(String shortPaisDestino) {
+		this.shortPaisDestino = shortPaisDestino;
+	}
+
+	public String getPlataformaDestino() {
+		return plataformaDestino;
+	}
+
+	public void setPlataformaDestino(String plataformaDestino) {
+		this.plataformaDestino = plataformaDestino;
+	}
+
+	public Float getDistancia() {
+		return distancia;
+	}
+
+	public void setDistancia(Float distancia) {
+		this.distancia = distancia;
 	}
 
 	public Date getFechaSalida() {
@@ -95,7 +143,47 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 	public void setHoraLlegada(Time horaLlegada) {
 		this.horaLlegada = horaLlegada;
 	}
+
+	public Time getDuracion() {
+		return duracion;
+	}
+
+	public void setDuracion(Time duracion) {
+		this.duracion = duracion;
+	}
+
+	public Float getPrecioClaseTur() {
+		return precioClaseTur;
+	}
+
+	public void setPrecioClaseTur(Float precioClaseTur) {
+		this.precioClaseTur = precioClaseTur;
+	}
+
+	public Float getPrecioClasePrim() {
+		return precioClasePrim;
+	}
+
+	public void setPrecioClasePrim(Float precioClasePrim) {
+		this.precioClasePrim = precioClasePrim;
+	}
 	
+	public String getImagen1() {
+		return imagen1;
+	}
+
+	public void setImagen1(String imagen1) {
+		this.imagen1 = imagen1;
+	}
+
+	public String getImagen2() {
+		return imagen2;
+	}
+
+	public void setImagen2(String imagen2) {
+		this.imagen2 = imagen2;
+	}
+
 	public Integer getCupo() {
 		return cupo;
 	}
@@ -111,9 +199,12 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 		
 		res += "Codigo Viaje: " + getCodigoViaje() + "\n";
 		res += "Ciudad de origen: " + getCiudadOrigen() + "\n";
-		res += "Pais de origen: " + getPaisOrigen() + "( " + getShortPaisOrigen() + ")" + "\n";
+		res += "Pais de origen: " + getPaisOrigen() + " (" + getShortPaisOrigen() + ")" + "\n";
+		res += "Plataforma de origen: " + getPlataformaOrigen() + "\n";
 		res += "Ciudad de destino: " + getCiudadDestino() + "\n";
-		res += "Pais de destino: " + getPaisDestino() + "( " + getShortPaisDestino() + ")" + "\n";
+		res += "Pais de destino: " + getPaisDestino() + "(" + getShortPaisDestino() + ")" + "\n";
+		res += "Plataforma de destino: " + getPlataformaDestino() + "\n";
+		res += "Distancia: " + getDistancia() + "\n";
 		res += "Fecha de Salida: " + getFechaSalida() + "\n";
 		res += "Hora de Salida: " + getHoraSalida() + "\n";
 		res += "Fecha de Llegada: " + getFechaLlegada() + "\n";
@@ -130,12 +221,22 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 		vC.setCodigoViaje(getCodigoViaje());
 		vC.setCiudadOrigen(getCiudadOrigen());
 		vC.setPaisOrigen(getPaisOrigen());
+		vC.setShortPaisOrigen(getShortPaisOrigen());
+		vC.setPlataformaOrigen(getPlataformaOrigen());
 		vC.setCiudadDestino(getCiudadDestino());
 		vC.setPaisDestino(getPaisDestino());
+		vC.setShortPaisDestino(getShortPaisDestino());
+		vC.setPlataformaDestino(getPlataformaDestino());
+		vC.setDistancia(getDistancia());
 		vC.setFechaSalida(getFechaSalida());
 		vC.setHoraSalida(getHoraSalida());
 		vC.setFechaLlegada(getFechaLlegada());
 		vC.setHoraLlegada(getHoraLlegada());
+		vC.setDuracion(getDuracion());
+		vC.setPrecioClaseTur(getPrecioClaseTur());
+		vC.setPrecioClasePrim(getPrecioClasePrim());
+		vC.setImagen1(getImagen1());
+		vC.setImagen2(getImagen2());
 		vC.setCupo(getCupo());
 		
 		return vC;
@@ -149,12 +250,22 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 		result = prime * result + ((ciudadOrigen == null) ? 0 : ciudadOrigen.hashCode());
 		result = prime * result + ((codigoViaje == null) ? 0 : codigoViaje.hashCode());
 		result = prime * result + ((cupo == null) ? 0 : cupo.hashCode());
+		result = prime * result + ((distancia == null) ? 0 : distancia.hashCode());
+		result = prime * result + ((duracion == null) ? 0 : duracion.hashCode());
 		result = prime * result + ((fechaLlegada == null) ? 0 : fechaLlegada.hashCode());
 		result = prime * result + ((fechaSalida == null) ? 0 : fechaSalida.hashCode());
 		result = prime * result + ((horaLlegada == null) ? 0 : horaLlegada.hashCode());
 		result = prime * result + ((horaSalida == null) ? 0 : horaSalida.hashCode());
+		result = prime * result + ((imagen1 == null) ? 0 : imagen1.hashCode());
+		result = prime * result + ((imagen2 == null) ? 0 : imagen2.hashCode());
 		result = prime * result + ((paisDestino == null) ? 0 : paisDestino.hashCode());
 		result = prime * result + ((paisOrigen == null) ? 0 : paisOrigen.hashCode());
+		result = prime * result + ((plataformaDestino == null) ? 0 : plataformaDestino.hashCode());
+		result = prime * result + ((plataformaOrigen == null) ? 0 : plataformaOrigen.hashCode());
+		result = prime * result + ((precioClasePrim == null) ? 0 : precioClasePrim.hashCode());
+		result = prime * result + ((precioClaseTur == null) ? 0 : precioClaseTur.hashCode());
+		result = prime * result + ((shortPaisDestino == null) ? 0 : shortPaisDestino.hashCode());
+		result = prime * result + ((shortPaisOrigen == null) ? 0 : shortPaisOrigen.hashCode());
 		return result;
 	}
 
@@ -187,6 +298,16 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 				return false;
 		} else if (!cupo.equals(other.cupo))
 			return false;
+		if (distancia == null) {
+			if (other.distancia != null)
+				return false;
+		} else if (!distancia.equals(other.distancia))
+			return false;
+		if (duracion == null) {
+			if (other.duracion != null)
+				return false;
+		} else if (!duracion.equals(other.duracion))
+			return false;
 		if (fechaLlegada == null) {
 			if (other.fechaLlegada != null)
 				return false;
@@ -207,6 +328,16 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 				return false;
 		} else if (!horaSalida.equals(other.horaSalida))
 			return false;
+		if (imagen1 == null) {
+			if (other.imagen1 != null)
+				return false;
+		} else if (!imagen1.equals(other.imagen1))
+			return false;
+		if (imagen2 == null) {
+			if (other.imagen2 != null)
+				return false;
+		} else if (!imagen2.equals(other.imagen2))
+			return false;
 		if (paisDestino == null) {
 			if (other.paisDestino != null)
 				return false;
@@ -217,23 +348,37 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 				return false;
 		} else if (!paisOrigen.equals(other.paisOrigen))
 			return false;
+		if (plataformaDestino == null) {
+			if (other.plataformaDestino != null)
+				return false;
+		} else if (!plataformaDestino.equals(other.plataformaDestino))
+			return false;
+		if (plataformaOrigen == null) {
+			if (other.plataformaOrigen != null)
+				return false;
+		} else if (!plataformaOrigen.equals(other.plataformaOrigen))
+			return false;
+		if (precioClasePrim == null) {
+			if (other.precioClasePrim != null)
+				return false;
+		} else if (!precioClasePrim.equals(other.precioClasePrim))
+			return false;
+		if (precioClaseTur == null) {
+			if (other.precioClaseTur != null)
+				return false;
+		} else if (!precioClaseTur.equals(other.precioClaseTur))
+			return false;
+		if (shortPaisDestino == null) {
+			if (other.shortPaisDestino != null)
+				return false;
+		} else if (!shortPaisDestino.equals(other.shortPaisDestino))
+			return false;
+		if (shortPaisOrigen == null) {
+			if (other.shortPaisOrigen != null)
+				return false;
+		} else if (!shortPaisOrigen.equals(other.shortPaisOrigen))
+			return false;
 		return true;
-	}
-
-	public String getShortPaisOrigen() {
-		return shortPaisOrigen;
-	}
-
-	public void setShortPaisOrigen(String shortPaisOrigen) {
-		this.shortPaisOrigen = shortPaisOrigen;
-	}
-
-	public String getShortPaisDestino() {
-		return shortPaisDestino;
-	}
-
-	public void setShortPaisDestino(String shortPaisDestino) {
-		this.shortPaisDestino = shortPaisDestino;
 	}
 	
 }

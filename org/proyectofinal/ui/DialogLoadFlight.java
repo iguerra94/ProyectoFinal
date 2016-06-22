@@ -19,9 +19,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import org.proyectofinal.bo.ex.ViajeCabeceraNotValidException;
 import org.proyectofinal.bo.impl.ViajeCabeceraBoImpl;
 import org.proyectofinal.bo.interfaces.ViajeCabeceraBo;
-import org.proyectofinal.dao.ex.ViajeCabeceraNotValidException;
 import org.proyectofinal.dao.impl.ViajeCabeceraDaoImpl;
 import org.proyectofinal.dao.interfaces.ViajeCabeceraDao;
 import org.proyectofinal.model.impl.ViajeCabeceraImpl;
@@ -41,18 +41,9 @@ import javax.swing.DefaultComboBoxModel;
 
 public class DialogLoadFlight extends JDialog {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 2618894532538789035L;
-	/**
-	 * 
-	 */
 	private JTextField txtCodigoViaje;
-	private JTextField txtCiudadOrigen;
 	@SuppressWarnings("rawtypes")
 	private JComboBox cmbPaisOrigen;
-	private JTextField txtCiudadDestino;
 	@SuppressWarnings("rawtypes")
 	private JComboBox cmbPaisDestino;
 	private JDateChooser dateChooserFechaSalida;
@@ -84,27 +75,27 @@ public class DialogLoadFlight extends JDialog {
 			public void windowGainedFocus(WindowEvent e) {
 				
 				if (txtCodigoViaje.getText().trim().length() > 0){
-					vC.setCodigoViaje(Integer.parseInt(txtCodigoViaje.getText()));
+					vC.setCodigoViaje(txtCodigoViaje.getText());
 				}else{
-					vC.setCodigoViaje(-1);
+					vC.setCodigoViaje("");
 				}
 				
-				if (txtCiudadOrigen.getText().trim().length() > 0){
-					vC.setCiudadOrigen(txtCiudadOrigen.getText());
-				}else {
-					vC.setCiudadOrigen("");
-				}
+//				if (txtCiudadOrigen.getText().trim().length() > 0){
+//					vC.setCiudadOrigen(txtCiudadOrigen.getText());
+//				}else {
+//					vC.setCiudadOrigen("");
+//				}
+//				
+//				if (cmbPaisOrigen.getSelectedIndex() == 0){
+//					vC.setPaisOrigen(listaPaises.getListaPaises().get(0).getPais());
+//					vC.setShortPaisOrigen(listaPaises.getListaPaises().get(0).getShortPais());
+//				}
 				
-				if (cmbPaisOrigen.getSelectedIndex() == 0){
-					vC.setPaisOrigen(listaPaises.getListaPaises().get(0).getPais());
-					vC.setShortPaisOrigen(listaPaises.getListaPaises().get(0).getShortPais());
-				}
-				
-				if (txtCiudadDestino.getText().trim().length() > 0){
-					vC.setCiudadDestino(txtCiudadDestino.getText());
-				}else{
-					vC.setCiudadDestino("");					
-				}
+//				if (txtCiudadDestino.getText().trim().length() > 0){
+//					vC.setCiudadDestino(txtCiudadDestino.getText());
+//				}else{
+//					vC.setCiudadDestino("");					
+//				}
 				
 				if (cmbPaisDestino.getSelectedIndex() == 0){
 					vC.setPaisDestino(listaPaises.getListaPaises().get(0).getPais());
@@ -163,8 +154,8 @@ public class DialogLoadFlight extends JDialog {
 					e1.printStackTrace();
 				} finally {
 					try {
+//						res.close();
 						vCDao.desconectar();
-						res.close();
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -200,11 +191,11 @@ public class DialogLoadFlight extends JDialog {
 		getContentPane().setLayout(null);
 		
 		JLabel lblCodigoDeViaje = new JLabel("Codigo de Viaje: ");
-		lblCodigoDeViaje.setBounds(15, 18, 119, 15);
+		lblCodigoDeViaje.setBounds(15, 18, 119, 30);
 		getContentPane().add(lblCodigoDeViaje);
 		
 		JLabel lblCiudadDeOrigen = new JLabel("Ciudad de Origen: ");
-		lblCiudadDeOrigen.setBounds(15, 45, 143, 15);
+		lblCiudadDeOrigen.setBounds(15, 45, 143, 30);
 		getContentPane().add(lblCiudadDeOrigen);
 		
 		JLabel lblPaisDeOrigen = new JLabel("Pais de Origen: ");
@@ -245,9 +236,9 @@ public class DialogLoadFlight extends JDialog {
 			public void focusLost(FocusEvent e) {
 				
 				if (txtCodigoViaje.getText().trim().length() > 0){
-					vC.setCodigoViaje(Integer.parseInt(txtCodigoViaje.getText()));						
+					vC.setCodigoViaje(txtCodigoViaje.getText());						
 				}else{
-					vC.setCodigoViaje(-1);
+					vC.setCodigoViaje("");
 				}
 			}
 		});
@@ -272,85 +263,18 @@ public class DialogLoadFlight extends JDialog {
 							txtCodigoViaje.setText("");
 							break;
 						}else{
-							vC.setCodigoViaje(Integer.parseInt(txtCodigoViaje.getText()));						
+							vC.setCodigoViaje("");						
 						}						
 					}
 					
 				}else{
-					vC.setCodigoViaje(-1);
+					vC.setCodigoViaje("");
 				}
 			}
 		});
-		txtCodigoViaje.setBounds(160, 15, 188, 19);
+		txtCodigoViaje.setBounds(160, 15, 188, 30);
 		getContentPane().add(txtCodigoViaje);
 		txtCodigoViaje.setColumns(10);
-		
-		txtCiudadOrigen = new JTextField();
-		txtCiudadOrigen.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				
-				if (txtCiudadOrigen.getText().trim().length() > 0){
-					vC.setCiudadOrigen(txtCiudadOrigen.getText());
-				}else {
-					vC.setCiudadOrigen("");
-				}
-			}
-		});
-		txtCiudadOrigen.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent e) {
-		
-				char c = e.getKeyChar();
-				
-				if ((c < 'a' || c > 'z') && (c < 'A' || c > 'Z') && (c != KeyEvent.VK_KP_LEFT) && c != (KeyEvent.VK_KP_RIGHT) && (c != KeyEvent.VK_SPACE) && (c != KeyEvent.VK_BACK_SPACE)){
-					e.consume();
-				}
-			}
-			@Override
-			public void keyReleased(KeyEvent e) {
-				if (txtCiudadOrigen.getText().trim().length() > 0){
-					vC.setCiudadOrigen(txtCiudadOrigen.getText());
-				}else {
-					vC.setCiudadOrigen("");
-				}
-			}
-		});
-		txtCiudadOrigen.setColumns(10);
-		txtCiudadOrigen.setBounds(160, 45, 188, 19);
-		getContentPane().add(txtCiudadOrigen);
-		
-		txtCiudadDestino = new JTextField();
-		txtCiudadDestino.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				
-				if (txtCiudadDestino.getText().trim().length() > 0){
-					vC.setCiudadDestino(txtCiudadDestino.getText());
-				}else{
-					vC.setCiudadDestino("");					
-				}
-			}
-		});
-		txtCiudadDestino.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent e) {
-		
-				char c = e.getKeyChar();
-				
-				if ((c < 'a' || c > 'z') && (c < 'A' || c > 'Z') && (c != KeyEvent.VK_KP_LEFT) && c != (KeyEvent.VK_KP_RIGHT) && (c != KeyEvent.VK_SPACE) && (c != KeyEvent.VK_BACK_SPACE)){
-					e.consume();
-				}
-			}
-			@Override
-			public void keyReleased(KeyEvent e) {
-				if (txtCiudadDestino.getText().trim().length() > 0){
-					vC.setCiudadDestino(txtCiudadDestino.getText());
-				}else{
-					vC.setCiudadDestino("");					
-				}
-			}
-		});
 		
 		cmbPaisOrigen = new JComboBox();
 		cmbPaisOrigen.setModel(new DefaultComboBoxModel(modelPaises));
@@ -373,11 +297,8 @@ public class DialogLoadFlight extends JDialog {
 				
 			}
 		});
-		cmbPaisOrigen.setBounds(160, 73, 188, 22);
+		cmbPaisOrigen.setBounds(160, 73, 188, 30);
 		getContentPane().add(cmbPaisOrigen);
-		txtCiudadDestino.setColumns(10);
-		txtCiudadDestino.setBounds(160, 105, 188, 19);
-		getContentPane().add(txtCiudadDestino);
 		
 		
 		cmbPaisDestino = new JComboBox();
@@ -402,7 +323,7 @@ public class DialogLoadFlight extends JDialog {
 	
 			}
 		});
-		cmbPaisDestino.setBounds(160, 130, 188, 22);
+		cmbPaisDestino.setBounds(160, 130, 188, 30);
 		getContentPane().add(cmbPaisDestino);
 
 		dateChooserFechaLlegada = new JDateChooser();
@@ -595,21 +516,21 @@ public class DialogLoadFlight extends JDialog {
 		this.txtCodigoViaje = txtCodigoViaje;
 	}
 
-	public JTextField getTxtCiudadOrigen() {
-		return txtCiudadOrigen;
-	}
-
-	public void setTxtCiudadOrigen(JTextField txtCiudadOrigen) {
-		this.txtCiudadOrigen = txtCiudadOrigen;
-	}
-
-	public JTextField getTxtCiudadDestino() {
-		return txtCiudadDestino;
-	}
-
-	public void setTxtCiudadDestino(JTextField txtCiudadDestino) {
-		this.txtCiudadDestino = txtCiudadDestino;
-	}
+//	public JTextField getTxtCiudadOrigen() {
+//		return txtCiudadOrigen;
+//	}
+//
+//	public void setTxtCiudadOrigen(JTextField txtCiudadOrigen) {
+//		this.txtCiudadOrigen = txtCiudadOrigen;
+//	}
+//
+//	public JTextField getTxtCiudadDestino() {
+//		return txtCiudadDestino;
+//	}
+//
+//	public void setTxtCiudadDestino(JTextField txtCiudadDestino) {
+//		this.txtCiudadDestino = txtCiudadDestino;
+//	}
 	
 	public JDateChooser getDateChooserFechaSalida() {
 		return dateChooserFechaSalida;

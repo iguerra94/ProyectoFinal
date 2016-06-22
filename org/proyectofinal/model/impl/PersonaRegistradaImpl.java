@@ -15,6 +15,7 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 	private String email = null;
 	private Date fechaNacimiento = null;
 	private String telefono = null;
+	private String shortPais = null;
 	private String pais = null;
 	private String ciudad = null;
 	private Usuario usuario = null;
@@ -107,6 +108,14 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 		this.telefono = telefono;
 	}
 
+	public String getShortPais() {
+		return this.shortPais;
+	}
+
+	public void setShortPais(String shortPais) {
+		this.shortPais = shortPais;
+	}
+
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.model.interfaces.Persona#getPais()
 	 */
@@ -163,7 +172,7 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 		res += "Email: " + getEmail() + "\n";
 		res += "Fecha de Nacimiento: " + getFechaNacimiento() + "\n";
 		res += "Telefono: " + getTelefono() + "\n"; 
-		res += "Pais: " + getPais() + "\n";
+		res += "Pais: " + getPais() + " (" + getShortPais() + ")\n";
 		res += "Ciudad: " + getCiudad() + "\n";
 		res += getUsuario().toString();
 		
@@ -183,6 +192,7 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 		p.setEmail(getEmail());
 		p.setFechaNacimiento(getFechaNacimiento());
 		p.setTelefono(getTelefono());
+		p.setShortPais(getShortPais());
 		p.setPais(getPais());
 		p.setCiudad(getCiudad());
 		p.setUsuario(getUsuario());
@@ -201,6 +211,7 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 		result = prime * result + ((fechaNacimiento == null) ? 0 : fechaNacimiento.hashCode());
 		result = prime * result + ((nombre == null) ? 0 : nombre.hashCode());
 		result = prime * result + ((pais == null) ? 0 : pais.hashCode());
+		result = prime * result + ((shortPais == null) ? 0 : shortPais.hashCode());
 		result = prime * result + ((telefono == null) ? 0 : telefono.hashCode());
 		result = prime * result + ((usuario == null) ? 0 : usuario.hashCode());
 		return result;
@@ -249,6 +260,11 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 			if (other.pais != null)
 				return false;
 		} else if (!pais.equals(other.pais))
+			return false;
+		if (shortPais == null) {
+			if (other.shortPais != null)
+				return false;
+		} else if (!shortPais.equals(other.shortPais))
 			return false;
 		if (telefono == null) {
 			if (other.telefono != null)

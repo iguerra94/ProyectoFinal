@@ -60,9 +60,6 @@ public class BotonPasajero extends JButton implements ActionListener, MouseListe
 
 			if (cant % 2 == 0) {
 
-				// System.out.println("Numero: " + getAsiento());
-				// System.out.println("Precio: $" + getPrecio());
-
 				this.setContentAreaFilled(true);
 
 				setEstadoAsiento("SELECCIONADO");
@@ -95,14 +92,12 @@ public class BotonPasajero extends JButton implements ActionListener, MouseListe
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// System.out.println("Numero: " + getAsiento());
-		// System.out.println("Precio: $" + getPrecio());
+		
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		
-//		System.out.println("HOLA");
+
 	}
 
 	@Override

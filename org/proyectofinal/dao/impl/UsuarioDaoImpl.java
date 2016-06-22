@@ -19,34 +19,46 @@ public class UsuarioDaoImpl extends AbstractDao implements UsuarioDao {
 		PreparedStatement sentencia = getConexion().prepareStatement("select * from Usuario");
 		
 		ResultSet resultado = sentencia.executeQuery();
-		
+
 		return resultado;
 	}
 	
-	public ResultSet consultarPorUsuario(Usuario u) throws ClassNotFoundException, SQLException, UserNotExistsException {
+	public ResultSet consultarPorUsuario(Usuario u) throws ClassNotFoundException, SQLException {
 		
 		conectar();
 
-		PreparedStatement sentencia = getConexion().prepareStatement("select * from Usuario where usuario = ?");
+		PreparedStatement sentencia = getConexion().prepareStatement("select * from Usuario where usuario = ? and contrasenia = ? and tipoUsuario = ?");
 		
 		sentencia.setString(1, u.getNombreUsuario());
+		sentencia.setString(2, u.getPassword());
+		sentencia.setInt(3, u.getTipoUsuario());
 		
 		ResultSet resultado = sentencia.executeQuery();
-		
+
 		return resultado;
 	}
 	
-	public ResultSet consultarPorUsuario(String usuario) throws ClassNotFoundException, SQLException, UserNotExistsException {
+	public ResultSet consultarPorUsuario(String usuario) throws UserNotExistsException {
 		
-		conectar();
+		PreparedStatement sentencia = null;
+		ResultSet resultado = null;
+		
+		try {
+			conectar();
+			
+			sentencia = getConexion().prepareStatement("select * from Usuario where usuario = ?");
 
-		PreparedStatement sentencia = getConexion().prepareStatement("select * from Usuario where usuario = ?");
-		
-		sentencia.setString(1, usuario);
-		
-		ResultSet resultado = sentencia.executeQuery();
-		
-//		if (!resultado.next()) throw new UserNotExistsException();
+			sentencia.setString(1, usuario);
+			
+			resultado = sentencia.executeQuery();
+
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		return resultado;
 	}
@@ -55,26 +67,22 @@ public class UsuarioDaoImpl extends AbstractDao implements UsuarioDao {
 		
 		conectar();
 		
-		try {
-			ResultSet res = this.consultarPorUsuario(u);
+		ResultSet res = this.consultarPorUsuario(u);
+		
+		if (!res.next()){
+			PreparedStatement sentencia = getConexion().prepareStatement("insert into Usuario (usuario, contrasenia, tipoUsuario, fechaInicio) values (?,?, 1, ?)");
 			
-			if (!res.next()){
-				PreparedStatement sentencia = getConexion().prepareStatement("insert into Usuario (usuario, contrasenia, tipoUsuario, fechaInicio) values (?,?, 1, ?)");
-				
-				sentencia.setString(1, u.getNombreUsuario());
-				sentencia.setString(2, u.getPassword());
-				sentencia.setTimestamp(3, u.getFechaInicio());
-				
-				sentencia.executeUpdate();
-				
-				desconectar();
-			}else{
-				throw new UserAlreadyExistsException();
-			}
-		} catch (UserNotExistsException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			sentencia.setString(1, u.getNombreUsuario());
+			sentencia.setString(2, u.getPassword());
+			sentencia.setTimestamp(3, u.getFechaInicio());
+			
+			sentencia.executeUpdate();
+
+			desconectar();
+		}else{
+			throw new UserAlreadyExistsException();
 		}
+		
 	
 	}
 
@@ -87,7 +95,7 @@ public class UsuarioDaoImpl extends AbstractDao implements UsuarioDao {
 		sentencia.setString(1, u.getNombreUsuario());
 		
 		sentencia.executeUpdate();
-		
+
 		desconectar();
 	}
 
@@ -116,7 +124,8 @@ public class UsuarioDaoImpl extends AbstractDao implements UsuarioDao {
 		sentencia.setString(2, user);
 		
 		sentencia.executeUpdate();
-		
+	//	sentencia.close();
+	//	res.close();
 		desconectar();
 	}
 	

@@ -18,7 +18,9 @@ public class PasajeroDaoImpl extends AbstractDao implements PasajeroDao {
 		
 		ResultSet resultado = sentencia.executeQuery();
 
-		desconectar();
+//		sentencia.close();
+		
+//		desconectar();
 		
 		return resultado;
 	}
@@ -75,6 +77,7 @@ public class PasajeroDaoImpl extends AbstractDao implements PasajeroDao {
 
 		sentencia1.executeUpdate();
 		
+//		sentencia1.close();
 //		this.desconectar();
 	}
 
