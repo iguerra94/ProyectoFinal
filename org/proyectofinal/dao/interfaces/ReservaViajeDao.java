@@ -13,7 +13,7 @@ public interface ReservaViajeDao {
 	public ResultSet consultarPorPasajero(ReservaViaje rV) throws ClassNotFoundException, SQLException;
 	public ResultSet consultarPorPersonaQueReserva(String dni) throws ClassNotFoundException, SQLException;
 	public ResultSet consultarPorViaje(ReservaViaje rV) throws ClassNotFoundException, SQLException;
-	public ResultSet consultarAsientosPorViaje(Integer codViaje) throws ClassNotFoundException, SQLException;		
+	public ResultSet consultarAsientosPorViaje(String codViaje) throws ClassNotFoundException, SQLException;		
 	public void alta(ReservaViaje rV) throws SQLException, ClassNotFoundException;
 	public void baja(ReservaViaje rV) throws SQLException, ClassNotFoundException;
 	public void modificacion(String dniNuevo, String dniAnterior) throws SQLException, ClassNotFoundException;

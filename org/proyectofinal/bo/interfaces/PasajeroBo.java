@@ -6,4 +6,6 @@ import org.proyectofinal.model.interfaces.Pasajero;
 public interface PasajeroBo {
 	
 	public void verificarDatosPasajero(Pasajero p) throws NotValidPassengerException;
+
+	public void agregarPasajero(Pasajero pasajero);
 }

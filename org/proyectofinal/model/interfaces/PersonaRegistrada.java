@@ -31,6 +31,9 @@ public interface PersonaRegistrada extends Cloneable {
 	public String getCiudad();
 	public void setCiudad(String ciudad);
 	
+	public Integer getSaldo();
+	public void setSaldo(Integer saldo);
+	
 	public Usuario getUsuario();
 	public void setUsuario(Usuario usuario);
 	

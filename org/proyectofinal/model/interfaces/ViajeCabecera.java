@@ -55,6 +55,9 @@ public interface ViajeCabecera extends Cloneable {
 
 	public Float getPrecioClasePrim();
 	public void setPrecioClasePrim(Float precioClasePrim);
+	
+	public Float getOferta();
+	public void setOferta(Float oferta);
 
 	public String getImagen1();
 	public void setImagen1(String imagen1);

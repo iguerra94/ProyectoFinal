@@ -18,6 +18,7 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 	private String shortPais = null;
 	private String pais = null;
 	private String ciudad = null;
+	private Integer saldo = null;
 	private Usuario usuario = null;
 	
 	public PersonaRegistradaImpl(){
@@ -144,6 +145,14 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 		this.ciudad = ciudad;
 	}
 
+	public Integer getSaldo() {
+		return saldo;
+	}
+
+	public void setSaldo(Integer saldo) {
+		this.saldo = saldo;
+	}
+
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.model.interfaces.Persona#getUsuario()
 	 */
@@ -174,6 +183,7 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 		res += "Telefono: " + getTelefono() + "\n"; 
 		res += "Pais: " + getPais() + " (" + getShortPais() + ")\n";
 		res += "Ciudad: " + getCiudad() + "\n";
+		res += "Saldo: " + getSaldo() + "\n";
 		res += getUsuario().toString();
 		
 		return res; 
@@ -195,6 +205,7 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 		p.setShortPais(getShortPais());
 		p.setPais(getPais());
 		p.setCiudad(getCiudad());
+		p.setSaldo(getSaldo());
 		p.setUsuario(getUsuario());
 		
 		return p;
@@ -204,13 +215,11 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((apellido == null) ? 0 : apellido.hashCode());
 		result = prime * result + ((ciudad == null) ? 0 : ciudad.hashCode());
-		result = prime * result + ((dni == null) ? 0 : dni.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((fechaNacimiento == null) ? 0 : fechaNacimiento.hashCode());
-		result = prime * result + ((nombre == null) ? 0 : nombre.hashCode());
 		result = prime * result + ((pais == null) ? 0 : pais.hashCode());
+		result = prime * result + ((saldo == null) ? 0 : saldo.hashCode());
 		result = prime * result + ((shortPais == null) ? 0 : shortPais.hashCode());
 		result = prime * result + ((telefono == null) ? 0 : telefono.hashCode());
 		result = prime * result + ((usuario == null) ? 0 : usuario.hashCode());
@@ -226,20 +235,10 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 		if (getClass() != obj.getClass())
 			return false;
 		PersonaRegistradaImpl other = (PersonaRegistradaImpl) obj;
-		if (apellido == null) {
-			if (other.apellido != null)
-				return false;
-		} else if (!apellido.equals(other.apellido))
-			return false;
 		if (ciudad == null) {
 			if (other.ciudad != null)
 				return false;
 		} else if (!ciudad.equals(other.ciudad))
-			return false;
-		if (dni == null) {
-			if (other.dni != null)
-				return false;
-		} else if (!dni.equals(other.dni))
 			return false;
 		if (email == null) {
 			if (other.email != null)
@@ -251,15 +250,15 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 				return false;
 		} else if (!fechaNacimiento.equals(other.fechaNacimiento))
 			return false;
-		if (nombre == null) {
-			if (other.nombre != null)
-				return false;
-		} else if (!nombre.equals(other.nombre))
-			return false;
 		if (pais == null) {
 			if (other.pais != null)
 				return false;
 		} else if (!pais.equals(other.pais))
+			return false;
+		if (saldo == null) {
+			if (other.saldo != null)
+				return false;
+		} else if (!saldo.equals(other.saldo))
 			return false;
 		if (shortPais == null) {
 			if (other.shortPais != null)

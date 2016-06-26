@@ -22,9 +22,9 @@ public class UsuarioBoImpl implements UsuarioBo {
 	
 	public void verificar(Usuario u) throws UserNotValidException{
 		
-		if (u.getNombreUsuario() == null || u.getNombreUsuario().length() == 0 || 
-			u.getPassword() == null || u.getPassword().length() == 0 || 
-			u.getTipoUsuario() == -1) {
+		if (u.getNombreUsuario().length() == 0 || u.getNombreUsuario() == null ||
+			u.getPassword().length() == 0 || u.getPassword() == null || 
+			u.getTipoUsuario() == -1 || u.getTipoUsuario() == null) {
 			
 			throw new UserNotValidException();
 		}
@@ -48,13 +48,14 @@ public class UsuarioBoImpl implements UsuarioBo {
 				throw new UserNotCorrectException();
 			}
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
+	}
+	
+	public void retornarUsuarioYPersona() {
 		
 	}
 	
@@ -81,6 +82,5 @@ public class UsuarioBoImpl implements UsuarioBo {
 			
 		return pass;
 	}
-	
 	
 }

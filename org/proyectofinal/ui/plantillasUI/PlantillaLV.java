@@ -13,18 +13,24 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 
+import org.proyectofinal.bo.impl.ViajeCabeceraBoImpl;
+import org.proyectofinal.bo.interfaces.ViajeCabeceraBo;
 import org.proyectofinal.model.interfaces.ViajeCabecera;
+import org.proyectofinal.ui.ReservaBoletoUI;
 
 public class PlantillaLV extends JDialog {
 	
 	private JPanel panelVuelos;
 	private JScrollPane scrollPane;
 	private JPanel panelVuelo;
+	private JLabel lblVuelo;
+	private JButton btnSeleccionar;
 	private JPanel panelImagenes;
 	private JLabel lblMostrarImagen;
 	private ImageIcon imagen1;
@@ -116,7 +122,7 @@ public class PlantillaLV extends JDialog {
 
 	private void agregarInfo(ViajeCabecera viaje) {
 		
-		JLabel lblVuelo = new JLabel(viaje.getCodigoViaje());
+		lblVuelo = new JLabel(viaje.getCodigoViaje());
 		lblVuelo.setHorizontalAlignment(SwingConstants.CENTER);
 		lblVuelo.setFont(new Font("Arial", Font.BOLD,14));
 		lblVuelo.setBounds(0, 10, 100, 40);
@@ -182,16 +188,36 @@ public class PlantillaLV extends JDialog {
 		label6.setBounds(547, 35, 93, 25);
 		panelVuelo.add(label6);
 		
-		JLabel lblPrecio = new JLabel(String.format("%.2f", viaje.getPrecioClaseTur()));
+		JLabel lblPrecio = new JLabel(String.format("%.2f", ( viaje.getPrecioClaseTur() - ( viaje.getPrecioClaseTur()*viaje.getOferta() ) )));
 		lblPrecio.setHorizontalAlignment(SwingConstants.LEFT);
 		lblPrecio.setFont(new Font("Arial", Font.BOLD,14));
 		lblPrecio.setBounds(640, 35, 70, 25);
 		panelVuelo.add(lblPrecio);
 	}
 
-	private void agregarBoton() {
-		JButton btnSeleccionar = new JButton("Seleccionar");
+	private void agregarBoton(ViajeCabecera viaje) {
+		final JButton btnSeleccionar = new JButton("Seleccionar");
+		btnSeleccionar.setToolTipText(viaje.getCodigoViaje());
 		btnSeleccionar.setBounds(567, 5, 118, 30);
+		btnSeleccionar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				ViajeCabeceraBo vCBo = new ViajeCabeceraBoImpl();			
+					
+				ViajeCabecera viaje = vCBo.retornarViaje(btnSeleccionar.getToolTipText());
+				
+				ReservaBoletoUI ui = new ReservaBoletoUI();
+				
+				ui.cargarInfoVuelo(viaje);
+				
+				ui.setearViaje(viaje);
+				
+				ui.setVisible(true);
+				
+			}
+		});
 		panelVuelo.add(btnSeleccionar);
 	}
 	
@@ -285,7 +311,7 @@ public class PlantillaLV extends JDialog {
 		for (ViajeCabecera viaje : listaViajes) {
 			agregarPanel(i);
 			agregarInfo(viaje);
-			agregarBoton();
+			agregarBoton(viaje);
 		
 			i++;
 		}

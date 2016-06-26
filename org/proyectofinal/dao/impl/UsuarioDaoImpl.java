@@ -145,4 +145,12 @@ public class UsuarioDaoImpl extends AbstractDao implements UsuarioDao {
 		desconectar();
 	}
 
+//	public ResultSet consultarDatosUsuario(String usuario) {
+//		
+//		PreparedStatement sentencia = getConexion().prepareStatement("SELECT * from Usuario WHERE usuario=? ciudadOrigen, shortPaisOrigen FROM ViajeCabecera");
+//		
+//		ResultSet resultado = sentencia.executeQuery();
+//	
+//		return resultado;		
+//	}
 }

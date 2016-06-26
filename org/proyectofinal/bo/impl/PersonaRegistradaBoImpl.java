@@ -9,8 +9,13 @@ import org.proyectofinal.bo.interfaces.PersonaRegistradaBo;
 import org.proyectofinal.dao.ex.PersonAlreadyExistsException;
 import org.proyectofinal.dao.ex.PersonNotValidException;
 import org.proyectofinal.dao.impl.PersonaRegistradaDaoImpl;
+import org.proyectofinal.dao.impl.ViajeCabeceraDaoImpl;
 import org.proyectofinal.dao.interfaces.PersonaRegistradaDao;
+import org.proyectofinal.dao.interfaces.ViajeCabeceraDao;
+import org.proyectofinal.model.impl.PersonaRegistradaImpl;
+import org.proyectofinal.model.impl.ViajeCabeceraImpl;
 import org.proyectofinal.model.interfaces.PersonaRegistrada;
+import org.proyectofinal.model.interfaces.ViajeCabecera;
 
 public class PersonaRegistradaBoImpl implements PersonaRegistradaBo {
 	
@@ -72,9 +77,13 @@ public class PersonaRegistradaBoImpl implements PersonaRegistradaBo {
 		pDao.altaPersonaRegistrada(p);
 	}
 	
-	public String retornarEmail(PersonaRegistradaDao pRDao, String dni){
+	
+	
+	public String retornarEmail(String dni){
 		
 		String email = null;
+
+		PersonaRegistradaDao pRDao = new PersonaRegistradaDaoImpl();
 
 		try {
 
@@ -85,15 +94,56 @@ public class PersonaRegistradaBoImpl implements PersonaRegistradaBo {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		return email;
+		return email;		
+	}
+	
+	public PersonaRegistrada retornarPersona(String usuario) {
 		
+		PersonaRegistrada pR = new PersonaRegistradaImpl();
+
+		PersonaRegistradaDao pRDao = new PersonaRegistradaDaoImpl();
+		
+		try {
+			
+			pRDao.conectar();
+			
+			ResultSet res = pRDao.consultarPorUsuario(usuario);
+			
+			while (res.next()) {
+				pR.setDni(res.getString("dni"));
+				pR.setNombre(res.getString("nombre"));
+				pR.setApellido(res.getString("apellido"));
+				pR.setEmail(res.getString("email"));
+				pR.setTelefono(res.getString("telefono"));
+				pR.setFechaNacimiento(res.getDate("fechaNacimiento"));
+				pR.setPais(res.getString("pais"));
+				pR.setCiudad(res.getString("ciudad"));
+				pR.setSaldo(res.getInt("saldo"));
+			}
+
+			pRDao.desconectar();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		return pR;
+		
+	}
+
+	@Override
+	public PersonaRegistrada retornarPersonaPorUsuario(String usuario) {
+		
+		PersonaRegistrada p = retornarPersona(usuario);
+		
+		return p;
 	}
 
 }

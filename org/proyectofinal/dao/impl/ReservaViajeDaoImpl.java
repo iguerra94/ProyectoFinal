@@ -82,11 +82,11 @@ public class ReservaViajeDaoImpl extends AbstractDao implements ReservaViajeDao 
 		return resultado;
 	}
 	
-	public ResultSet consultarAsientosPorViaje(Integer codViaje) throws ClassNotFoundException, SQLException{
+	public ResultSet consultarAsientosPorViaje(String codViaje) throws ClassNotFoundException, SQLException{
 		
 		PreparedStatement sentencia = getConexion().prepareStatement("select distinct asiento from ReservaViaje where codViaje = ?");
 		
-		sentencia.setInt(1, codViaje);
+		sentencia.setString(1, codViaje);
 		
 		ResultSet resultado = sentencia.executeQuery();
 //		sentencia.close();

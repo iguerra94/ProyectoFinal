@@ -1,8 +1,10 @@
 package org.proyectofinal.bo.impl;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.proyectofinal.bo.ex.ViajeCabeceraNotValidException;
@@ -33,11 +35,18 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 		
 	}
 
-	public void verificarImportantes(ViajeCabecera vC) throws ViajeCabeceraNotValidException {
+	public void verificarImportantesConFecha(ViajeCabecera vC) throws ViajeCabeceraNotValidException {
 		
 		if (vC.getCiudadOrigen().length() == 0 || vC.getCiudadDestino().length() == 0 ||
 			vC.getFechaSalida().equals(null)) {
 			
+			throw new ViajeCabeceraNotValidException();
+		}
+	}
+	
+	public void verificarImportantesSinFecha(ViajeCabecera vC) throws ViajeCabeceraNotValidException {
+		
+		if (vC.getCiudadOrigen().length() == 0 || vC.getCiudadDestino().length() == 0) {
 			throw new ViajeCabeceraNotValidException();
 		}
 	}
@@ -128,6 +137,7 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 				vC.setDuracion(res.getTime("duracion"));
 				vC.setPrecioClaseTur(res.getFloat("precioClaseTur"));
 				vC.setPrecioClasePrim(res.getFloat("precioClasePrim"));
+				vC.setOferta(res.getFloat("oferta"));
 				vC.setImagen1(res.getString("imagen1"));
 				vC.setImagen2(res.getString("imagen2"));
 				vC.setCupo(res.getInt("cupo"));
@@ -136,10 +146,8 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 			vCDao.desconectar();
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -147,27 +155,90 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 		
 	}
 
-	@Override
-	public List<ViajeCabecera> retornarVuelos(ViajeCabecera vC) throws NoFlightsFoundException {
+	public List<ViajeCabecera> retornarVuelosPorFecha(ViajeCabecera vC) throws NoFlightsFoundException {
+		
+		List<ViajeCabecera> listVuelos = new ArrayList<ViajeCabecera>();
+		
+		ViajeCabeceraDao vCDao = new ViajeCabeceraDaoImpl();
+		
+		
+		ResultSet res = null;
+		
+		Calendar c = null;
+		
+		Date fechaSalida = vC.getFechaSalida();
+		
+		java.util.Date dateUtil = null; 
+		
+		Date dateSql = null;
+		
+		try {
+			
+			vCDao.conectar();
+			
+			int k = 7;
+			
+			for (int i = 1; i <= k; i++){
+
+				res = vCDao.consultarVuelosPorFecha(vC);
+	
+				while (res.next()){
+					ViajeCabecera viaje = retornarViaje(res.getString("codViaje"));
+					listVuelos.add(viaje);
+				}
+
+				c = Calendar.getInstance();
+				
+				c.setTime(new java.util.Date(fechaSalida.getTime()));
+				
+				c.add(Calendar.DATE, i);
+				
+				dateUtil = c.getTime();
+				
+				dateSql = new Date(dateUtil.getTime());
+				
+				vC.setFechaSalida(dateSql);							
+				
+			}
+			
+			if (listVuelos.size() == 0){
+				throw new NoFlightsFoundException();
+			}
+			
+			vCDao.desconectar();
+
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return listVuelos;
+	}
+	
+	public List<ViajeCabecera> retornarVuelosCualquierFecha(ViajeCabecera vC) throws NoFlightsFoundException {
 		
 		List<ViajeCabecera> listVuelos = new ArrayList<ViajeCabecera>();
 		
 		ViajeCabeceraDao vCDao = new ViajeCabeceraDaoImpl();
 		
 		try {
+			
 			vCDao.conectar();
 
-			ResultSet res = vCDao.consultarVuelos(vC);
+			ResultSet res = vCDao.consultarVuelosCualquierFecha(vC);
 
-			if (res.next()){
-				while (res.next()){
-					ViajeCabecera viaje = retornarViaje(res.getString("codViaje"));
-					listVuelos.add(viaje);
-				}
-			} else {
+			while (res.next()){
+				ViajeCabecera viaje = retornarViaje(res.getString("codViaje"));
+				listVuelos.add(viaje);
+			}
+			
+			if (listVuelos.size() == 0){
 				throw new NoFlightsFoundException();
 			}
-
+			
 			vCDao.desconectar();
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -180,4 +251,19 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 		return listVuelos;
 	}
 
+	@Override
+	public void actualizarCupo(ViajeCabecera viaje) {
+
+		ViajeCabeceraDao vCDao = new ViajeCabeceraDaoImpl();
+		
+		try {
+			vCDao.actualizarCupo(viaje);
+		} catch (ClassNotFoundException e) {			
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
+	
 }

@@ -9,9 +9,12 @@ import org.proyectofinal.model.interfaces.ViajeCabecera;
 public interface ViajeCabeceraBo {
 	
 	public void verificarTodos(ViajeCabecera vC) throws ViajeCabeceraNotValidException;
-	public void verificarImportantes(ViajeCabecera vC) throws ViajeCabeceraNotValidException;		
+	public void verificarImportantesConFecha(ViajeCabecera vC) throws ViajeCabeceraNotValidException;		
+	public void verificarImportantesSinFecha(ViajeCabecera vC) throws ViajeCabeceraNotValidException;		
 	public ViajeCabecera retornarViaje(String codViaje);
 	public List<String> retornarOrigenes();
 	public List<String> retornarDestinos();
-	public List<ViajeCabecera> retornarVuelos(ViajeCabecera vC) throws NoFlightsFoundException;
+	public List<ViajeCabecera> retornarVuelosPorFecha(ViajeCabecera vC) throws NoFlightsFoundException;
+	public List<ViajeCabecera> retornarVuelosCualquierFecha(ViajeCabecera vC) throws NoFlightsFoundException;
+	public void actualizarCupo(ViajeCabecera viaje);
 }

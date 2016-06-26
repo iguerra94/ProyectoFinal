@@ -115,19 +115,30 @@ public class PersonaRegistradaDaoImpl extends AbstractDao implements PersonaRegi
 		
 		return resultado;
 	}
+	
+//	public ResultSet consultarPorUsuario(String user) throws SQLException, ClassNotFoundException {
+//
+//		conectar();
+//		
+//		PreparedStatement sentencia = getConexion().prepareStatement("select * from Usuario u inner join PersonaRegistrada preg on u.usuario = preg.usuario inner join PersonaGenerica pr on pr.dni = preg.dni where u.usuario = ?");
+//
+//		sentencia.setString(1, user);
+//		
+//		ResultSet resultado = sentencia.executeQuery();
+//
+////		sentencia.close();
+////		desconectar();
+//		
+//		return resultado;
+//	}
 
 	public ResultSet consultarPorUsuario(String user) throws SQLException, ClassNotFoundException {
-
-		conectar();
 		
-		PreparedStatement sentencia = getConexion().prepareStatement("select * from Usuario u inner join PersonaRegistrada preg on u.usuario = preg.usuario inner join PersonaGenerica pr on pr.dni = preg.dni where u.usuario = ?");
+		PreparedStatement sentencia = getConexion().prepareStatement("select * from PersonaRegistrada pr inner join PersonaGenerica pg on pg.dni = pr.dni where usuario = ?");
 
 		sentencia.setString(1, user);
 		
 		ResultSet resultado = sentencia.executeQuery();
-
-//		sentencia.close();
-//		desconectar();
 		
 		return resultado;
 	}

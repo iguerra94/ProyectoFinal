@@ -16,7 +16,8 @@ public interface ViajeCabeceraDao {
 	public ResultSet consultarPorCodigoViaje(ViajeCabecera vC) throws SQLException, ClassNotFoundException;
 	public ResultSet consultarOrigenes() throws ClassNotFoundException, SQLException;
 	public ResultSet consultarDestinos() throws ClassNotFoundException, SQLException;
-	public ResultSet consultarVuelos(ViajeCabecera vC) throws ClassNotFoundException, SQLException;
+	public ResultSet consultarVuelosPorFecha(ViajeCabecera vC) throws ClassNotFoundException, SQLException;
+	public ResultSet consultarVuelosCualquierFecha(ViajeCabecera vC) throws ClassNotFoundException, SQLException;
 	public void alta(ViajeCabecera vC) throws SQLException, ClassNotFoundException;
 	public void baja(Integer codigoViaje) throws SQLException, ClassNotFoundException;
 	public void actualizarCupo(ViajeCabecera vC) throws SQLException, ClassNotFoundException;

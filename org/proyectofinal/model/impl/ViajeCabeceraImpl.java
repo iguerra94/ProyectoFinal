@@ -24,6 +24,7 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 	private Time duracion = null;
 	private Float precioClaseTur = null;
 	private Float precioClasePrim = null;
+	private Float oferta = null;
 	private String imagen1 = null;
 	private String imagen2 = null;
 	private Integer cupo = null;
@@ -168,6 +169,14 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 		this.precioClasePrim = precioClasePrim;
 	}
 	
+	public Float getOferta() {
+		return oferta;
+	}
+
+	public void setOferta(Float oferta) {
+		this.oferta = oferta;
+	}
+	
 	public String getImagen1() {
 		return imagen1;
 	}
@@ -235,6 +244,7 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 		vC.setDuracion(getDuracion());
 		vC.setPrecioClaseTur(getPrecioClaseTur());
 		vC.setPrecioClasePrim(getPrecioClasePrim());
+		vC.setOferta(getOferta());
 		vC.setImagen1(getImagen1());
 		vC.setImagen2(getImagen2());
 		vC.setCupo(getCupo());
@@ -258,6 +268,7 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 		result = prime * result + ((horaSalida == null) ? 0 : horaSalida.hashCode());
 		result = prime * result + ((imagen1 == null) ? 0 : imagen1.hashCode());
 		result = prime * result + ((imagen2 == null) ? 0 : imagen2.hashCode());
+		result = prime * result + ((oferta == null) ? 0 : oferta.hashCode());
 		result = prime * result + ((paisDestino == null) ? 0 : paisDestino.hashCode());
 		result = prime * result + ((paisOrigen == null) ? 0 : paisOrigen.hashCode());
 		result = prime * result + ((plataformaDestino == null) ? 0 : plataformaDestino.hashCode());
@@ -337,6 +348,11 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 			if (other.imagen2 != null)
 				return false;
 		} else if (!imagen2.equals(other.imagen2))
+			return false;
+		if (oferta == null) {
+			if (other.oferta != null)
+				return false;
+		} else if (!oferta.equals(other.oferta))
 			return false;
 		if (paisDestino == null) {
 			if (other.paisDestino != null)

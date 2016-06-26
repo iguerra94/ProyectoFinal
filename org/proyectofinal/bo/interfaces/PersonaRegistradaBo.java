@@ -14,5 +14,6 @@ public interface PersonaRegistradaBo {
 	public void verificarImportantes(PersonaRegistrada p) throws PersonNotValidException;
 	public void verificarEdad(PersonaRegistrada p) throws PersonNotValidAgeException;
 	public void registrarPersona(PersonaRegistrada p) throws ClassNotFoundException, SQLException, PersonAlreadyExistsException;
-	public String retornarEmail(PersonaRegistradaDao pRDao, String dni);
+	public String retornarEmail(String dni);
+	public PersonaRegistrada retornarPersonaPorUsuario(String usuario);
 }

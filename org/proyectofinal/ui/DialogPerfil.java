@@ -9,7 +9,6 @@ public class DialogPerfil extends PlantillaDP {
 		inicializarAtributos();
 		inicializarComponentes();
 		
-		setVisible(true);
 	}
 
 }

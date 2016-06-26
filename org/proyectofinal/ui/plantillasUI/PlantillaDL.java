@@ -36,6 +36,7 @@ import org.proyectofinal.dao.ex.UserNotValidException;
 import org.proyectofinal.model.impl.UsuarioImpl;
 import org.proyectofinal.model.interfaces.Usuario;
 import org.proyectofinal.ui.DialogMissedPass;
+import org.proyectofinal.ui.DialogRegistrarse;
 import org.proyectofinal.ui.MainFrameUI;
 
 public class PlantillaDL extends JDialog {
@@ -44,12 +45,10 @@ public class PlantillaDL extends JDialog {
 	private JPasswordField txtContrasea;
 	private JComboBox cmbTipoUsuario;
 	private JButton btnIngresar;
-	private JButton btnOlvidoSuContrasea;
 	private Usuario u;
 	private UsuarioBo uBo;
 	
 	public PlantillaDL(){
-		
 	}
 	
 	protected void inicializarAtributos(){
@@ -57,7 +56,7 @@ public class PlantillaDL extends JDialog {
 		setTitle("Iniciar Sesión");
 		getContentPane().setBackground(Color.WHITE);
 		setModal(true);
-		setBounds(new Rectangle(0, 0, 310, 480));
+		setBounds(new Rectangle(0, 0, 310, 500));
 		getContentPane().setLayout(null);
 		setLocationRelativeTo(null);
 	}
@@ -84,19 +83,22 @@ public class PlantillaDL extends JDialog {
 		getContentPane().add(lblImagen);
 		
 		JLabel lblUsuario = new JLabel("USUARIO:");
+		lblUsuario.setLabelFor(txtUsuario);
 		lblUsuario.setHorizontalAlignment(SwingConstants.CENTER);
 		lblUsuario.setBounds(15, 132, 284, 39);
 		getContentPane().add(lblUsuario);
 		
 		JLabel lblContrasea = new JLabel("CONTRASEÑA:");
+		lblContrasea.setLabelFor(txtContrasea);
 		lblContrasea.setHorizontalAlignment(SwingConstants.CENTER);
 		lblContrasea.setHorizontalTextPosition(SwingConstants.CENTER);
-		lblContrasea.setBounds(15, 212, 284, 39);
+		lblContrasea.setBounds(15, 236, 284, 39);
 		getContentPane().add(lblContrasea);
 		
 		JLabel lblTipoUsuario = new JLabel("TIPO DE USUARIO:");
+		lblTipoUsuario.setLabelFor(cmbTipoUsuario);
 		lblTipoUsuario.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTipoUsuario.setBounds(15, 318, 284, 39);
+		lblTipoUsuario.setBounds(15, 340, 284, 39);
 		getContentPane().add(lblTipoUsuario);
 	}
 	
@@ -120,10 +122,9 @@ public class PlantillaDL extends JDialog {
 			}
 		});
 		getContentPane().add(txtUsuario);
-		txtUsuario.setColumns(10);
 
 		txtContrasea = new JPasswordField();
-		txtContrasea.setBounds(45, 256, 220, 30);
+		txtContrasea.setBounds(45, 280, 220, 30);
 		txtContrasea.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -152,7 +153,7 @@ public class PlantillaDL extends JDialog {
 
 		});
 		cmbTipoUsuario.setModel(new DefaultComboBoxModel(new String[] {"","COMÚN", "ADMINISTRADOR"}));
-		cmbTipoUsuario.setBounds(45, 362, 220, 30);
+		cmbTipoUsuario.setBounds(45, 384, 220, 30);
 		getContentPane().add(cmbTipoUsuario);
 	}
 	
@@ -161,7 +162,7 @@ public class PlantillaDL extends JDialog {
 		uBo = new UsuarioBoImpl();
 		
 		btnIngresar = new JButton("Ingresar");
-		btnIngresar.setBounds(75, 408, 160, 34);
+		btnIngresar.setBounds(75, 430, 160, 34);
 		btnIngresar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
@@ -199,8 +200,8 @@ public class PlantillaDL extends JDialog {
 //					
 //					validate();
 //					repaint();
-					
-				}catch (UserNotValidException e) {
+						
+				} catch (UserNotValidException e) {
 					JOptionPane.showMessageDialog(null, e.getMessage());
 				} catch (UserNotCorrectException e) {
 					JOptionPane.showMessageDialog(null, e.getMessage());
@@ -209,28 +210,44 @@ public class PlantillaDL extends JDialog {
 			}
 		});
 		getContentPane().add(btnIngresar);
+		getRootPane().setDefaultButton(btnIngresar);
+	
+		JButton btnUsuarioNuevo = new JButton("¿Es la primera vez que ingresa?");
+		btnUsuarioNuevo.setMargin(new Insets(2, 0, 2, 0));
+		btnUsuarioNuevo.addActionListener(new ActionListener() {			
+			@Override
+			public void actionPerformed(ActionEvent e) {			
+				registrar();
+			}			
+		});
+		btnUsuarioNuevo.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnUsuarioNuevo.setForeground(Color.BLUE);
+		btnUsuarioNuevo.setContentAreaFilled(false);
+		btnUsuarioNuevo.setBorderPainted(false);
+		btnUsuarioNuevo.setBounds(0, 206, 310, 30);
+		getContentPane().add(btnUsuarioNuevo);
 		
-		btnOlvidoSuContrasea = new JButton("¿Olvidó su contraseña?");
+		JButton btnOlvidoSuContrasea = new JButton("¿Olvidó su contraseña?");
 		btnOlvidoSuContrasea.setHorizontalAlignment(SwingConstants.LEFT);
 		btnOlvidoSuContrasea.setMargin(new Insets(2, 0, 2, 0));
 		btnOlvidoSuContrasea.setHorizontalTextPosition(SwingConstants.CENTER);
-		btnOlvidoSuContrasea.addActionListener(new ActionListener() {
-			
+		btnOlvidoSuContrasea.addActionListener(new ActionListener() {		
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				if (e.getSource() == btnOlvidoSuContrasea){
-					recuperarPass();
-				}
+			public void actionPerformed(ActionEvent e) {				
+				recuperarPass();				
 			}
 		});
 		btnOlvidoSuContrasea.setBorderPainted(false);
 		btnOlvidoSuContrasea.setForeground(Color.BLUE);
 		btnOlvidoSuContrasea.setContentAreaFilled(false);
-		btnOlvidoSuContrasea.setBounds(30, 286, 235, 30);
+		btnOlvidoSuContrasea.setBounds(45, 310, 220, 30);
 		getContentPane().add(btnOlvidoSuContrasea);
 	}
 
+	private void registrar() {
+		DialogRegistrarse ui = new DialogRegistrarse();
+	}
+	
 	private void recuperarPass(){
 		DialogMissedPass d = new DialogMissedPass();
 	}
@@ -273,5 +290,4 @@ public class PlantillaDL extends JDialog {
 	public void setUsuario(Usuario u) {
 		this.u = u;
 	}
-
 }

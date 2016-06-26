@@ -2,8 +2,10 @@ package org.proyectofinal.ui;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -13,18 +15,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 
 import org.proyectofinal.dao.impl.ReservaViajeDaoImpl;
 import org.proyectofinal.dao.interfaces.ReservaViajeDao;
 import org.proyectofinal.model.interfaces.Usuario;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
 
 public class panelUsuario extends JPanel {
 
@@ -39,7 +36,6 @@ public class panelUsuario extends JPanel {
 	private JLabel lblPais;
 	private JPanel panelDatosPersonales;
 	private JPanel panelHistorialReservas;
-	private JButton btnReservarBoleto;
 	private JTable table;
 	private JLabel lblCant;
 	private JScrollPane sPaneHistorialReservas;
@@ -284,112 +280,6 @@ public class panelUsuario extends JPanel {
 		lblCant.setBounds(224, 12, 55, 46);
 		panelHistorialReservas.add(lblCant);
 		
-//		btnCambiarDatosPersonales = new JButton("<html><center>Cambiar<br />datos<br />personales<center></html>");
-//		btnCambiarDatosPersonales.setBounds(780, 130, 180, 70);
-//		add(btnCambiarDatosPersonales);
-		
-		btnReservarBoleto = new JButton("Reservar Boleto");
-		btnReservarBoleto.setFont(new Font("Dialog", Font.BOLD, 16));
-		btnReservarBoleto.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			
-				if (e.getSource() == btnReservarBoleto){
-//					final ListadoVuelosUI ui = new ListadoVuelosUI(u);
-//					
-//					SwingUtilities.invokeLater(new Runnable() {
-//					    @Override public void run() {
-//					    	SwingUtilities.invokeLater(new Runnable() {
-//							    @Override public void run() {
-//							        ui.getTable().removeColumn(ui.getTable().getColumnModel().getColumn(6));
-//							    }
-//							});
-//					    }
-//					});
-//					ui.remove(ui.getBtnAgregar());
-//					
-//					ui.setDni(lblDni.getText());
-//					ui.getContentPane().add(ui.getBtnContinuar());
-//					
-//					ui.setResizable(true);
-//					ui.setSize(995, 520);
-//					
-//					ui.setLocationRelativeTo(null);
-//					ui.setResizable(false);
-//					
-//					ui.validate();
-//					ui.repaint();
-//
-//					ui.setVisible(true);
-				}
-			}
-		});
-		btnReservarBoleto.setBounds(30, 455, 228, 47);
-		add(btnReservarBoleto);
-				
-		setVisible(true);
 	}
-
-	public JLabel getLblBienvenido() {
-		return lblBienvenido;
-	}
-
-	public void setLblBienvenido(JLabel lblBienvenido) {
-		this.lblBienvenido = lblBienvenido;
-	}
-
-	public JLabel getLblNombre() {
-		return lblNombre;
-	}
-
-	public void setLblNombre(JLabel lblNombre) {
-		this.lblNombre = lblNombre;
-	}
-
-	public JLabel getLblApellido() {
-		return lblApellido;
-	}
-
-	public void setLblApellido(JLabel lblApellido) {
-		this.lblApellido = lblApellido;
-	}
-
-	public JLabel getLblEmail() {
-		return lblEmail;
-	}
-
-	public void setLblEmail(JLabel lblEmail) {
-		this.lblEmail = lblEmail;
-	}
-
-	public JLabel getLblCiudad() {
-		return lblCiudad;
-	}
-
-	public void setLblCiudad(JLabel lblCiudad) {
-		this.lblCiudad = lblCiudad;
-	}
-
-	public JLabel getLblPais() {
-		return lblPais;
-	}
-
-	public void setLblPais(JLabel lblPais) {
-		this.lblPais = lblPais;
-	}
-
-	public JLabel getLblDni() {
-		return lblDni;
-	}
-
-	public void setLblDni(JLabel lblDni) {
-		this.lblDni = lblDni;
-	}
-
-	public JLabel getLblTelefono() {
-		return lblTelefono;
-	}
-
-	public void setLblTelefono(JLabel lblTelefono) {
-		this.lblTelefono = lblTelefono;
-	}
+	
 }
