@@ -17,4 +17,6 @@ public interface ReservaViajeDao {
 	public void alta(ReservaViaje rV) throws SQLException, ClassNotFoundException;
 	public void baja(ReservaViaje rV) throws SQLException, ClassNotFoundException;
 	public void modificacion(String dniNuevo, String dniAnterior) throws SQLException, ClassNotFoundException;
+	public ResultSet consultarCantidadDeReservas(String dni) throws SQLException;
+
 }

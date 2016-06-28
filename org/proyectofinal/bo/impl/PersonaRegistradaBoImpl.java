@@ -4,6 +4,8 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.swing.JOptionPane;
+
 import org.proyectofinal.bo.ex.PersonNotValidAgeException;
 import org.proyectofinal.bo.interfaces.PersonaRegistradaBo;
 import org.proyectofinal.dao.ex.PersonAlreadyExistsException;
@@ -77,8 +79,6 @@ public class PersonaRegistradaBoImpl implements PersonaRegistradaBo {
 		pDao.altaPersonaRegistrada(p);
 	}
 	
-	
-	
 	public String retornarEmail(String dni){
 		
 		String email = null;
@@ -144,6 +144,23 @@ public class PersonaRegistradaBoImpl implements PersonaRegistradaBo {
 		PersonaRegistrada p = retornarPersona(usuario);
 		
 		return p;
+	}
+
+	@Override
+	public void modificarPersona(PersonaRegistrada pR){
+		
+		PersonaRegistradaDao pRDao = new PersonaRegistradaDaoImpl();
+		
+		try {
+			pRDao.modificacion(pR);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+//			JOptionPane.showMessageDialog(null, e.getMessage());
+		} catch (SQLException e) {
+			e.printStackTrace();
+//			JOptionPane.showMessageDialog(null, e.getMessage());
+		}
+		
 	}
 
 }

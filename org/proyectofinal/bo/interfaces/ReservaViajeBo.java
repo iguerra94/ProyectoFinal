@@ -10,4 +10,5 @@ public interface ReservaViajeBo {
 	public void verificarReserva(ReservaViaje rV) throws NotValidPassengerException;
 	public List<Integer> controlarAsientosOcupados(ReservaViaje rV);
 	public void agregarReserva(ReservaViaje reservaViaje);
+	public Integer retornarCantidadDeReservas(String dni);
 }

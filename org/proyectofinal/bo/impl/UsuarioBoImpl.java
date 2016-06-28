@@ -5,13 +5,19 @@ import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
 
+import org.proyectofinal.bo.ex.NotEqualPasswordException;
 import org.proyectofinal.bo.interfaces.UsuarioBo;
 import org.proyectofinal.dao.ex.UserAlreadyExistsException;
 import org.proyectofinal.dao.ex.UserNotCorrectException;
 import org.proyectofinal.dao.ex.UserNotExistsException;
 import org.proyectofinal.dao.ex.UserNotValidException;
+import org.proyectofinal.dao.impl.PersonaRegistradaDaoImpl;
 import org.proyectofinal.dao.impl.UsuarioDaoImpl;
+import org.proyectofinal.dao.interfaces.PersonaRegistradaDao;
 import org.proyectofinal.dao.interfaces.UsuarioDao;
+import org.proyectofinal.model.impl.PersonaRegistradaImpl;
+import org.proyectofinal.model.impl.UsuarioImpl;
+import org.proyectofinal.model.interfaces.PersonaRegistrada;
 import org.proyectofinal.model.interfaces.Usuario;
 
 public class UsuarioBoImpl implements UsuarioBo {
@@ -55,10 +61,6 @@ public class UsuarioBoImpl implements UsuarioBo {
 		
 	}
 	
-	public void retornarUsuarioYPersona() {
-		
-	}
-	
 	public void registrarUsuario(Usuario u) throws ClassNotFoundException, SQLException, UserAlreadyExistsException {
 		
 		UsuarioDao uDao = new UsuarioDaoImpl();
@@ -81,6 +83,71 @@ public class UsuarioBoImpl implements UsuarioBo {
 		}
 			
 		return pass;
+	}
+
+	@Override
+	public Usuario retornarUsuario(String usuario) throws UserNotExistsException{
+		
+		Usuario u = new UsuarioImpl();
+
+		UsuarioDao uDao = new UsuarioDaoImpl();
+		
+		try {
+			
+			uDao.conectar();
+			
+			ResultSet res = uDao.consultarPorUsuario(usuario);
+			
+			while (res.next()) {
+				u.setNombreUsuario(res.getString("usuario"));
+				u.setPassword(res.getString("contrasenia"));
+				u.setTipoUsuario(res.getInt("tipoUsuario"));
+				u.setFechaInicio(res.getTimestamp("fechaInicio"));
+			}
+
+			uDao.desconectar();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		return u;
+	}
+	
+	public void controlarNuevaContrasenia(char[] nueva, char[] confirmar) throws NotEqualPasswordException {
+
+		Boolean igual = true;
+		
+		if (nueva.length != confirmar.length){
+			igual = false;
+		}else{
+			for (int i = 0; i < nueva.length && igual; i++){
+				
+				if (nueva[i] != confirmar[i]){
+					igual = false;			
+				}
+			}
+		}
+		
+		if (!igual){
+			throw new NotEqualPasswordException();
+		}
+	}
+
+	@Override
+	public void modificarUsuario(String contrasenia, String usuario) {
+		
+		UsuarioDao uDao = new UsuarioDaoImpl();
+		
+		try {
+			uDao.modificacionContrasenia(contrasenia, usuario);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

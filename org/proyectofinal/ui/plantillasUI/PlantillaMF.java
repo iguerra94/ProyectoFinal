@@ -811,6 +811,7 @@ public class PlantillaMF extends JFrame {
 		PersonaRegistradaBo pBo = new PersonaRegistradaBoImpl();
 		
 		PersonaRegistrada persona = pBo.retornarPersonaPorUsuario(btnPerfil.getText());
+		
 		DialogPerfil ui = new DialogPerfil();
 		
 		ui.agregarPanelPersona(persona);

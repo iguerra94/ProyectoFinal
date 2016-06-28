@@ -1757,9 +1757,7 @@ public class PlantillaRV extends JDialog implements MouseListener{
 	}
 	
 	protected void setearViaje(ViajeCabecera viaje){
-//		this.setvC(viaje);
 		getrV().setViaje(viaje);
-//		System.out.println(getvC());
 	}
 
 	protected void accionesBotonesOcupados(){

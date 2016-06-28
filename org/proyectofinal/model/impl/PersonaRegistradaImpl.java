@@ -184,7 +184,7 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 		res += "Pais: " + getPais() + " (" + getShortPais() + ")\n";
 		res += "Ciudad: " + getCiudad() + "\n";
 		res += "Saldo: " + getSaldo() + "\n";
-		res += getUsuario().toString();
+		if (getUsuario() != null) res += getUsuario().toString();
 		
 		return res; 
 	}

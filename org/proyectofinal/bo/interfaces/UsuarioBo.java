@@ -2,6 +2,7 @@ package org.proyectofinal.bo.interfaces;
 
 import java.sql.SQLException;
 
+import org.proyectofinal.bo.ex.NotEqualPasswordException;
 import org.proyectofinal.dao.ex.UserAlreadyExistsException;
 import org.proyectofinal.dao.ex.UserNotCorrectException;
 import org.proyectofinal.dao.ex.UserNotExistsException;
@@ -19,4 +20,11 @@ public interface UsuarioBo {
 	public void registrarUsuario(Usuario u) throws ClassNotFoundException, SQLException, UserAlreadyExistsException;
 
 	public String recuperarPass(String usuario) throws ClassNotFoundException, SQLException, UserNotExistsException;
+
+	public Usuario retornarUsuario(String usuario) throws UserNotExistsException;
+	
+	public void controlarNuevaContrasenia(char[] nueva, char[] confirmar) throws NotEqualPasswordException;
+
+	public void modificarUsuario(String contrasenia, String usuario);
+
 }

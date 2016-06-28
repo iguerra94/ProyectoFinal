@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import org.proyectofinal.bo.ex.PersonNotValidAgeException;
 import org.proyectofinal.dao.ex.PersonAlreadyExistsException;
 import org.proyectofinal.dao.ex.PersonNotValidException;
-import org.proyectofinal.dao.interfaces.PersonaRegistradaDao;
 import org.proyectofinal.model.interfaces.PersonaRegistrada;
 
 public interface PersonaRegistradaBo {
@@ -16,4 +15,5 @@ public interface PersonaRegistradaBo {
 	public void registrarPersona(PersonaRegistrada p) throws ClassNotFoundException, SQLException, PersonAlreadyExistsException;
 	public String retornarEmail(String dni);
 	public PersonaRegistrada retornarPersonaPorUsuario(String usuario);
+	public void modificarPersona(PersonaRegistrada pR);
 }

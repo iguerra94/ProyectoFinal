@@ -60,4 +60,33 @@ public class ReservaViajeBoImpl implements ReservaViajeBo {
 		}
 	}
 
+	@Override
+	public Integer retornarCantidadDeReservas(String dni) {
+		
+		Integer cantReservas = null;
+		
+		ReservaViajeDao rVDao = new ReservaViajeDaoImpl();
+		
+		try {
+		
+			rVDao.conectar();
+			
+			ResultSet res = rVDao.consultarCantidadDeReservas(dni);
+			
+			while(res.next()){
+				cantReservas = res.getInt("cantReservas");
+			}
+			
+			rVDao.desconectar();
+		
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return cantReservas;
+		
+	}
+
 }

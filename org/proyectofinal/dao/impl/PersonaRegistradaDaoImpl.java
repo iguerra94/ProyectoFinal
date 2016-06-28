@@ -1,7 +1,5 @@
 package org.proyectofinal.dao.impl;
 
-//import java.sql.Connection;
-//import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -71,16 +69,11 @@ public class PersonaRegistradaDaoImpl extends AbstractDao implements PersonaRegi
 	
 	public ResultSet consultarPersonaPorDni(String dni) throws SQLException, ClassNotFoundException {
 		
-		conectar();
-		
 		PreparedStatement sentencia = getConexion().prepareStatement("select * from PersonaGenerica where dni = ?");
 		
 		sentencia.setString(1, dni);
 		
 		ResultSet resultado = sentencia.executeQuery();
-
-//		sentencia.close();
-//		desconectar();
 		
 		return resultado;
 	}
@@ -217,68 +210,82 @@ public class PersonaRegistradaDaoImpl extends AbstractDao implements PersonaRegi
 		this.desconectar();
 	}
 
-	public void modificacionDni(String atr, String valor, String dni) throws SQLException, ClassNotFoundException, PersonAlreadyExistsException {	
+	public void modificacionDni(String valor, String dni) throws SQLException, ClassNotFoundException, PersonAlreadyExistsException {	
 		
 		this.conectar();	
 		
 		ResultSet res = null;
 		PreparedStatement sentencia = null;
-		
-		if (atr.equals("dni")) {
 
-			res = this.consultarPersonaPorDni(valor);
-			
-			if (res.next()){
-				throw new PersonAlreadyExistsException();
-			}else{
-				sentencia = getConexion().prepareStatement("update PersonaGenerica set dni = ? where dni = ?");	
-			}
-			
+		res = this.consultarPersonaPorDni(valor);
+		
+		if (res.next()){
+			throw new PersonAlreadyExistsException();
+		}else{
+			sentencia = getConexion().prepareStatement("update PersonaGenerica set dni = ? where dni = ?");	
 		}
 		
 		sentencia.setString(1, valor);
 		sentencia.setString(2, dni);
 		
 		sentencia.executeUpdate();
-		
-//		res.close();
-//		sentencia.close();
 		
 		this.desconectar();
 	}
 	
-	public void modificacion(String atr, String valor, String dni) throws SQLException, ClassNotFoundException {	
-		
-		this.conectar();			
-		
-		PreparedStatement sentencia = null;
-		
-		if (atr.equals("nombre")) {
-			sentencia = getConexion().prepareStatement("update PersonaGenerica set nombre = ? where dni = ?");
-		} else if (atr.equals("apellido")) {
-			sentencia = getConexion().prepareStatement("update PersonaGenerica set apellido = ? where dni = ?");
-		} else if (atr.equals("email")) {
-			sentencia = getConexion().prepareStatement("update PersonaRegistrada set email = ? where dni = ?");
-		} else if (atr.equals("telefono")) {
-			sentencia = getConexion().prepareStatement("update PersonaRegistrada set telefono = ? where dni = ?");
-		} else if (atr.equals("fechaNacimiento")) {
-			sentencia = getConexion().prepareStatement("update PersonaRegistrada set fechaNacimiento = ? where dni = ?");
-		} else if (atr.equals("pais")) {
-			sentencia = getConexion().prepareStatement("update PersonaRegistrada set pais = ? where dni = ?");
-		} else if (atr.equals("ciudad")) {
-			sentencia = getConexion().prepareStatement("update PersonaRegistrada set ciudad = ? where dni = ?");
-		} else if (atr.equals("usuario")) {
-			sentencia = getConexion().prepareStatement("update PersonaRegistrada set usuario = ? where dni = ?");
-		}
+//	public void modificacion(String atr, String valor, String dni) throws SQLException, ClassNotFoundException {	
+//		
+//		this.conectar();			
+//		
+//		PreparedStatement sentencia = null;
+//		
+//		if (atr.equals("nombre")) {
+//			sentencia = getConexion().prepareStatement("update PersonaGenerica set nombre = ? where dni = ?");
+//		} else if (atr.equals("apellido")) {
+//			sentencia = getConexion().prepareStatement("update PersonaGenerica set apellido = ? where dni = ?");
+//		} else if (atr.equals("email")) {
+//			sentencia = getConexion().prepareStatement("update PersonaRegistrada set email = ? where dni = ?");
+//		} else if (atr.equals("telefono")) {
+//			sentencia = getConexion().prepareStatement("update PersonaRegistrada set telefono = ? where dni = ?");
+//		} else if (atr.equals("fechaNacimiento")) {
+//			sentencia = getConexion().prepareStatement("update PersonaRegistrada set fechaNacimiento = ? where dni = ?");
+//		} else if (atr.equals("pais")) {
+//			sentencia = getConexion().prepareStatement("update PersonaRegistrada set pais = ? where dni = ?");
+//		} else if (atr.equals("ciudad")) {
+//			sentencia = getConexion().prepareStatement("update PersonaRegistrada set ciudad = ? where dni = ?");
+//		} else if (atr.equals("usuario")) {
+//			sentencia = getConexion().prepareStatement("update PersonaRegistrada set usuario = ? where dni = ?");
+//		}
+//
+//		sentencia.setString(1, valor);
+//		sentencia.setString(2, dni);
+//		
+//		sentencia.executeUpdate();
+//
+//		this.desconectar();
+//	}
 
-		sentencia.setString(1, valor);
-		sentencia.setString(2, dni);
-		
-		sentencia.executeUpdate();
+	@Override
+	public void modificacion(PersonaRegistrada pR) throws SQLException, ClassNotFoundException {
 
-//		sentencia.close();
+		conectar();
+
+		PreparedStatement sentencia1 = getConexion().prepareStatement("update PersonaGenerica set nombre = ?, apellido = ? where dni = ?");
 		
-		this.desconectar();
+		sentencia1.setString(1, pR.getNombre());
+		sentencia1.setString(2, pR.getApellido());
+		sentencia1.setString(3, pR.getDni());
+
+		PreparedStatement sentencia2 = getConexion().prepareStatement("update PersonaRegistrada set email = ?, telefono = ? where dni = ?");
+
+		sentencia2.setString(1, pR.getEmail());
+		sentencia2.setString(2, pR.getTelefono());
+		sentencia2.setString(3, pR.getDni());
+		
+		sentencia1.executeUpdate();
+		sentencia2.executeUpdate();
+		
+		desconectar();
 	}
 
 }

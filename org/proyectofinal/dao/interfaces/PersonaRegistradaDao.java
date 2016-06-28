@@ -21,6 +21,7 @@ public interface PersonaRegistradaDao {
 	public ResultSet consultarEmail(String dni) throws SQLException, ClassNotFoundException;
 	public void altaPersonaRegistrada(PersonaRegistrada p) throws SQLException, ClassNotFoundException, PersonAlreadyExistsException;
 	public void bajaPersonaRegistrada(PersonaRegistrada p) throws SQLException, ClassNotFoundException;
-	public void modificacionDni(String atr, String valor, String dni) throws SQLException, ClassNotFoundException, PersonAlreadyExistsException;
-	public void modificacion(String atr, String valor, String dni) throws SQLException, ClassNotFoundException;
+	public void modificacionDni(String valor, String dni) throws SQLException, ClassNotFoundException, PersonAlreadyExistsException;
+	public void modificacion(PersonaRegistrada pR) throws SQLException, ClassNotFoundException;
+
 }

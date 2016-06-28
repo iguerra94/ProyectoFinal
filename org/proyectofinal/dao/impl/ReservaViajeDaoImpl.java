@@ -135,8 +135,20 @@ public class ReservaViajeDaoImpl extends AbstractDao implements ReservaViajeDao 
 		sentencia.setString(2, dniAnterior);
 		
 		sentencia.executeUpdate();
-//		sentencia.close();
+
 		this.desconectar();
+	}
+
+	@Override
+	public ResultSet consultarCantidadDeReservas(String dni) throws SQLException {
+
+		PreparedStatement sentencia = getConexion().prepareStatement("select COUNT(*) cantReservas from ReservaViaje where dniPersona = ?");
+		
+		sentencia.setString(1, dni);
+		
+		ResultSet resultado = sentencia.executeQuery();
+
+		return resultado;
 	}	
 
 }

@@ -12,6 +12,14 @@ import org.proyectofinal.model.interfaces.Usuario;
 
 public class UsuarioDaoImpl extends AbstractDao implements UsuarioDao {
 
+	public void conectar() throws ClassNotFoundException, SQLException{
+		super.conectar();
+	}
+	
+	public void desconectar() throws SQLException{
+		super.desconectar();
+	}
+	
 	public ResultSet consultar() throws ClassNotFoundException, SQLException {
 		
 		conectar();
@@ -38,7 +46,7 @@ public class UsuarioDaoImpl extends AbstractDao implements UsuarioDao {
 		return resultado;
 	}
 	
-	public ResultSet consultarPorUsuario(String usuario) throws UserNotExistsException {
+	public ResultSet consultarPorUsuario(String usuario) throws ClassNotFoundException, SQLException {
 		
 		PreparedStatement sentencia = null;
 		ResultSet resultado = null;
@@ -107,12 +115,7 @@ public class UsuarioDaoImpl extends AbstractDao implements UsuarioDao {
 
 		ResultSet res = null;
 		
-		try {
-			res = consultarPorUsuario(valor);
-		} catch (UserNotExistsException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
+		res = consultarPorUsuario(valor);
 		
 		if (res.next()){
 			throw new UserAlreadyExistsException();
@@ -129,7 +132,7 @@ public class UsuarioDaoImpl extends AbstractDao implements UsuarioDao {
 		desconectar();
 	}
 	
-	public void modificacionContrasenia(String valor, String user) throws SQLException, ClassNotFoundException {
+	public void modificacionContrasenia(String contrasenia, String usuario) throws SQLException, ClassNotFoundException {
 		
 		conectar();
 		
@@ -137,20 +140,12 @@ public class UsuarioDaoImpl extends AbstractDao implements UsuarioDao {
 
 		sentencia = getConexion().prepareStatement("update Usuario set contrasenia = ? where usuario = ?");
 		
-		sentencia.setString(1, valor);
-		sentencia.setString(2, user);
+		sentencia.setString(1, contrasenia);
+		sentencia.setString(2, usuario);
 		
 		sentencia.executeUpdate();
 		
 		desconectar();
 	}
 
-//	public ResultSet consultarDatosUsuario(String usuario) {
-//		
-//		PreparedStatement sentencia = getConexion().prepareStatement("SELECT * from Usuario WHERE usuario=? ciudadOrigen, shortPaisOrigen FROM ViajeCabecera");
-//		
-//		ResultSet resultado = sentencia.executeQuery();
-//	
-//		return resultado;		
-//	}
 }
