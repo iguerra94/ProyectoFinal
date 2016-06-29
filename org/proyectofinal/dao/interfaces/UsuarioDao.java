@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.proyectofinal.dao.ex.UserAlreadyExistsException;
-import org.proyectofinal.dao.ex.UserNotExistsException;
 import org.proyectofinal.model.interfaces.Usuario;
 
 public interface UsuarioDao {
@@ -17,5 +16,6 @@ public interface UsuarioDao {
 	public void baja(Usuario u) throws SQLException, ClassNotFoundException;
 	public void modificacionNombreUsuario(String valor, String user) throws SQLException, ClassNotFoundException, UserAlreadyExistsException;
 	public void modificacionContrasenia(String contrasenia, String usuario) throws SQLException, ClassNotFoundException;
-	
+	public ResultSet consultarDniPorUsuario(String usuario) throws SQLException;
+			
 }

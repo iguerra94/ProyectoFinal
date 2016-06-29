@@ -138,15 +138,11 @@ public class PersonaRegistradaDaoImpl extends AbstractDao implements PersonaRegi
 	
 	public ResultSet consultarEmail(String dni) throws SQLException, ClassNotFoundException {
 		
-		conectar();
-		
 		PreparedStatement sentencia = getConexion().prepareStatement("select email from PersonaRegistrada where dni = ?");
 		
 		sentencia.setString(1, dni);
 		
 		ResultSet resultado = sentencia.executeQuery();
-		
-//		sentencia.close();
 		
 		return resultado;
 	}

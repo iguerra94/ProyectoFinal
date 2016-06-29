@@ -1,24 +1,31 @@
 package org.proyectofinal.ui;
 
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowFocusListener;
 import java.awt.event.WindowListener;
 
-import org.proyectofinal.model.interfaces.ReservaViaje;
-import org.proyectofinal.ui.plantillasUI.PlantillaRV;
+import org.proyectofinal.bo.impl.ViajeCabeceraBoImpl;
+import org.proyectofinal.bo.interfaces.ViajeCabeceraBo;
+import org.proyectofinal.ui.plantillasUI.PlantillaDRF;
 
-public class ReservaBoletoUI extends PlantillaRV implements WindowListener, WindowFocusListener {
-
-	public ReservaBoletoUI() {
+public class DialogRemoveFlight extends PlantillaDRF implements WindowListener {
+	
+	public DialogRemoveFlight(){
+	
 		inicializarAtributos();
+		inicializarComponentes();
 		addWindowListener(this);
-		addWindowFocusListener(this);
+		
+		setVisible(true);
 	}
-
 
 	@Override
 	public void windowOpened(WindowEvent e) {
+
+		ViajeCabeceraBo vCBo = new ViajeCabeceraBoImpl();
 		
+		String[] modeloVuelos = vCBo.retornarCodigosViaje();
+		
+		cargarVuelos(modeloVuelos);
 	}
 
 	@Override
@@ -48,19 +55,6 @@ public class ReservaBoletoUI extends PlantillaRV implements WindowListener, Wind
 
 	@Override
 	public void windowDeactivated(WindowEvent e) {
-	}
-
-	@Override
-	public void windowGainedFocus(WindowEvent e) {
-		accionesCmbCantPasajerosAlTenerFocoLaVentana();
-//		setearNombre();
-//		setearApellido();
-//		setearDni();
-//		setearAsientoYPrecio();
-	}
-
-	@Override
-	public void windowLostFocus(WindowEvent e) {
 		
 	}
 

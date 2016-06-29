@@ -27,4 +27,6 @@ public interface UsuarioBo {
 
 	public void modificarUsuario(String contrasenia, String usuario);
 
+	public String retornarDniPorUsuario(String usuario);
+
 }

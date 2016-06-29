@@ -1,5 +1,6 @@
 package org.proyectofinal.ui;
 
+import java.awt.Color;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
@@ -43,6 +44,14 @@ public class DialogLogin extends PlantillaDL implements WindowListener {
 		ui.setBtnPerfil(new JButton(""));
 		
 		ui.getBtnPerfil().setText(getUsuario().getNombreUsuario());
+		
+		if (getUsuario().getTipoUsuario() == 0){
+			ui.agregarMenuAdmin();
+			ui.getBtnPerfil().setForeground(Color.RED);
+		}else if (getUsuario().getTipoUsuario() == 1){
+			ui.getBtnPerfil().setForeground(Color.BLACK);
+		}
+		
 	}
 
 	@Override

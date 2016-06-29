@@ -17,4 +17,6 @@ public interface ViajeCabeceraBo {
 	public List<ViajeCabecera> retornarVuelosPorFecha(ViajeCabecera vC) throws NoFlightsFoundException;
 	public List<ViajeCabecera> retornarVuelosCualquierFecha(ViajeCabecera vC) throws NoFlightsFoundException;
 	public void actualizarCupo(ViajeCabecera viaje);
+	public String[] retornarCodigosViaje();
+	public void eliminarVuelo(String codigo);
 }

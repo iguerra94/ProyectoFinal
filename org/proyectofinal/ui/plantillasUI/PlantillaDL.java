@@ -174,32 +174,13 @@ public class PlantillaDL extends JDialog {
 					
 					dispose();
 
-//					persona = pDao.consultarPorUsuario(u);
-//					
-//					if (persona.next()){
-//						
-//						pU.getLblNombre().setText(persona.getString("nombre"));
-//						pU.getLblApellido().setText(persona.getString("apellido"));
-//						pU.getLblEmail().setText(persona.getString("email"));
-//						pU.getLblTelefono().setText(persona.getString("telefono"));
-//						pU.getLblCiudad().setText(persona.getString("ciudad"));
-//						pU.getLblPais().setText(persona.getString("pais"));
-//						pU.getLblDni().setText(persona.getString("dni"));
-//
-//						if (persona.getInt("tipoUsuario") == 0){
-//							pU.getLblBienvenido().setText("Bienvenido Administrador!");
-//							pU.getLblBienvenido().setForeground(Color.RED);	
-//						}else if (persona.getInt("tipoUsuario") == 1){
-//							pU.getLblBienvenido().setText("Bienvenido " + persona.getString("nombre") + "!");
-//							pU.getLblBienvenido().setForeground(Color.BLACK);								
-//						}
-//						
-//						pU.add(pU.getLblBienvenido());
-//					
+//					if (persona.getInt("tipoUsuario") == 0){
+//						pU.getLblBienvenido().setText("Bienvenido Administrador!");
+//						pU.getLblBienvenido().setForeground(Color.RED);	
+//					}else if (persona.getInt("tipoUsuario") == 1){
+//						pU.getLblBienvenido().setText("Bienvenido " + persona.getString("nombre") + "!");
+//						pU.getLblBienvenido().setForeground(Color.BLACK);								
 //					}
-//					
-//					validate();
-//					repaint();
 						
 				} catch (UserNotValidException e) {
 					JOptionPane.showMessageDialog(null, e.getMessage());
@@ -286,8 +267,8 @@ public class PlantillaDL extends JDialog {
 		return u;
 	}
 
-	
 	public void setUsuario(Usuario u) {
 		this.u = u;
 	}
+
 }

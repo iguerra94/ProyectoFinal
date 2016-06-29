@@ -19,16 +19,23 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 
 	public void verificarTodos(ViajeCabecera vC) throws ViajeCabeceraNotValidException{
 		
-		if (vC.getCodigoViaje() == "" || 
-			vC.getCiudadOrigen().length() == 0 || 
+		if (vC.getCodigoViaje().length() == 0 || 
 			vC.getPaisOrigen().length() == 0 || 
-			vC.getCiudadDestino().length() == 0 || 
+			vC.getCiudadOrigen().length() == 0 || 
+			vC.getPlataformaOrigen().length() == 0 || 
 			vC.getPaisDestino().length() == 0 || 
+			vC.getCiudadDestino().length() == 0 || 
+			vC.getPlataformaDestino().length() == 0 || 
 			vC.getFechaSalida() == null ||
-			vC.getFechaLlegada() == null ||
 			vC.getHoraSalida().toString() == "00:00:00" ||
+			vC.getFechaLlegada() == null ||
 			vC.getHoraLlegada().toString() == "00:00:00" || 
-			vC.getCupo() == -1){
+			vC.getDistancia() == -1f || 
+			vC.getDuracion().toString() == "00:00:00" ||								
+			vC.getPrecioClasePrim() == -1f ||
+			vC.getPrecioClaseTur() == -1f ||
+			vC.getImagen1().length() == 0 ||
+			vC.getImagen2().length() == 0){
 
 			throw new ViajeCabeceraNotValidException();
 		}
@@ -241,10 +248,8 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 			
 			vCDao.desconectar();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -264,6 +269,55 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 			e.printStackTrace();
 		}
 
+	}
+
+	@Override
+	public String[] retornarCodigosViaje() {
+
+		String[] modeloVuelos = null;
+		
+		ViajeCabeceraDao vCDao = new ViajeCabeceraDaoImpl();
+		
+		List<String> listaVuelos = new ArrayList<String>();
+
+		try {
+
+			ResultSet res = vCDao.consultarCodigosViaje();
+			
+			while (res.next()){
+				listaVuelos.add(res.getString("codViaje"));
+			}
+			
+			modeloVuelos = new String[listaVuelos.size()];
+			
+			int i = 0;
+			
+			for (String codigo : listaVuelos) {
+				modeloVuelos[i] = codigo;
+				i++;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		return modeloVuelos;
+	}
+
+	@Override
+	public void eliminarVuelo(String codigo) {
+		
+		ViajeCabeceraDao vCDao = new ViajeCabeceraDaoImpl();
+		
+		try {
+			vCDao.baja(codigo);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

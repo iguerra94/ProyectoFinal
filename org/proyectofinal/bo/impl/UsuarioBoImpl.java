@@ -3,21 +3,15 @@ package org.proyectofinal.bo.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javax.swing.JOptionPane;
-
 import org.proyectofinal.bo.ex.NotEqualPasswordException;
 import org.proyectofinal.bo.interfaces.UsuarioBo;
 import org.proyectofinal.dao.ex.UserAlreadyExistsException;
 import org.proyectofinal.dao.ex.UserNotCorrectException;
 import org.proyectofinal.dao.ex.UserNotExistsException;
 import org.proyectofinal.dao.ex.UserNotValidException;
-import org.proyectofinal.dao.impl.PersonaRegistradaDaoImpl;
 import org.proyectofinal.dao.impl.UsuarioDaoImpl;
-import org.proyectofinal.dao.interfaces.PersonaRegistradaDao;
 import org.proyectofinal.dao.interfaces.UsuarioDao;
-import org.proyectofinal.model.impl.PersonaRegistradaImpl;
 import org.proyectofinal.model.impl.UsuarioImpl;
-import org.proyectofinal.model.interfaces.PersonaRegistrada;
 import org.proyectofinal.model.interfaces.Usuario;
 
 public class UsuarioBoImpl implements UsuarioBo {
@@ -148,6 +142,35 @@ public class UsuarioBoImpl implements UsuarioBo {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public String retornarDniPorUsuario(String usuario) {
+
+		String dni = null;
+		
+		
+		UsuarioDao uDao = new UsuarioDaoImpl();
+	
+		try {
+
+			uDao.conectar();
+			
+			ResultSet res = uDao.consultarDniPorUsuario(usuario);
+			
+			while(res.next()){
+				dni = res.getString("dni");
+			}
+			
+			uDao.desconectar();
+	
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return dni;	
 	}
 	
 }

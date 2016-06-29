@@ -10,6 +10,7 @@ import org.proyectofinal.bo.interfaces.ReservaViajeBo;
 import org.proyectofinal.dao.impl.ReservaViajeDaoImpl;
 import org.proyectofinal.dao.interfaces.ReservaViajeDao;
 import org.proyectofinal.model.interfaces.ReservaViaje;
+import org.proyectofinal.model.interfaces.ViajeCabecera;
 
 public class ReservaViajeBoImpl implements ReservaViajeBo {
 	
@@ -18,8 +19,7 @@ public class ReservaViajeBoImpl implements ReservaViajeBo {
 	}
 
 	@Override
-	public List<Integer> controlarAsientosOcupados(ReservaViaje rV) {
-		
+	public List<Integer> controlarAsientosOcupados(ViajeCabecera viaje) {
 		
 		ReservaViajeDao rVDao = new ReservaViajeDaoImpl();
 		
@@ -29,7 +29,7 @@ public class ReservaViajeBoImpl implements ReservaViajeBo {
 			
 			rVDao.conectar();
 			
-			ResultSet res = rVDao.consultarAsientosPorViaje(rV.getViaje().getCodigoViaje());
+			ResultSet res = rVDao.consultarAsientosPorViaje(viaje.getCodigoViaje());
 			
 			while(res.next()){
 				listaOcupados.add(res.getInt("asiento"));

@@ -61,10 +61,8 @@ public class UsuarioDaoImpl extends AbstractDao implements UsuarioDao {
 			resultado = sentencia.executeQuery();
 
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -146,6 +144,18 @@ public class UsuarioDaoImpl extends AbstractDao implements UsuarioDao {
 		sentencia.executeUpdate();
 		
 		desconectar();
+	}
+
+	@Override
+	public ResultSet consultarDniPorUsuario(String usuario) throws SQLException {
+		
+		PreparedStatement sentencia = getConexion().prepareStatement("SELECT dni FROM Usuario u inner join PersonaRegistrada p on u.usuario = p.usuario where u.usuario = ?");
+		
+		sentencia.setString(1, usuario);
+		
+		ResultSet resultado = sentencia.executeQuery();
+		
+		return resultado;		
 	}
 
 }

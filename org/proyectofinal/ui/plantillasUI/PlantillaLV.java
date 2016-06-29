@@ -13,7 +13,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
@@ -26,11 +25,11 @@ import org.proyectofinal.ui.ReservaBoletoUI;
 
 public class PlantillaLV extends JDialog {
 	
+	private JLabel labelDni;
 	private JPanel panelVuelos;
 	private JScrollPane scrollPane;
 	private JPanel panelVuelo;
 	private JLabel lblVuelo;
-	private JButton btnSeleccionar;
 	private JPanel panelImagenes;
 	private JLabel lblMostrarImagen;
 	private ImageIcon imagen1;
@@ -41,7 +40,7 @@ public class PlantillaLV extends JDialog {
 		
 	}
 	
-	public void inicializarAtributos(){
+	protected void inicializarAtributos(){
 		setResizable(false);
 		setTitle("Busqueda de vuelos");
 		getContentPane().setBackground(new Color(245,245,245));
@@ -51,12 +50,11 @@ public class PlantillaLV extends JDialog {
 		getContentPane().setLayout(null);
 	}
 	
-	public void inicializarComponentes(){
-		agregarLabels();
+	protected void inicializarComponentes(){
 		agregarPaneVuelo();		
 	}
 
-	private void agregarLabels() {
+	private void agregarLabels(String dni) {
 
 		JLabel label1 = new JLabel("Vuelo");
 		label1.setVerticalAlignment(SwingConstants.CENTER);
@@ -89,6 +87,10 @@ public class PlantillaLV extends JDialog {
 		label4.setForeground(new Color(48, 63, 159));
 		label4.setBounds(462, 10, 100, 20);
 		getContentPane().add(label4);
+		
+		labelDni = new JLabel("");
+		labelDni.setToolTipText(dni);
+		label4.setBounds(-10, 0, 10, 0);
 	}
 
 	private void agregarPaneVuelo() {
@@ -204,15 +206,21 @@ public class PlantillaLV extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				ViajeCabeceraBo vCBo = new ViajeCabeceraBoImpl();			
-					
+				ViajeCabeceraBo vCBo = new ViajeCabeceraBoImpl();	
+				
 				ViajeCabecera viaje = vCBo.retornarViaje(btnSeleccionar.getToolTipText());
+				
+				String dni = labelDni.getToolTipText();
 				
 				ReservaBoletoUI ui = new ReservaBoletoUI();
 				
+				ui.cargarAsientos(viaje);
+				
+				ui.setearViajeYDniReserva(viaje, dni);
+				
 				ui.cargarInfoVuelo(viaje);
 				
-				ui.setearViaje(viaje);
+				dispose();
 				
 				ui.setVisible(true);
 				
@@ -300,6 +308,10 @@ public class PlantillaLV extends JDialog {
 			}
 		});
 		panelImagenes.add(btnImagen2);		
+	}
+	
+	public void setearDni(String dni){
+		agregarLabels(dni);
 	}
 	
 	public void mostrarVuelos(List<ViajeCabecera> listaViajes){

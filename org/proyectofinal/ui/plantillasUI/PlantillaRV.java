@@ -15,8 +15,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -36,13 +39,13 @@ import org.proyectofinal.bo.ex.NotValidPassengerException;
 import org.proyectofinal.bo.impl.PasajeroBoImpl;
 import org.proyectofinal.bo.impl.PersonaRegistradaBoImpl;
 import org.proyectofinal.bo.impl.ReservaViajeBoImpl;
+import org.proyectofinal.bo.impl.ViajeCabeceraBoImpl;
 import org.proyectofinal.bo.interfaces.PasajeroBo;
 import org.proyectofinal.bo.interfaces.PersonaRegistradaBo;
 import org.proyectofinal.bo.interfaces.ReservaViajeBo;
 import org.proyectofinal.bo.interfaces.ViajeCabeceraBo;
 import org.proyectofinal.model.impl.PasajeroImpl;
 import org.proyectofinal.model.impl.ReservaViajeImpl;
-import org.proyectofinal.model.impl.ViajeCabeceraImpl;
 import org.proyectofinal.model.interfaces.Pasajero;
 import org.proyectofinal.model.interfaces.ReservaViaje;
 import org.proyectofinal.model.interfaces.ViajeCabecera;
@@ -95,22 +98,17 @@ public class PlantillaRV extends JDialog implements MouseListener{
 	private List<BotonPasajero> botonesOcupados = new ArrayList<BotonPasajero>();
 	private int a = 1;
 	private Integer opcion;
-	private ViajeCabecera vC = new ViajeCabeceraImpl();
-	private ViajeCabeceraBo vCBo;
 	private Pasajero pasajero;
 	private PasajeroBo pBo;
 	private Boolean estadoAnterior = false;
 	private BotonPasajero b;
 	private Reservas reservas;
 	private ReservaViaje rV;
+	private ViajeCabeceraBo vCBo;
 	private ReservaViajeBo rVBo;
 	private PersonaRegistradaBo pRBo;	
 
 	public PlantillaRV(){
-
-//		inicializarAtributos();
-//		inicializarComponentes();
-		
 	}
 
 	protected void inicializarAtributos() {
@@ -123,38 +121,36 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		setLocationRelativeTo(null);
 	}
 	
-	protected void inicializarComponentes() {
-		agregarPanelAsientos();
-		agregarPanelInfoPasajeros();
-	}
-	
-	private void agregarPanelAsientos() {
+	private void agregarPanelAsientos(ViajeCabecera viaje) {
 
-		rV = new ReservaViajeImpl();
-//		vC = null;
-		
 		botones = new ArrayList<BotonPasajero>();
 
-		accionesBotonesOcupados();
-		
 		panelAsientos = new JPanel();
 		panelAsientos.setBounds(20, 45, 537, 585);
 		panelAsientos.setLayout(null);
 		panelAsientos.setBackground(Color.WHITE);
 
-		agregarAsientosPrimera();
-		agregarAsientosTurista();
+		agregarAsientosPrimera(viaje);
+		agregarAsientosTurista(viaje);
 
+		accionesBotonesOcupados(viaje);
+		
 		setearToolTipBotonesDisponibles();
 
 		agregarInfoSobreAsientosPanelAsientos();
 		agregarLabelsEtiquetasPanelAsientos();
-		agregarLabelCantAsientosDisponibles();
+		agregarLabelCantAsientosDisponibles(viaje);
 		agregarFondoAvion();
 		
 	}
 	
-	private void agregarAsientosPrimera() {
+	private void agregarAsientosPrimera(ViajeCabecera viaje) {
+
+		Float precioPrim = viaje.getPrecioClasePrim()*(1-viaje.getOferta());
+
+		String precioFormateado = String.format(Locale.ROOT, "%.2f", precioPrim);
+		
+		precioPrim = Float.parseFloat(precioFormateado);
 
 		panel1 = new JPanel();
 		panel1.setBounds(173, 144, 53, 119);
@@ -174,8 +170,7 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		panel3.setOpaque(false);
 		panel3.setLayout(new GridLayout(3, 2, 0, 7));
 		
-//		System.out.println(getrV().getViaje());
-		final BotonPasajero btnNro1 = new BotonPasajero(1, getrV().getViaje().getPrecioClasePrim());
+		final BotonPasajero btnNro1 = new BotonPasajero(1, precioPrim);
 		btnNro1.setName("btnNro1");
 		btnNro1.addMouseListener(this);
 		btnNro1.setBackground(new Color(0, 128, 0));
@@ -185,9 +180,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro1.setMargin(new Insets(2, 0, 2, 0));
 		panel1.add(btnNro1);
 		
-		final BotonPasajero btnNro2 = new BotonPasajero(2, getvC().getPrecioClasePrim());		
+		final BotonPasajero btnNro2 = new BotonPasajero(2, precioPrim);		
 		btnNro2.setName("btnNro2");
-//		btnNro2.addMouseListener(this);
+		btnNro2.addMouseListener(this);
 		btnNro2.setBackground(new Color(0, 128, 0));
 		btnNro2.setContentAreaFilled(false);
 		btnNro2.setBorder(new LineBorder(Color.BLACK, 1));
@@ -195,9 +190,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro2.setHorizontalTextPosition(SwingConstants.CENTER);
 		panel1.add(btnNro2);
 		
-		final BotonPasajero btnNro7 = new BotonPasajero(7, getvC().getPrecioClasePrim());
+		final BotonPasajero btnNro7 = new BotonPasajero(7, precioPrim);
 		btnNro7.setName("btnNro7");
-		//		btnNro7.addMouseListener(this);
+		btnNro7.addMouseListener(this);
 		btnNro7.setBackground(new Color(0, 128, 0));
 		btnNro7.setContentAreaFilled(false);
 		btnNro7.setBorder(new LineBorder(Color.BLACK, 1));
@@ -205,9 +200,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro7.setMargin(new Insets(2, 0, 2, 0));
 		panel1.add(btnNro7);
 		
-		final BotonPasajero btnNro8 = new BotonPasajero(8, getvC().getPrecioClasePrim());
+		final BotonPasajero btnNro8 = new BotonPasajero(8, precioPrim);
 		btnNro8.setName("btnNro8");
-//		btnNro8.addMouseListener(this);
+		btnNro8.addMouseListener(this);
 		btnNro8.setBackground(new Color(0, 128, 0));
 		btnNro8.setContentAreaFilled(false);
 		btnNro8.setBorder(new LineBorder(Color.BLACK, 1));
@@ -215,9 +210,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro8.setMargin(new Insets(2, 0, 2, 0));
 		panel1.add(btnNro8);
 		
-		final BotonPasajero btnNro13 = new BotonPasajero(13, getvC().getPrecioClasePrim());
+		final BotonPasajero btnNro13 = new BotonPasajero(13, precioPrim);
 		btnNro13.setName("btnNro13");
-		//	btnNro13.addMouseListener(this);
+		btnNro13.addMouseListener(this);
 		btnNro13.setBackground(new Color(0, 128, 0));
 		btnNro13.setContentAreaFilled(false);
 		btnNro13.setBorder(new LineBorder(Color.BLACK, 1));
@@ -225,9 +220,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro13.setMargin(new Insets(2, 0, 2, 0));
 		panel1.add(btnNro13);
 		
-		final BotonPasajero btnNro14 = new BotonPasajero(14, getvC().getPrecioClasePrim());
+		final BotonPasajero btnNro14 = new BotonPasajero(14, precioPrim);
 		btnNro14.setName("btnNro14");
-		//btnNro14.addMouseListener(this);
+		btnNro14.addMouseListener(this);
 		btnNro14.setBackground(new Color(0, 128, 0));
 		btnNro14.setContentAreaFilled(false);
 		btnNro14.setBorder(new LineBorder(Color.BLACK, 1));
@@ -235,9 +230,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro14.setMargin(new Insets(2, 0, 2, 0));
 		panel1.add(btnNro14);
 		
-		final BotonPasajero btnNro3 = new BotonPasajero(3, getvC().getPrecioClasePrim());
+		final BotonPasajero btnNro3 = new BotonPasajero(3, precioPrim);
 		btnNro3.setName("btnNro3");
-		//	btnNro3.addMouseListener(this);
+		btnNro3.addMouseListener(this);
 		btnNro3.setBackground(new Color(0, 128, 0));
 		btnNro3.setContentAreaFilled(false);
 		btnNro3.setBorder(new LineBorder(Color.BLACK, 1));
@@ -245,9 +240,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro3.setMargin(new Insets(2, 0, 2, 0));
 		panel2.add(btnNro3);
 
-		final BotonPasajero btnNro4 = new BotonPasajero(4, getvC().getPrecioClasePrim());
+		final BotonPasajero btnNro4 = new BotonPasajero(4, precioPrim);
 		btnNro4.setName("btnNro4");
-		//	btnNro4.addMouseListener(this);
+		btnNro4.addMouseListener(this);
 		btnNro4.setBackground(new Color(0, 128, 0));
 		btnNro4.setContentAreaFilled(false);
 		btnNro4.setBorder(new LineBorder(Color.BLACK, 1));
@@ -255,9 +250,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro4.setMargin(new Insets(2, 0, 2, 0));
 		panel2.add(btnNro4);
 		
-		final BotonPasajero btnNro9 = new BotonPasajero(9, getvC().getPrecioClasePrim());
+		final BotonPasajero btnNro9 = new BotonPasajero(9, precioPrim);
 		btnNro9.setName("btnNro9");
-		//	btnNro9.addMouseListener(this);
+		btnNro9.addMouseListener(this);
 		btnNro9.setBackground(new Color(0, 128, 0));
 		btnNro9.setContentAreaFilled(false);
 		btnNro9.setBorder(new LineBorder(Color.BLACK, 1));
@@ -265,9 +260,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro9.setMargin(new Insets(2, 0, 2, 0));
 		panel2.add(btnNro9);
 		
-		final BotonPasajero btnNro10 = new BotonPasajero(10, getvC().getPrecioClasePrim());
+		final BotonPasajero btnNro10 = new BotonPasajero(10, precioPrim);
 		btnNro10.setName("btnNro10");
-		//	btnNro10.addMouseListener(this);
+		btnNro10.addMouseListener(this);
 		btnNro10.setBackground(new Color(0, 128, 0));
 		btnNro10.setContentAreaFilled(false);
 		btnNro10.setBorder(new LineBorder(Color.BLACK, 1));
@@ -275,9 +270,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro10.setMargin(new Insets(2, 0, 2, 0));
 		panel2.add(btnNro10);
 
-		final BotonPasajero btnNro15 = new BotonPasajero(15, getvC().getPrecioClasePrim());
+		final BotonPasajero btnNro15 = new BotonPasajero(15, precioPrim);
 		btnNro15.setName("btnNro15");
-		//	btnNro15.addMouseListener(this);
+		btnNro15.addMouseListener(this);
 		btnNro15.setBackground(new Color(0, 128, 0));
 		btnNro15.setContentAreaFilled(false);
 		btnNro15.setBorder(new LineBorder(Color.BLACK, 1));
@@ -285,9 +280,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro15.setMargin(new Insets(2, 0, 2, 0));
 		panel2.add(btnNro15);
 		
-		final BotonPasajero btnNro16 = new BotonPasajero(16, getvC().getPrecioClasePrim());
+		final BotonPasajero btnNro16 = new BotonPasajero(16, precioPrim);
 		btnNro16.setName("btnNro16");
-		//	btnNro16.addMouseListener(this);
+		btnNro16.addMouseListener(this);
 		btnNro16.setBackground(new Color(0, 128, 0));
 		btnNro16.setContentAreaFilled(false);
 		btnNro16.setBorder(new LineBorder(Color.BLACK, 1));
@@ -295,9 +290,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro16.setMargin(new Insets(2, 0, 2, 0));
 		panel2.add(btnNro16);
 		
-		final BotonPasajero btnNro5 = new BotonPasajero(5, getvC().getPrecioClasePrim());
+		final BotonPasajero btnNro5 = new BotonPasajero(5, precioPrim);
 		btnNro5.setName("btnNro5");
-		//	btnNro5.addMouseListener(this);
+		btnNro5.addMouseListener(this);
 		btnNro5.setBackground(new Color(0, 128, 0));
 		btnNro5.setContentAreaFilled(false);
 		btnNro5.setBorder(new LineBorder(Color.BLACK, 1));
@@ -305,9 +300,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro5.setMargin(new Insets(2, 0, 2, 0));
 		panel3.add(btnNro5);
 		
-		final BotonPasajero btnNro6 = new BotonPasajero(6, getvC().getPrecioClasePrim());
+		final BotonPasajero btnNro6 = new BotonPasajero(6, precioPrim);
 		btnNro6.setName("btnNro6");
-		//	btnNro6.addMouseListener(this);
+		btnNro6.addMouseListener(this);
 		btnNro6.setBackground(new Color(0, 128, 0));
 		btnNro6.setContentAreaFilled(false);
 		btnNro6.setBorder(new LineBorder(Color.BLACK, 1));
@@ -315,9 +310,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro6.setMargin(new Insets(2, 2, 2, 2));
 		panel3.add(btnNro6);
 		
-		final BotonPasajero btnNro11 = new BotonPasajero(11, getvC().getPrecioClasePrim());
+		final BotonPasajero btnNro11 = new BotonPasajero(11, precioPrim);
 		btnNro11.setName("btnNro11");
-		//	btnNro11.addMouseListener(this);
+		btnNro11.addMouseListener(this);
 		btnNro11.setBackground(new Color(0, 128, 0));
 		btnNro11.setContentAreaFilled(false);
 		btnNro11.setBorder(new LineBorder(Color.BLACK, 1));
@@ -325,9 +320,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro11.setMargin(new Insets(2, 0, 2, 0));
 		panel3.add(btnNro11);
 
-		final BotonPasajero btnNro12 = new BotonPasajero(12, getvC().getPrecioClasePrim());
+		final BotonPasajero btnNro12 = new BotonPasajero(12, precioPrim);
 		btnNro12.setName("btnNro12");
-		//	btnNro12.addMouseListener(this);
+		btnNro12.addMouseListener(this);
 		btnNro12.setBackground(new Color(0, 128, 0));
 		btnNro12.setContentAreaFilled(false);
 		btnNro12.setBorder(new LineBorder(Color.BLACK, 1));
@@ -335,9 +330,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro12.setMargin(new Insets(2, 0, 2, 0));
 		panel3.add(btnNro12);
 		
-		final BotonPasajero btnNro17 = new BotonPasajero(17, getvC().getPrecioClasePrim());
+		final BotonPasajero btnNro17 = new BotonPasajero(17, precioPrim);
 		btnNro17.setName("btnNro17");
-		//	btnNro17.addMouseListener(this);
+		btnNro17.addMouseListener(this);
 		btnNro17.setBackground(new Color(0, 128, 0));
 		btnNro17.setContentAreaFilled(false);
 		btnNro17.setBorder(new LineBorder(Color.BLACK, 1));
@@ -345,9 +340,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro17.setHorizontalTextPosition(SwingConstants.CENTER);
 		panel3.add(btnNro17);
 		
-		final BotonPasajero btnNro18 = new BotonPasajero(18, getvC().getPrecioClasePrim());
+		final BotonPasajero btnNro18 = new BotonPasajero(18, precioPrim);
 		btnNro18.setName("btnNro18");
-		//	btnNro18.addMouseListener(this);
+		btnNro18.addMouseListener(this);
 		btnNro18.setBackground(new Color(0, 128, 0));
 		btnNro18.setContentAreaFilled(false);
 		btnNro18.setBorder(new LineBorder(Color.BLACK, 1));
@@ -376,7 +371,13 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		botones.add(17, btnNro18);	
 	}
 
-	private void agregarAsientosTurista() {
+	private void agregarAsientosTurista(ViajeCabecera viaje) {
+		
+		Float precioTur = viaje.getPrecioClaseTur()*(1-viaje.getOferta());
+
+		String precioFormateado = String.format(Locale.ROOT, "%.2f", precioTur);
+		
+		precioTur = Float.parseFloat(precioFormateado);
 		
 		panel4 = new JPanel();
 		panel4.setBounds(175, 282, 50, 289);
@@ -397,9 +398,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		panel6.setLayout(new GridLayout(8, 2, 0, 7));
 		
 		
-		final BotonPasajero btnNro19 = new BotonPasajero(19, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro19 = new BotonPasajero(19, precioTur);
 		btnNro19.setName("btnNro19");
-		//	btnNro19.addMouseListener(this);
+		btnNro19.addMouseListener(this);
 		btnNro19.setBackground(new Color(0, 128, 0));
 		btnNro19.setContentAreaFilled(false);
 		btnNro19.setBorder(new LineBorder(Color.BLACK, 1));
@@ -407,9 +408,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro19.setMargin(new Insets(2, 0, 2, 0));
 		panel4.add(btnNro19);
 
-		final BotonPasajero btnNro20 = new BotonPasajero(20, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro20 = new BotonPasajero(20, precioTur);
 		btnNro20.setName("btnNro20");
-		//	btnNro20.addMouseListener(this);
+		btnNro20.addMouseListener(this);
 		btnNro20.setBackground(new Color(0, 128, 0));
 		btnNro20.setContentAreaFilled(false);
 		btnNro20.setBorder(new LineBorder(Color.BLACK, 1));
@@ -417,9 +418,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro20.setMargin(new Insets(2, 0, 2, 0));
 		panel4.add(btnNro20);
 
-		final BotonPasajero btnNro25 = new BotonPasajero(25, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro25 = new BotonPasajero(25, precioTur);
 		btnNro25.setName("btnNro25");
-		//	btnNro25.addMouseListener(this);
+		btnNro25.addMouseListener(this);
 		btnNro25.setBackground(new Color(0, 128, 0));
 		btnNro25.setContentAreaFilled(false);
 		btnNro25.setBorder(new LineBorder(Color.BLACK, 1));
@@ -427,9 +428,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro25.setMargin(new Insets(2, 0, 2, 0));
 		panel4.add(btnNro25);
 		
-		final BotonPasajero btnNro26 = new BotonPasajero(26, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro26 = new BotonPasajero(26, precioTur);
 		btnNro26.setName("btnNro26");
-		//	btnNro26.addMouseListener(this);
+		btnNro26.addMouseListener(this);
 		btnNro26.setBackground(new Color(0, 128, 0));
 		btnNro26.setContentAreaFilled(false);
 		btnNro26.setBorder(new LineBorder(Color.BLACK, 1));
@@ -437,9 +438,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro26.setMargin(new Insets(2, 0, 2, 0));
 		panel4.add(btnNro26);
 
-		final BotonPasajero btnNro31 = new BotonPasajero(31, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro31 = new BotonPasajero(31, precioTur);
 		btnNro31.setName("btnNro31");
-		//	btnNro31.addMouseListener(this);
+		btnNro31.addMouseListener(this);
 		btnNro31.setBackground(new Color(0, 128, 0));
 		btnNro31.setContentAreaFilled(false);
 		btnNro31.setBorder(new LineBorder(Color.BLACK, 1));
@@ -447,9 +448,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro31.setMargin(new Insets(2, 0, 2, 0));
 		panel4.add(btnNro31);
 
-		final BotonPasajero btnNro32 = new BotonPasajero(32, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro32 = new BotonPasajero(32, precioTur);
 		btnNro32.setName("btnNro32");
-		//	btnNro32.addMouseListener(this);
+		btnNro32.addMouseListener(this);
 		btnNro32.setBackground(new Color(0, 128, 0));
 		btnNro32.setContentAreaFilled(false);
 		btnNro32.setBorder(new LineBorder(Color.BLACK, 1));
@@ -457,9 +458,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro32.setMargin(new Insets(2, 0, 2, 0));
 		panel4.add(btnNro32);
 
-		final BotonPasajero btnNro37 = new BotonPasajero(37, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro37 = new BotonPasajero(37, precioTur);
 		btnNro37.setName("btnNro37");
-		//	btnNro37.addMouseListener(this);
+		btnNro37.addMouseListener(this);
 		btnNro37.setBackground(new Color(0, 128, 0));
 		btnNro37.setContentAreaFilled(false);
 		btnNro37.setBorder(new LineBorder(Color.BLACK, 1));
@@ -467,9 +468,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro37.setMargin(new Insets(2, 0, 2, 0));
 		panel4.add(btnNro37);
 
-		final BotonPasajero btnNro38 = new BotonPasajero(38, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro38 = new BotonPasajero(38, precioTur);
 		btnNro38.setName("btnNro38");
-		//	btnNro38.addMouseListener(this);
+		btnNro38.addMouseListener(this);
 		btnNro38.setBackground(new Color(0, 128, 0));
 		btnNro38.setContentAreaFilled(false);
 		btnNro38.setBorder(new LineBorder(Color.BLACK, 1));
@@ -477,9 +478,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro38.setMargin(new Insets(2, 0, 2, 0));
 		panel4.add(btnNro38);
 		
-		final BotonPasajero btnNro43 = new BotonPasajero(43, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro43 = new BotonPasajero(43, precioTur);
 		btnNro43.setName("btnNro43");
-		//	btnNro43.addMouseListener(this);
+		btnNro43.addMouseListener(this);
 		btnNro43.setBackground(new Color(0, 128, 0));
 		btnNro43.setContentAreaFilled(false);
 		btnNro43.setBorder(new LineBorder(Color.BLACK, 1));
@@ -487,9 +488,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro43.setMargin(new Insets(2, 0, 2, 0));
 		panel4.add(btnNro43);
 
-		final BotonPasajero btnNro44 = new BotonPasajero(44, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro44 = new BotonPasajero(44, precioTur);
 		btnNro44.setName("btnNro44");
-		//	btnNro44.addMouseListener(this);
+		btnNro44.addMouseListener(this);
 		btnNro44.setBackground(new Color(0, 128, 0));
 		btnNro44.setContentAreaFilled(false);
 		btnNro44.setBorder(new LineBorder(Color.BLACK, 1));
@@ -497,9 +498,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro44.setMargin(new Insets(2, 0, 2, 0));
 		panel4.add(btnNro44);
 		
-		final BotonPasajero btnNro49 = new BotonPasajero(49, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro49 = new BotonPasajero(49, precioTur);
 		btnNro49.setName("btnNro49");
-		//	btnNro49.addMouseListener(this);
+		btnNro49.addMouseListener(this);
 		btnNro49.setBackground(new Color(0, 128, 0));
 		btnNro49.setContentAreaFilled(false);
 		btnNro49.setBorder(new LineBorder(Color.BLACK, 1));
@@ -507,9 +508,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro49.setMargin(new Insets(2, 0, 2, 0));
 		panel4.add(btnNro49);
 
-		final BotonPasajero btnNro50 = new BotonPasajero(50, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro50 = new BotonPasajero(50, precioTur);
 		btnNro50.setName("btnNro50");
-		//	btnNro50.addMouseListener(this);
+		btnNro50.addMouseListener(this);
 		btnNro50.setBackground(new Color(0, 128, 0));
 		btnNro50.setContentAreaFilled(false);
 		btnNro50.setBorder(new LineBorder(Color.BLACK, 1));
@@ -517,9 +518,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro50.setMargin(new Insets(2, 0, 2, 0));
 		panel4.add(btnNro50);
 
-		final BotonPasajero btnNro55 = new BotonPasajero(55, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro55 = new BotonPasajero(55, precioTur);
 		btnNro55.setName("btnNro55");
-		//	btnNro55.addMouseListener(this);
+		btnNro55.addMouseListener(this);
 		btnNro55.setBackground(new Color(0, 128, 0));
 		btnNro55.setContentAreaFilled(false);
 		btnNro55.setBorder(new LineBorder(Color.BLACK, 1));
@@ -527,9 +528,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro55.setMargin(new Insets(2, 0, 2, 0));
 		panel4.add(btnNro55);
 		
-		final BotonPasajero btnNro56 = new BotonPasajero(56, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro56 = new BotonPasajero(56, precioTur);
 		btnNro56.setName("btnNro56");
-		//	btnNro56.addMouseListener(this);
+		btnNro56.addMouseListener(this);
 		btnNro56.setBackground(new Color(0, 128, 0));
 		btnNro56.setContentAreaFilled(false);
 		btnNro56.setBorder(new LineBorder(Color.BLACK, 1));
@@ -537,9 +538,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro56.setMargin(new Insets(2, 0, 2, 0));
 		panel4.add(btnNro56);
 		
-		final BotonPasajero btnNro61 = new BotonPasajero(61, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro61 = new BotonPasajero(61, precioTur);
 		btnNro61.setName("btnNro61");
-		//	btnNro61.addMouseListener(this);
+		btnNro61.addMouseListener(this);
 		btnNro61.setBackground(new Color(0, 128, 0));
 		btnNro61.setContentAreaFilled(false);
 		btnNro61.setBorder(new LineBorder(Color.BLACK, 1));
@@ -547,9 +548,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro61.setMargin(new Insets(2, 0, 2, 0));
 		panel4.add(btnNro61);
 
-		final BotonPasajero btnNro62 = new BotonPasajero(62, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro62 = new BotonPasajero(62, precioTur);
 		btnNro62.setName("btnNro62");
-		//btnNro62.addMouseListener(this);
+		btnNro62.addMouseListener(this);
 		btnNro62.setBackground(new Color(0, 128, 0));
 		btnNro62.setContentAreaFilled(false);
 		btnNro62.setBorder(new LineBorder(Color.BLACK, 1));
@@ -557,9 +558,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro62.setMargin(new Insets(2, 0, 2, 0));
 		panel4.add(btnNro62);
 		
-		final BotonPasajero btnNro21 = new BotonPasajero(21, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro21 = new BotonPasajero(21, precioTur);
 		btnNro21.setName("btnNro21");
-//		btnNro21.addMouseListener(this);
+		btnNro21.addMouseListener(this);
 		btnNro21.setBackground(new Color(0, 128, 0));
 		btnNro21.setContentAreaFilled(false);
 		btnNro21.setBorder(new LineBorder(Color.BLACK, 1));
@@ -567,9 +568,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro21.setMargin(new Insets(2, 0, 2, 0));
 		panel5.add(btnNro21);
 		
-		final BotonPasajero btnNro22 = new BotonPasajero(22, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro22 = new BotonPasajero(22, precioTur);
 		btnNro22.setName("btnNro22");
-		//		btnNro22.addMouseListener(this);
+		btnNro22.addMouseListener(this);
 		btnNro22.setBackground(new Color(0, 128, 0));
 		btnNro22.setContentAreaFilled(false);
 		btnNro22.setBorder(new LineBorder(Color.BLACK, 1));
@@ -577,9 +578,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro22.setMargin(new Insets(2, 0, 2, 0));
 		panel5.add(btnNro22);
 
-		final BotonPasajero btnNro27 = new BotonPasajero(27, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro27 = new BotonPasajero(27, precioTur);
 		btnNro27.setName("btnNro27");
-		//		btnNro27.addMouseListener(this);
+		btnNro27.addMouseListener(this);
 		btnNro27.setBackground(new Color(0, 128, 0));
 		btnNro27.setContentAreaFilled(false);
 		btnNro27.setBorder(new LineBorder(Color.BLACK, 1));
@@ -587,9 +588,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro27.setMargin(new Insets(2, 0, 2, 0));
 		panel5.add(btnNro27);
 
-		final BotonPasajero btnNro28 = new BotonPasajero(28, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro28 = new BotonPasajero(28, precioTur);
 		btnNro28.setName("btnNro28");
-		//		btnNro28.addMouseListener(this);
+		btnNro28.addMouseListener(this);
 		btnNro28.setBackground(new Color(0, 128, 0));
 		btnNro28.setContentAreaFilled(false);
 		btnNro28.setBorder(new LineBorder(Color.BLACK, 1));
@@ -597,9 +598,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro28.setMargin(new Insets(2, 0, 2, 0));
 		panel5.add(btnNro28);
 
-		final BotonPasajero btnNro33 = new BotonPasajero(33, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro33 = new BotonPasajero(33, precioTur);
 		btnNro33.setName("btnNro33");
-		//		btnNro33.addMouseListener(this);
+		btnNro33.addMouseListener(this);
 		btnNro33.setBackground(new Color(0, 128, 0));
 		btnNro33.setContentAreaFilled(false);
 		btnNro33.setBorder(new LineBorder(Color.BLACK, 1));
@@ -607,9 +608,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro33.setMargin(new Insets(2, 0, 2, 0));
 		panel5.add(btnNro33);
 
-		final BotonPasajero btnNro34 = new BotonPasajero(34, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro34 = new BotonPasajero(34, precioTur);
 		btnNro34.setName("btnNro34");
-		//		btnNro34.addMouseListener(this);
+		btnNro34.addMouseListener(this);
 		btnNro34.setBackground(new Color(0, 128, 0));
 		btnNro34.setContentAreaFilled(false);
 		btnNro34.setBorder(new LineBorder(Color.BLACK, 1));
@@ -617,9 +618,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro34.setMargin(new Insets(2, 0, 2, 0));
 		panel5.add(btnNro34);
 		
-		final BotonPasajero btnNro39 = new BotonPasajero(39, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro39 = new BotonPasajero(39, precioTur);
 		btnNro39.setName("btnNro39");
-		//	btnNro39.addMouseListener(this);
+		btnNro39.addMouseListener(this);
 		btnNro39.setBackground(new Color(0, 128, 0));
 		btnNro39.setContentAreaFilled(false);
 		btnNro39.setBorder(new LineBorder(Color.BLACK, 1));
@@ -627,9 +628,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro39.setMargin(new Insets(2, 0, 2, 0));
 		panel5.add(btnNro39);
 		
-		final BotonPasajero btnNro40 = new BotonPasajero(40, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro40 = new BotonPasajero(40, precioTur);
 		btnNro40.setName("btnNro40");
-		//	btnNro40.addMouseListener(this);
+		btnNro40.addMouseListener(this);
 		btnNro40.setBackground(new Color(0, 128, 0));
 		btnNro40.setContentAreaFilled(false);
 		btnNro40.setBorder(new LineBorder(Color.BLACK, 1));
@@ -637,9 +638,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro40.setMargin(new Insets(2, 0, 2, 0));
 		panel5.add(btnNro40);
 		
-		final BotonPasajero btnNro45 = new BotonPasajero(45, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro45 = new BotonPasajero(45, precioTur);
 		btnNro45.setName("btnNro45");
-		//	btnNro45.addMouseListener(this);
+		btnNro45.addMouseListener(this);
 		btnNro45.setBackground(new Color(0, 128, 0));
 		btnNro45.setContentAreaFilled(false);
 		btnNro45.setBorder(new LineBorder(Color.BLACK, 1));
@@ -647,9 +648,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro45.setMargin(new Insets(2, 0, 2, 0));
 		panel5.add(btnNro45);
 
-		final BotonPasajero btnNro46 = new BotonPasajero(46, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro46 = new BotonPasajero(46, precioTur);
 		btnNro46.setName("btnNro46");
-		//	btnNro46.addMouseListener(this);
+		btnNro46.addMouseListener(this);
 		btnNro46.setBackground(new Color(0, 128, 0));
 		btnNro46.setContentAreaFilled(false);
 		btnNro46.setBorder(new LineBorder(Color.BLACK, 1));
@@ -657,9 +658,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro46.setMargin(new Insets(2, 0, 2, 0));
 		panel5.add(btnNro46);
 
-		final BotonPasajero btnNro51 = new BotonPasajero(51, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro51 = new BotonPasajero(51, precioTur);
 		btnNro51.setName("btnNro51");
-		//	btnNro51.addMouseListener(this);
+		btnNro51.addMouseListener(this);
 		btnNro51.setBackground(new Color(0, 128, 0));
 		btnNro51.setContentAreaFilled(false);
 		btnNro51.setBorder(new LineBorder(Color.BLACK, 1));
@@ -667,9 +668,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro51.setMargin(new Insets(2, 0, 2, 0));
 		panel5.add(btnNro51);
 		
-		final BotonPasajero btnNro52 = new BotonPasajero(52, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro52 = new BotonPasajero(52, precioTur);
 		btnNro52.setName("btnNro52");
-		//	btnNro52.addMouseListener(this);
+		btnNro52.addMouseListener(this);
 		btnNro52.setBackground(new Color(0, 128, 0));
 		btnNro52.setContentAreaFilled(false);
 		btnNro52.setBorder(new LineBorder(Color.BLACK, 1));
@@ -677,9 +678,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro52.setMargin(new Insets(2, 0, 2, 0));
 		panel5.add(btnNro52);
 
-		final BotonPasajero btnNro57 = new BotonPasajero(57, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro57 = new BotonPasajero(57, precioTur);
 		btnNro57.setName("btnNro57");
-		//	btnNro57.addMouseListener(this);
+		btnNro57.addMouseListener(this);
 		btnNro57.setBackground(new Color(0, 128, 0));
 		btnNro57.setContentAreaFilled(false);
 		btnNro57.setBorder(new LineBorder(Color.BLACK, 1));
@@ -687,9 +688,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro57.setMargin(new Insets(2, 0, 2, 0));
 		panel5.add(btnNro57);
 
-		final BotonPasajero btnNro58 = new BotonPasajero(58, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro58 = new BotonPasajero(58, precioTur);
 		btnNro58.setName("btnNro58");
-		//	btnNro58.addMouseListener(this);
+		btnNro58.addMouseListener(this);
 		btnNro58.setBackground(new Color(0, 128, 0));
 		btnNro58.setContentAreaFilled(false);
 		btnNro58.setBorder(new LineBorder(Color.BLACK, 1));
@@ -697,9 +698,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro58.setMargin(new Insets(2, 0, 2, 0));
 		panel5.add(btnNro58);
 
-		final BotonPasajero btnNro63 = new BotonPasajero(63, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro63 = new BotonPasajero(63, precioTur);
 		btnNro63.setName("btnNro63");
-		//	btnNro63.addMouseListener(this);
+		btnNro63.addMouseListener(this);
 		btnNro63.setBackground(new Color(0, 128, 0));
 		btnNro63.setContentAreaFilled(false);
 		btnNro63.setBorder(new LineBorder(Color.BLACK, 1));
@@ -707,9 +708,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro63.setMargin(new Insets(2, 0, 2, 0));
 		panel5.add(btnNro63);
 		
-		final BotonPasajero btnNro64 = new BotonPasajero(64, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro64 = new BotonPasajero(64, precioTur);
 		btnNro64.setName("btnNro64");
-		//btnNro64.addMouseListener(this);
+		btnNro64.addMouseListener(this);
 		btnNro64.setBackground(new Color(0, 128, 0));
 		btnNro64.setContentAreaFilled(false);
 		btnNro64.setBorder(new LineBorder(Color.BLACK, 1));
@@ -717,9 +718,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro64.setMargin(new Insets(2, 0, 2, 0));
 		panel5.add(btnNro64);
 		
-		final BotonPasajero btnNro23 = new BotonPasajero(23, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro23 = new BotonPasajero(23, precioTur);
 		btnNro23.setName("btnNro23");
-		//		btnNro23.addMouseListener(this);
+		btnNro23.addMouseListener(this);
 		btnNro23.setBackground(new Color(0, 128, 0));
 		btnNro23.setContentAreaFilled(false);
 		btnNro23.setBorder(new LineBorder(Color.BLACK, 1));
@@ -727,9 +728,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro23.setMargin(new Insets(2, 0, 2, 0));
 		panel6.add(btnNro23);
 		
-		final BotonPasajero btnNro24 = new BotonPasajero(24, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro24 = new BotonPasajero(24, precioTur);
 		btnNro24.setName("btnNro24");
-		//	btnNro24.addMouseListener(this);
+		btnNro24.addMouseListener(this);
 		btnNro24.setBackground(new Color(0, 128, 0));
 		btnNro24.setContentAreaFilled(false);
 		btnNro24.setBorder(new LineBorder(Color.BLACK, 1));
@@ -737,9 +738,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro24.setMargin(new Insets(2, 0, 2, 0));
 		panel6.add(btnNro24);
 		
-		final BotonPasajero btnNro29 = new BotonPasajero(29, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro29 = new BotonPasajero(29, precioTur);
 		btnNro29.setName("btnNro29");
-		//	btnNro29.addMouseListener(this);
+		btnNro29.addMouseListener(this);
 		btnNro29.setBackground(new Color(0, 128, 0));
 		btnNro29.setContentAreaFilled(false);
 		btnNro29.setBorder(new LineBorder(Color.BLACK, 1));
@@ -747,9 +748,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro29.setMargin(new Insets(2, 0, 2, 0));
 		panel6.add(btnNro29);
 		
-		final BotonPasajero btnNro30 = new BotonPasajero(30, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro30 = new BotonPasajero(30, precioTur);
 		btnNro30.setName("btnNro30");
-		//	btnNro30.addMouseListener(this);
+		btnNro30.addMouseListener(this);
 		btnNro30.setBackground(new Color(0, 128, 0));
 		btnNro30.setContentAreaFilled(false);
 		btnNro30.setBorder(new LineBorder(Color.BLACK, 1));
@@ -757,9 +758,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro30.setMargin(new Insets(2, 0, 2, 0));
 		panel6.add(btnNro30);
 		
-		final BotonPasajero btnNro35 = new BotonPasajero(35, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro35 = new BotonPasajero(35, precioTur);
 		btnNro35.setName("btnNro35");
-		//	btnNro35.addMouseListener(this);
+		btnNro35.addMouseListener(this);
 		btnNro35.setBackground(new Color(0, 128, 0));
 		btnNro35.setContentAreaFilled(false);
 		btnNro35.setBorder(new LineBorder(Color.BLACK, 1));
@@ -767,9 +768,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro35.setMargin(new Insets(2, 0, 2, 0));
 		panel6.add(btnNro35);
 
-		final BotonPasajero btnNro36 = new BotonPasajero(36, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro36 = new BotonPasajero(36, precioTur);
 		btnNro36.setName("btnNro36");
-		//	btnNro36.addMouseListener(this);
+			btnNro36.addMouseListener(this);
 		btnNro36.setBackground(new Color(0, 128, 0));
 		btnNro36.setContentAreaFilled(false);
 		btnNro36.setBorder(new LineBorder(Color.BLACK, 1));
@@ -777,9 +778,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro36.setMargin(new Insets(2, 0, 2, 0));
 		panel6.add(btnNro36);
 		
-		final BotonPasajero btnNro41 = new BotonPasajero(41, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro41 = new BotonPasajero(41, precioTur);
 		btnNro41.setName("btnNro41");
-		//	btnNro41.addMouseListener(this);
+		btnNro41.addMouseListener(this);
 		btnNro41.setBackground(new Color(0, 128, 0));
 		btnNro41.setContentAreaFilled(false);
 		btnNro41.setBorder(new LineBorder(Color.BLACK, 1));
@@ -787,9 +788,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro41.setMargin(new Insets(2, 0, 2, 0));
 		panel6.add(btnNro41);
 		
-		final BotonPasajero btnNro42 = new BotonPasajero(42, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro42 = new BotonPasajero(42, precioTur);
 		btnNro42.setName("btnNro42");
-		//	btnNro42.addMouseListener(this);
+		btnNro42.addMouseListener(this);
 		btnNro42.setBackground(new Color(0, 128, 0));
 		btnNro42.setContentAreaFilled(false);
 		btnNro42.setBorder(new LineBorder(Color.BLACK, 1));
@@ -797,9 +798,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro42.setMargin(new Insets(2, 0, 2, 0));
 		panel6.add(btnNro42);
 		
-		final BotonPasajero btnNro47 = new BotonPasajero(47, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro47 = new BotonPasajero(47, precioTur);
 		btnNro47.setName("btnNro47");
-		//	btnNro47.addMouseListener(this);
+		btnNro47.addMouseListener(this);
 		btnNro47.setBackground(new Color(0, 128, 0));
 		btnNro47.setContentAreaFilled(false);
 		btnNro47.setBorder(new LineBorder(Color.BLACK, 1));
@@ -807,9 +808,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro47.setMargin(new Insets(2, 0, 2, 0));
 		panel6.add(btnNro47);
 		
-		final BotonPasajero btnNro48 = new BotonPasajero(48, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro48 = new BotonPasajero(48, precioTur);
 		btnNro48.setName("btnNro48");
-		//	btnNro48.addMouseListener(this);
+		btnNro48.addMouseListener(this);
 		btnNro48.setBackground(new Color(0, 128, 0));
 		btnNro48.setContentAreaFilled(false);
 		btnNro48.setBorder(new LineBorder(Color.BLACK, 1));
@@ -817,9 +818,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro48.setMargin(new Insets(2, 0, 2, 0));
 		panel6.add(btnNro48);
 		
-		final BotonPasajero btnNro53 = new BotonPasajero(53, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro53 = new BotonPasajero(53, precioTur);
 		btnNro53.setName("btnNro53");
-		//	btnNro53.addMouseListener(this);
+		btnNro53.addMouseListener(this);
 		btnNro53.setBackground(new Color(0, 128, 0));
 		btnNro53.setContentAreaFilled(false);
 		btnNro53.setBorder(new LineBorder(Color.BLACK, 1));
@@ -827,9 +828,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro53.setMargin(new Insets(2, 0, 2, 0));
 		panel6.add(btnNro53);
 		
-		final BotonPasajero btnNro54 = new BotonPasajero(54, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro54 = new BotonPasajero(54, precioTur);
 		btnNro54.setName("btnNro54");
-		//	btnNro54.addMouseListener(this);
+		btnNro54.addMouseListener(this);
 		btnNro54.setBackground(new Color(0, 128, 0));
 		btnNro54.setContentAreaFilled(false);
 		btnNro54.setBorder(new LineBorder(Color.BLACK, 1));
@@ -837,9 +838,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro54.setMargin(new Insets(2, 0, 2, 0));
 		panel6.add(btnNro54);
 		
-		final BotonPasajero btnNro59 = new BotonPasajero(59, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro59 = new BotonPasajero(59, precioTur);
 		btnNro59.setName("btnNro59");
-		//	btnNro59.addMouseListener(this);
+		btnNro59.addMouseListener(this);
 		btnNro59.setBackground(new Color(0, 128, 0));
 		btnNro59.setContentAreaFilled(false);
 		btnNro59.setBorder(new LineBorder(Color.BLACK, 1));
@@ -847,9 +848,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro59.setMargin(new Insets(2, 0, 2, 0));
 		panel6.add(btnNro59);
 
-		final BotonPasajero btnNro60 = new BotonPasajero(60, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro60 = new BotonPasajero(60, precioTur);
 		btnNro60.setName("btnNro60");
-		//	btnNro60.addMouseListener(this);
+		btnNro60.addMouseListener(this);
 		btnNro60.setBackground(new Color(0, 128, 0));
 		btnNro60.setContentAreaFilled(false);
 		btnNro60.setBorder(new LineBorder(Color.BLACK, 1));
@@ -857,9 +858,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro60.setMargin(new Insets(2, 0, 2, 0));
 		panel6.add(btnNro60);
 		
-		final BotonPasajero btnNro65 = new BotonPasajero(65, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro65 = new BotonPasajero(65, precioTur);
 		btnNro65.setName("btnNro65");
-		//	btnNro65.addMouseListener(this);
+		btnNro65.addMouseListener(this);
 		btnNro65.setBackground(new Color(0, 128, 0));
 		btnNro65.setContentAreaFilled(false);
 		btnNro65.setBorder(new LineBorder(Color.BLACK, 1));
@@ -867,9 +868,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnNro65.setMargin(new Insets(2, 0, 2, 0));
 		panel6.add(btnNro65);
 		
-		final BotonPasajero btnNro66 = new BotonPasajero(66, getvC().getPrecioClaseTur());
+		final BotonPasajero btnNro66 = new BotonPasajero(66, precioTur);
 		btnNro66.setName("btnNro66");
-		//	btnNro66.addMouseListener(this);
+		btnNro66.addMouseListener(this);
 		btnNro66.setBackground(new Color(0, 128, 0));
 		btnNro66.setContentAreaFilled(false);
 		btnNro66.setBorder(new LineBorder(Color.BLACK, 1));
@@ -975,8 +976,8 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		panelAsientos.add(lblCantidadDeAsientos);
 	}
 	
-	private void agregarLabelCantAsientosDisponibles() {
-		lblCantAsientosDisp = new JLabel("12");
+	private void agregarLabelCantAsientosDisponibles(ViajeCabecera viaje) {
+		lblCantAsientosDisp = new JLabel(viaje.getCupo().toString());
 		lblCantAsientosDisp.setBounds(105, 0, 35, 45);
 		lblCantAsientosDisp.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCantAsientosDisp.setFont(new Font("Arial", Font.BOLD, 16));
@@ -1021,11 +1022,11 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		}
 	}
 
-	protected void controlarAsientosOcupados() {
+	protected void controlarAsientosOcupados(ViajeCabecera viaje) {
 	
 		rVBo = new ReservaViajeBoImpl();
 	
-		List<Integer> listaOcupados = rVBo.controlarAsientosOcupados(rV);
+		List<Integer> listaOcupados = rVBo.controlarAsientosOcupados(viaje);
 
 		for (Integer asiento : listaOcupados) {
 			botonesOcupados.add(botones.get(asiento-1));					
@@ -1044,7 +1045,7 @@ public class PlantillaRV extends JDialog implements MouseListener{
 	}
 		
 
-	private void agregarPanelInfoPasajeros() {
+	private void agregarPanelInfoPasajeros(ViajeCabecera viaje, String dni) {
 
 		agregarLabelSeleccioneCantPasajeros();
 		
@@ -1056,7 +1057,7 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		getContentPane().add(panelPasajeros);
 		
 		agregarLabelsPanelInfoPasajeros();
-		agregarCamposPanelInfoPasajeros();
+		agregarCamposPanelInfoPasajeros(viaje, dni);
 		
 		agregarPanelDatosPasajeros();
 		
@@ -1084,9 +1085,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		panelPasajeros.add(lblCantPasajeros);
 	}
 	
-	private void agregarCamposPanelInfoPasajeros() {
+	private void agregarCamposPanelInfoPasajeros(ViajeCabecera viaje, String dni) {
 		agregarCmbCantPasajeros();
-		agregarBotonSiguiente();
+		agregarBotonSiguiente(viaje, dni);
 		agregarBotonAnterior();
 	}
 
@@ -1124,11 +1125,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		
 		getContentPane().remove(lblSeleccioneCantPasajeros);
 		getContentPane().add(panelAsientos);
+		
+		panelDatosPasajeros.setBorder(new TitledBorder(null, "Pasajero " + a +"/" + opcion, TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.PLAIN, 16), Color.WHITE));
 
-		Font f = new Font("Arial", Font.BOLD, 16);
-		
-		panelDatosPasajeros.setBorder(new TitledBorder(null, "Pasajero " + a +"/" + opcion, TitledBorder.LEADING, TitledBorder.TOP, f, Color.WHITE));
-		
 		panelPasajeros.add(panelDatosPasajeros);
 		panelPasajeros.add(btnSiguiente);
 		
@@ -1231,6 +1230,8 @@ public class PlantillaRV extends JDialog implements MouseListener{
 
 	private void agregarCamposPanelDatosPasajeros() {
 
+		pasajero = new PasajeroImpl();
+		
 		txtNombre = new JTextField();
 		txtNombre.setBounds(95, 25, 210, 28);
 		txtNombre.addFocusListener(new FocusAdapter() {
@@ -1250,6 +1251,8 @@ public class PlantillaRV extends JDialog implements MouseListener{
 			}
 		});
 		panelDatosPasajeros.add(txtNombre);
+		
+		pasajero.setNombre(txtNombre.getText());
 		
 		txtApellido = new JTextField();
 		txtApellido.setBounds(95, 58, 210, 28);
@@ -1271,6 +1274,8 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		});
 		panelDatosPasajeros.add(txtApellido);
 		
+		pasajero.setApellido(txtApellido.getText());
+		
 		txtDni = new JTextField();
 		txtDni.setBounds(95, 91, 210, 28);
 		txtDni.addFocusListener(new FocusAdapter() {
@@ -1291,6 +1296,8 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		});
 		panelDatosPasajeros.add(txtDni);
 		
+		pasajero.setDni(txtDni.getText());
+		
 		txtAsiento = new JTextField();
 		txtAsiento.setEditable(false);
 		txtAsiento.setBounds(95, 124, 210, 28);
@@ -1300,6 +1307,8 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		txtPrecio.setEditable(false);
 		txtPrecio.setBounds(95, 157, 210, 28);
 		panelDatosPasajeros.add(txtPrecio);
+		
+		rV.setAsiento(-1);
 	}
 	
 	protected void setearNombre() {
@@ -1351,7 +1360,6 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		}
 	}
 	
-
 	private void controlarTeclasNumericas(KeyEvent e) {
 		char c = e.getKeyChar();
 		
@@ -1360,19 +1368,20 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		}
 	}
 
-	private void agregarBotonSiguiente() {
+	private void agregarBotonSiguiente(ViajeCabecera viaje, String dni) {
 
-		pasajero = new PasajeroImpl();
 		rV = new ReservaViajeImpl();
 		
+		rV.setViaje(viaje);
+		rV.setDniPersona(dni);
+		
+		vCBo = new ViajeCabeceraBoImpl();
 		pBo = new PasajeroBoImpl();
 		rVBo = new ReservaViajeBoImpl();
-		
+
 		btnSiguiente = new JButton("Siguiente");
 		btnSiguiente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
-				pasajero = new PasajeroImpl();
 
 				try {
 					
@@ -1423,7 +1432,10 @@ public class PlantillaRV extends JDialog implements MouseListener{
 						txtAsiento.getText().length() > 0 && 
 						txtPrecio.getText().length() > 0){
 
+						Date d = new Date();
+						
 						rV.setPasajero(pasajero);
+						rV.setFechaReserva(new Timestamp(d.getTime()));
 						
 						reservas.agregarReserva(rV);
 
@@ -1440,9 +1452,9 @@ public class PlantillaRV extends JDialog implements MouseListener{
 								pBo.agregarPasajero(reservas.getListReservas().get(i).getPasajero());
 								
 								rVBo.agregarReserva(reservas.getListReservas().get(i));
+
+								vCBo.actualizarCupo(reservas.getListReservas().get(0).getViaje());
 							}
-							
-							vCBo.actualizarCupo(reservas.getListReservas().get(0).getViaje());
 							
 							//Generar PDF
 							
@@ -1452,10 +1464,11 @@ public class PlantillaRV extends JDialog implements MouseListener{
 							
 							
 							pRBo = new PersonaRegistradaBoImpl();
-
+							
 							String email = pRBo.retornarEmail(reservas.getListReservas().get(0).getDniPersona());
 							
 							try {
+
 								boleto.crearBoleto(reservas);
 								dispose();
 								JOptionPane.showMessageDialog(null, "Se esta enviando un mail a su correo con su boleto.");
@@ -1466,7 +1479,7 @@ public class PlantillaRV extends JDialog implements MouseListener{
 								e2.printStackTrace();
 							} finally {
 							
-								JOptionPane.showMessageDialog(null, "Se ha enviado un mail a " + email + " con el boleto para que este disponible para su descarga cuando lo requiera. Gracias.");
+								JOptionPane.showMessageDialog(null, "El mail ha sido enviado a su correo con el boleto para que este disponible para su descarga cuando lo requiera. Gracias.");
 								
 								boleto.abrirBoleto();
 							}
@@ -1482,6 +1495,8 @@ public class PlantillaRV extends JDialog implements MouseListener{
 						rV = new ReservaViajeImpl();
 						rV.setViaje(reservas.getListReservas().get(0).getViaje());
 						rV.setDniPersona(reservas.getListReservas().get(0).getDniPersona());
+						
+						pasajero = new PasajeroImpl();
 					}
 				}
 			}
@@ -1542,7 +1557,7 @@ public class PlantillaRV extends JDialog implements MouseListener{
 					panelPasajeros.remove(btnAnterior);
 					panelPasajeros.remove(btnSiguiente);
 					
-					panelDatosPasajeros.setBorder(new TitledBorder(null, "Pasajero " + a +"/" + opcion, TitledBorder.LEADING, TitledBorder.TOP, null, null));
+					panelDatosPasajeros.setBorder(new TitledBorder(null, "Pasajero " + a +"/" + opcion, TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.PLAIN, 16), Color.WHITE));
 					
 					panelPasajeros.add(panelDatosPasajeros);
 					panelPasajeros.add(btnSiguiente);
@@ -1756,27 +1771,23 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		}
 	}
 	
-	protected void setearViaje(ViajeCabecera viaje){
-		getrV().setViaje(viaje);
+	public void cargarAsientos(ViajeCabecera viaje){
+		agregarPanelAsientos(viaje);
+	}
+	
+	public void setearViajeYDniReserva(ViajeCabecera viaje, String dni) {
+		agregarPanelInfoPasajeros(viaje, dni);
 	}
 
-	protected void accionesBotonesOcupados(){
+	protected void accionesBotonesOcupados(ViajeCabecera viaje){
 	
-		controlarAsientosOcupados();
+		controlarAsientosOcupados(viaje);
 		
 		setearPropiedadesBotonesOcupados();
 		
 		removerBotonesOcupadosDeListaDeBotones();
 	}
-
-	public ViajeCabecera getvC() {
-		return vC;
-	}
-
-	public void setvC(ViajeCabecera vC) {
-		this.vC = vC;
-	}
-
+	
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		

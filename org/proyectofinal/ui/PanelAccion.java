@@ -87,16 +87,16 @@ public class PanelAccion extends JPanel {
 			ViajeCabeceraDao vCDao = new ViajeCabeceraDaoImpl();
 			Integer codigo = (Integer)tabla.getValueAt(tabla.getSelectedRow(), 0);
 			
-			try {
-				vCDao.baja(codigo);
-				JOptionPane.showMessageDialog(tabla, "El vuelo ha sido eliminado con exito!");
-			} catch (ClassNotFoundException e1) {
-				// TODO Auto-generated catch block
-				JOptionPane.showMessageDialog(tabla, e1.getMessage());
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				JOptionPane.showMessageDialog(tabla, e1.getMessage());
-			}
+//			try {
+////				vCDao.baja(codigo);
+//				JOptionPane.showMessageDialog(tabla, "El vuelo ha sido eliminado con exito!");
+//			} catch (ClassNotFoundException e1) {
+//				// TODO Auto-generated catch block
+//				JOptionPane.showMessageDialog(tabla, e1.getMessage());
+//			} catch (SQLException e1) {
+//				// TODO Auto-generated catch block
+//				JOptionPane.showMessageDialog(tabla, e1.getMessage());
+//			}
 		}
     }
     

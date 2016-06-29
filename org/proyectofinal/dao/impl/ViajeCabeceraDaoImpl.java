@@ -38,8 +38,6 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		
 		ResultSet resultado = sentencia.executeQuery();
 		
-	//	sentencia.close();
-		
 		return resultado;
 	}
 	
@@ -166,23 +164,22 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		desconectar();
 	}
 
-	public void baja(Integer codigoViaje) throws SQLException, ClassNotFoundException{
+	public void baja(String codigoViaje) throws SQLException, ClassNotFoundException{
 		
 		conectar();
 		
 		PreparedStatement sentencia = getConexion().prepareStatement("DELETE FROM ViajeCabecera WHERE codViaje = ?");
 		
-		sentencia.setInt(1, codigoViaje);
+		sentencia.setString(1, codigoViaje);
 		
 		sentencia.executeUpdate();
-	//	sentencia.close();
-		
+	
 		desconectar();
 	}
 
 	public void actualizarCupo(ViajeCabecera vC) throws SQLException, ClassNotFoundException{
 		
-		conectar();			
+		conectar();
 		
 		PreparedStatement sentencia = null;
 		
@@ -191,8 +188,7 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		sentencia.setString(1, vC.getCodigoViaje());
 		
 		sentencia.executeUpdate();
-	//	sentencia.close();
-		
+	
 		desconectar();
 	}
 	

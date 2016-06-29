@@ -89,7 +89,7 @@ public class ReservaViajeDaoImpl extends AbstractDao implements ReservaViajeDao 
 		sentencia.setString(1, codViaje);
 		
 		ResultSet resultado = sentencia.executeQuery();
-//		sentencia.close();
+
 		return resultado;
 	}
 	

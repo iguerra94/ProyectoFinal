@@ -32,6 +32,7 @@ import org.proyectofinal.ui.util.PaisUtil;
 
 import com.toedter.calendar.JDateChooser;
 import java.awt.event.WindowFocusListener;
+import java.awt.event.WindowListener;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
@@ -45,7 +46,7 @@ import javax.swing.border.TitledBorder;
 import java.awt.Color;
 import java.awt.Font;
 
-public class DialogLoadFlight extends PlantillaDLF {
+public class DialogLoadFlight extends PlantillaDLF implements WindowListener {
 
 	private JButton btnRealizarCambios;
 	private ViajeCabecera vC;
@@ -54,93 +55,80 @@ public class DialogLoadFlight extends PlantillaDLF {
 	
 	public DialogLoadFlight() {
 	
-		addWindowFocusListener(new WindowFocusListener() {
-			public void windowGainedFocus(WindowEvent e) {
-				
-				codigos = new ArrayList<Integer>();
-				
-				ResultSet res = null;
-				
-				try {
-					
-					res = vCDao.consultarCodigosViaje();
-				
-					while(res.next()){
-						codigos.add(res.getInt("codViaje"));
-					}
-					
-				} catch (SQLException e2) {
-					// TODO Auto-generated catch block
-					e2.printStackTrace();
-				} catch (ClassNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} finally {
-					try {
-						vCDao.desconectar();
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
-				}
-				
-			}
-			public void windowLostFocus(WindowEvent e) {
-				codigos = null;
-			}
-		});
+		inicializarAtributos();
+		inicializarComponentes();
+		addWindowListener(this);
 		
-		vC = new ViajeCabeceraImpl();
-		vCBo = new ViajeCabeceraBoImpl();
-	
-		
-		dateChooserFechaSalida.addPropertyChangeListener(new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent evt) {
-			
-				if (dateChooserFechaSalida.getDate() != null){
-					
-					dateChooserFechaLlegada.setDate(dateChooserFechaSalida.getDate());
-					dateChooserFechaLlegada.setMinSelectableDate(dateChooserFechaSalida.getDate());
-					
-					dateChooserFechaLlegada.validate();
-					dateChooserFechaLlegada.repaint();
-				}
-				
-			}
-		});
-		dateChooserFechaSalida.getCalendarButton().addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		setVisible(true);
 
-				dateChooserFechaSalida.setMinSelectableDate(dateChooserFechaSalida.getDate());
-				
-				dateChooserFechaLlegada.setDate(dateChooserFechaSalida.getDate());
-				dateChooserFechaLlegada.setMinSelectableDate(dateChooserFechaSalida.getDate());
-				
-				dateChooserFechaSalida.validate();
-				dateChooserFechaSalida.repaint();
-				dateChooserFechaLlegada.validate();
-				dateChooserFechaLlegada.repaint();
-			}
-		});
-		cmbCiudadOrigen.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				
-				if (cmbCiudadOrigen.getSelectedIndex() == 0){
-					vC.setPaisDestino(listaPaises.getListaPaises().get(0).getPais());
-					vC.setShortPaisDestino(listaPaises.getListaPaises().get(0).getShortPais());
-				}else if (cmbCiudadOrigen.getSelectedIndex() == 1){
-					vC.setPaisDestino(listaPaises.getListaPaises().get(1).getPais());
-					vC.setShortPaisDestino(listaPaises.getListaPaises().get(1).getShortPais());
-				}else if (cmbCiudadOrigen.getSelectedIndex() == 2){
-					vC.setPaisDestino(listaPaises.getListaPaises().get(2).getPais());
-					vC.setShortPaisDestino(listaPaises.getListaPaises().get(2).getShortPais());
-				}else if (cmbCiudadOrigen.getSelectedIndex() == 3){
-					vC.setPaisDestino(listaPaises.getListaPaises().get(3).getPais());
-					vC.setShortPaisDestino(listaPaises.getListaPaises().get(3).getShortPais());
-				}
-				
+//		addWindowFocusListener(new WindowFocusListener() {
+//			public void windowGainedFocus(WindowEvent e) {
+//				
+//				codigos = new ArrayList<Integer>();
+//				
+//				ResultSet res = null;
+//				
+//				try {
+//					
+//					res = vCDao.consultarCodigosViaje();
+//				
+//					while(res.next()){
+//						codigos.add(res.getInt("codViaje"));
+//					}
+//					
+//				} catch (SQLException e2) {
+//					e2.printStackTrace();
+//				} catch (ClassNotFoundException e1) {
+//					e1.printStackTrace();
+//				} finally {
+//					try {
+//						vCDao.desconectar();
+//					} catch (SQLException e1) {
+//						e1.printStackTrace();
+//					}
+//				}
+//				
+//			}
+//			public void windowLostFocus(WindowEvent e) {
+//				codigos = null;
+//			}
+//		});
 	
-			}
-		});
+	}
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+		cargarPaisesOrigen();
+	}
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+		
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		
 	}
 	
 }

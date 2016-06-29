@@ -209,15 +209,15 @@ public class Boleto {
 			ct = new ColumnText(cb);
 
 			//Numero de Viaje Pasajero
-			myText = new Phrase(reserva.getListReservas().get(i).getViaje().getCodigoViaje().toString(), FontFactory.getFont("georgia",13f, Font.NORMAL, BaseColor.BLACK));
-			ct.setSimpleColumn(myText, 500, 355, 530, 356, 1, Element.ALIGN_CENTER);
+			myText = new Phrase(reserva.getListReservas().get(i).getViaje().getCodigoViaje().toString(), FontFactory.getFont("georgia",10.5f, Font.NORMAL, BaseColor.BLACK));
+			ct.setSimpleColumn(myText, 480, 355, 550, 356, 1, Element.ALIGN_CENTER);
 			ct.go();
 
 			cb = writer.getDirectContent();
 			ct = new ColumnText(cb);
 
 			//Fecha y Hora de Salida Pasajero
-			myText = new Phrase(reserva.getListReservas().get(i).getViaje().getFechaSalida().toString().substring(8, 10) + "/" +reserva.getListReservas().get(i).getViaje().getFechaSalida().toString().substring(5, 7) + "/" + reserva.getListReservas().get(i).getViaje().getFechaSalida().toString().substring(0, 4) + " - " + reserva.getListReservas().get(i).getViaje().getHoraSalida().toString().substring(0, 5), FontFactory.getFont("georgia",10.5f, Font.NORMAL, BaseColor.BLACK));
+			myText = new Phrase(reserva.getListReservas().get(i).getViaje().getFechaSalida().toString().substring(8, 10) + "/" +reserva.getListReservas().get(i).getViaje().getFechaSalida().toString().substring(5, 7) + "/" + reserva.getListReservas().get(i).getViaje().getFechaSalida().toString().substring(0, 4) + " - " + reserva.getListReservas().get(i).getViaje().getHoraSalida().toString().substring(0, 5), FontFactory.getFont("georgia",10f, Font.NORMAL, BaseColor.BLACK));
 			ct.setSimpleColumn(myText, 440, 317, 560, 318, 1, Element.ALIGN_CENTER);
 			ct.go();
 			

@@ -87,11 +87,15 @@ public class PersonaRegistradaBoImpl implements PersonaRegistradaBo {
 
 		try {
 
+			pRDao.conectar();
+			
 			ResultSet res = pRDao.consultarEmail(dni);
 			
 			while (res.next()) {
 				email = res.getString("email");
 			}
+			
+			pRDao.desconectar();
 			
 		} catch (SQLException e) {
 			e.printStackTrace();

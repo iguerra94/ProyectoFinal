@@ -32,16 +32,20 @@ import javax.swing.border.MatteBorder;
 
 import org.proyectofinal.bo.ex.ViajeCabeceraNotValidException;
 import org.proyectofinal.bo.impl.PersonaRegistradaBoImpl;
+import org.proyectofinal.bo.impl.UsuarioBoImpl;
 import org.proyectofinal.bo.impl.ViajeCabeceraBoImpl;
 import org.proyectofinal.bo.interfaces.PersonaRegistradaBo;
+import org.proyectofinal.bo.interfaces.UsuarioBo;
 import org.proyectofinal.bo.interfaces.ViajeCabeceraBo;
 import org.proyectofinal.dao.ex.NoFlightsFoundException;
 import org.proyectofinal.model.impl.ViajeCabeceraImpl;
 import org.proyectofinal.model.interfaces.PersonaRegistrada;
 import org.proyectofinal.model.interfaces.ViajeCabecera;
+import org.proyectofinal.ui.DialogLoadFlight;
 import org.proyectofinal.ui.DialogLogin;
 import org.proyectofinal.ui.DialogPerfil;
 import org.proyectofinal.ui.DialogRegistrarse;
+import org.proyectofinal.ui.DialogRemoveFlight;
 import org.proyectofinal.ui.ListadoVuelosUI;
 import org.proyectofinal.ui.MainFrameUI;
 
@@ -273,18 +277,27 @@ public class PlantillaMF extends JFrame {
 				vC.setFechaSalida(fechaIda);
 				
 				ViajeCabeceraBo vCBo = new ViajeCabeceraBoImpl();
-			
+				UsuarioBo uBo = new UsuarioBoImpl();
+				
 				try {
 					
 					vCBo.verificarImportantesConFecha(vC);
 										
 					List<ViajeCabecera> listViajes = vCBo.retornarVuelosPorFecha(vC);
 					
-					if (chckbxAcumularKilometrosAeropass.isSelected() && !getLogueado()){
+					if (!getLogueado()){
 						loguear();
 					}
 					
+					String dni = null;
+
+					if (btnPerfil != null){
+						dni = uBo.retornarDniPorUsuario(btnPerfil.getText());						
+					}
+					
 					ListadoVuelosUI ui = new ListadoVuelosUI();
+						
+					ui.setearDni(dni);
 					
 					ui.mostrarVuelos(listViajes);
 					
@@ -431,12 +444,25 @@ public class PlantillaMF extends JFrame {
 				vC.setFechaSalida(fechaOferta);
 
 				ViajeCabeceraBo vCBo = new ViajeCabeceraBoImpl();
+				UsuarioBo uBo = new UsuarioBoImpl();
 				
 				try {
 					
 					List<ViajeCabecera> listViajes = vCBo.retornarVuelosCualquierFecha(vC);
 
+					if (!getLogueado()){
+						loguear();
+					}
+
+					String dni = null;
+					
+					if (btnPerfil != null){
+						dni = uBo.retornarDniPorUsuario(btnPerfil.getText());						
+					}
+					
 					ListadoVuelosUI ui = new ListadoVuelosUI();
+					
+					ui.setearDni(dni);
 					
 					ui.mostrarVuelos(listViajes);
 					
@@ -529,12 +555,25 @@ public class PlantillaMF extends JFrame {
 				vC.setFechaSalida(fechaOferta);
 
 				ViajeCabeceraBo vCBo = new ViajeCabeceraBoImpl();
+				UsuarioBo uBo = new UsuarioBoImpl();
 				
 				try {
 					
 					List<ViajeCabecera> listViajes = vCBo.retornarVuelosCualquierFecha(vC);
 	
+					if (!getLogueado()){
+						loguear();
+					}
+
+					String dni = null;
+					
+					if (btnPerfil != null){
+						dni = uBo.retornarDniPorUsuario(btnPerfil.getText());						
+					}
+					
 					ListadoVuelosUI ui = new ListadoVuelosUI();
+					
+					ui.setearDni(dni);
 					
 					ui.mostrarVuelos(listViajes);
 					
@@ -610,10 +649,6 @@ public class PlantillaMF extends JFrame {
 		lblDestinoOferta3.setFont(new Font("Roboto Bold", Font.PLAIN, 22));
 		panelOferta3.add(lblDestinoOferta3);
 		
-//		JLabel lblPrecio = new JLabel("<html>Desde AR$ 1979 <br />o 12 cuotas de AR$ 167</html> ");
-//		lblPrecio.setBounds(120, 230, 209, 30);
-//		panelOferta3.add(lblPrecio);
-		
 		JButton botonReservaOferta3 = new JButton("Reservar");
 		botonReservaOferta3.addActionListener(new ActionListener() {
 			
@@ -630,12 +665,25 @@ public class PlantillaMF extends JFrame {
 				vC.setFechaSalida(fechaOferta);
 
 				ViajeCabeceraBo vCBo = new ViajeCabeceraBoImpl();
+				UsuarioBo uBo = new UsuarioBoImpl();
 				
 				try {
 					
 					List<ViajeCabecera> listViajes = vCBo.retornarVuelosCualquierFecha(vC);
+					
+					if (!getLogueado()){
+						loguear();
+					}
+					
+					String dni = null;
 
+					if (btnPerfil != null){
+						dni = uBo.retornarDniPorUsuario(btnPerfil.getText());						
+					}
+					
 					ListadoVuelosUI ui = new ListadoVuelosUI();
+					
+					ui.setearDni(dni);
 					
 					ui.mostrarVuelos(listViajes);
 					
@@ -882,31 +930,117 @@ public class PlantillaMF extends JFrame {
 			}
 		});
 		mnArchivo.add(mntmSalir);
+//		
+//		JMenu mnDestinos = new JMenu("Destinos");
+//		menuBar.add(mnDestinos);
+//		
+//		JMenuItem mntmArgentina = new JMenuItem("Argentina");
+//		mnDestinos.add(mntmArgentina);
+//		
+//		JMenuItem mntmBrasil = new JMenuItem("Brasil");
+//		mnDestinos.add(mntmBrasil);
+//		
+//		JMenuItem mntmMexico = new JMenuItem("Mexico");
+//		mnDestinos.add(mntmMexico);
+//		
+//		JMenuItem mntmEEUU = new JMenuItem("Estados Unidos");
+//		mnDestinos.add(mntmEEUU);
+//	
+//		JMenuItem mntmColombia = new JMenuItem("Colombia");
+//		mnDestinos.add(mntmColombia);
+//	
+//		JMenuItem mntmOceania = new JMenuItem("Oceania");
+//		mnDestinos.add(mntmOceania);
+//		
+//		JMenuItem mntmEuropa = new JMenuItem("Europa");
+//		mnDestinos.add(mntmEuropa);
 		
-		JMenu mnDestinos = new JMenu("Destinos");
-		menuBar.add(mnDestinos);
-		
-		JMenuItem mntmArgentina = new JMenuItem("Argentina");
-		mnDestinos.add(mntmArgentina);
-		
-		JMenuItem mntmBrasil = new JMenuItem("Brasil");
-		mnDestinos.add(mntmBrasil);
-		
-		JMenuItem mntmMexico = new JMenuItem("Mexico");
-		mnDestinos.add(mntmMexico);
-		
-		JMenuItem mntmEEUU = new JMenuItem("Estados Unidos");
-		mnDestinos.add(mntmEEUU);
+	}
 	
-		JMenuItem mntmColombia = new JMenuItem("Colombia");
-		mnDestinos.add(mntmColombia);
+	public void agregarMenuAdmin(){
+		
+		JMenu mnAcciones = new JMenu("Acciones");
+		menuBar.add(mnAcciones);
+		
+		JMenu mnVuelos = new JMenu("Vuelos");
+		mnAcciones.add(mnVuelos);
+		
+		JMenuItem mntmCargarVuelo = new JMenuItem("Cargar vuelo");
+		mntmCargarVuelo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cargarVuelo();
+			}
+		});
+		mnVuelos.add(mntmCargarVuelo);
+		
+		JMenuItem mntmModificarVuelo = new JMenuItem("Modificar vuelo");
+		mntmModificarVuelo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				modificarVuelo();				
+			}
+		});
+		mnVuelos.add(mntmModificarVuelo);
+		
+		JMenuItem mntmEliminarVuelo = new JMenuItem("Eliminar vuelo");
+		mntmEliminarVuelo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				eliminarVuelo();
+			}
+		});
+		mnVuelos.add(mntmEliminarVuelo);
+
+		
+		JMenu mnOfertas = new JMenu("Ofertas");
+		mnAcciones.add(mnOfertas);
+		
+		JMenuItem mntmCargarOferta = new JMenuItem("Cargar oferta");
+		mntmCargarOferta.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cargarOferta();
+			}
+		});
+		mnOfertas.add(mntmCargarOferta);
+		
+		JMenuItem mntmModificarOferta = new JMenuItem("Modificar oferta");
+		mntmModificarOferta.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				modificarOferta();
+			}
+		});
+		mnOfertas.add(mntmModificarOferta);
+		
+		JMenuItem mntmEliminarOferta = new JMenuItem("Eliminar oferta");
+		mntmEliminarOferta.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				eliminarOferta();
+			}			
+		});
+		mnOfertas.add(mntmEliminarOferta);
+		
+	}
 	
-		JMenuItem mntmOceania = new JMenuItem("Oceania");
-		mnDestinos.add(mntmOceania);
-		
-		JMenuItem mntmEuropa = new JMenuItem("Europa");
-		mnDestinos.add(mntmEuropa);
-		
+	private void cargarVuelo() {
+		DialogLoadFlight dlf = new DialogLoadFlight();			
+	}
+	
+	private void modificarVuelo() {
+		DialogLoadFlight dlf = new DialogLoadFlight();			
+	}
+	
+	private void eliminarVuelo() {
+		DialogRemoveFlight drf = new DialogRemoveFlight();
+	}
+	
+	private void cargarOferta() {
+		DialogLoadFlight dlf = new DialogLoadFlight();			
+	}
+	
+	private void modificarOferta() {
+		DialogLoadFlight dlf = new DialogLoadFlight();			
+	}
+	
+	private void eliminarOferta() {
+		DialogLoadFlight dlf = new DialogLoadFlight();			
 	}
 	
 	protected void agregarInfoPanelOferta1(){
@@ -979,7 +1113,6 @@ public class PlantillaMF extends JFrame {
 			lblPrecioOferta3.setText("<html><strong>"+String.format("%.2f", viaje.getPrecioClaseTur())+"</strong></html>");
 			
 		} catch (NoFlightsFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
