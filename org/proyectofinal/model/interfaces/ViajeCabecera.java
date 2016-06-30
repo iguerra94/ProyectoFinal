@@ -32,9 +32,6 @@ public interface ViajeCabecera extends Cloneable {
 	public String getPlataformaDestino();
 	public void setPlataformaDestino(String plataformaDestino);
 
-	public Float getDistancia();
-	public void setDistancia(Float distancia);
-
 	public Date getFechaSalida();
 	public void setFechaSalida(Date fechaSalida);
 	
@@ -46,6 +43,9 @@ public interface ViajeCabecera extends Cloneable {
 
 	public Time getHoraLlegada();
 	public void setHoraLlegada(Time horaLlegada);
+
+	public Integer getDistancia();
+	public void setDistancia(Integer distancia);
 	
 	public Time getDuracion();
 	public void setDuracion(Time duracion);

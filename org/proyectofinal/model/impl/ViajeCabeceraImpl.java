@@ -16,11 +16,11 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 	private String paisDestino = null;
 	private String shortPaisDestino = null;
 	private String plataformaDestino = null;
-	private Float distancia = null;
 	private Date fechaSalida = null;
 	private Time horaSalida = null;
 	private Date fechaLlegada = null;
 	private Time horaLlegada = null;
+	private Integer distancia = null;
 	private Time duracion = null;
 	private Float precioClaseTur = null;
 	private Float precioClasePrim = null;
@@ -105,14 +105,6 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 		this.plataformaDestino = plataformaDestino;
 	}
 
-	public Float getDistancia() {
-		return distancia;
-	}
-
-	public void setDistancia(Float distancia) {
-		this.distancia = distancia;
-	}
-
 	public Date getFechaSalida() {
 		return fechaSalida;
 	}
@@ -143,6 +135,14 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 
 	public void setHoraLlegada(Time horaLlegada) {
 		this.horaLlegada = horaLlegada;
+	}
+	
+	public Integer getDistancia() {
+		return distancia;
+	}
+
+	public void setDistancia(Integer distancia) {
+		this.distancia = distancia;
 	}
 
 	public Time getDuracion() {

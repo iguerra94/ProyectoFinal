@@ -125,42 +125,38 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		
 		return resultado;
 	}
-	
-	public ResultSet calcularDuracion(ViajeCabecera vC) throws SQLException{
-		
-		PreparedStatement sentencia = getConexion().prepareStatement("UPDATE ViajeCabecera SET duracion = timediff(?,?) where codViaje = ?");
-	
-		sentencia.setTime(1, vC.getHoraLlegada());
-		sentencia.setTime(2, vC.getHoraSalida());
-		sentencia.setString(3, vC.getCodigoViaje());
-		
-		ResultSet resultado = sentencia.executeQuery();
-		
-		return resultado;
-	}
 
 	public void alta(ViajeCabecera vC) throws SQLException, ClassNotFoundException{
 		
 		conectar();
 		
-		PreparedStatement sentencia = getConexion().prepareStatement("INSERT INTO ViajeCabecera VALUES (?,?,?,?,?,?,?,date_format(?, '%d%m%Y'),?,date_format(?, '%d%m%Y'),?,?)");
+		PreparedStatement sentencia = getConexion().prepareStatement("INSERT INTO ViajeCabecera VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 		
 		sentencia.setString(1, vC.getCodigoViaje());
 		sentencia.setString(2, vC.getCiudadOrigen());
 		sentencia.setString(3, vC.getPaisOrigen());
 		sentencia.setString(4, vC.getShortPaisOrigen());
-		sentencia.setString(5, vC.getCiudadDestino());
-		sentencia.setString(6, vC.getPaisDestino());
-		sentencia.setString(7, vC.getShortPaisDestino());
-		sentencia.setDate(8, vC.getFechaSalida());
-		sentencia.setTime(9, vC.getHoraSalida());
-		sentencia.setDate(10, vC.getFechaLlegada());
-		sentencia.setTime(11, vC.getHoraLlegada());
-		sentencia.setInt(12, vC.getCupo());
+		sentencia.setString(5, vC.getPlataformaOrigen());
+		sentencia.setString(6, vC.getCiudadDestino());
+		sentencia.setString(7, vC.getPaisDestino());
+		sentencia.setString(8, vC.getShortPaisDestino());
+		sentencia.setString(9, vC.getPlataformaDestino());
+		sentencia.setDate(10, vC.getFechaSalida());
+		sentencia.setTime(11, vC.getHoraSalida());
+		sentencia.setDate(12, vC.getFechaLlegada());
+		sentencia.setTime(13, vC.getHoraLlegada());
+		sentencia.setInt(14, vC.getDistancia());
+		sentencia.setTime(15, vC.getDuracion());
+		sentencia.setFloat(16, vC.getPrecioClaseTur());
+		sentencia.setFloat(17, vC.getPrecioClasePrim());
+		sentencia.setFloat(18, vC.getOferta());
+		sentencia.setString(19, vC.getImagen1());
+		sentencia.setString(20, vC.getImagen2());
+		sentencia.setInt(21, vC.getCupo());
+
 		
 		sentencia.executeUpdate();
-	//	sentencia.close();
-		
+	
 		desconectar();
 	}
 

@@ -30,7 +30,7 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 			vC.getHoraSalida().toString() == "00:00:00" ||
 			vC.getFechaLlegada() == null ||
 			vC.getHoraLlegada().toString() == "00:00:00" || 
-			vC.getDistancia() == -1f || 
+			vC.getDistancia() == -1 || 
 			vC.getDuracion().toString() == "00:00:00" ||								
 			vC.getPrecioClasePrim() == -1f ||
 			vC.getPrecioClaseTur() == -1f ||
@@ -136,11 +136,11 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 				vC.setPaisDestino(res.getString("paisDestino"));
 				vC.setShortPaisDestino(res.getString("shortPaisDestino"));
 				vC.setPlataformaDestino(res.getString("plataformaDestino"));
-				vC.setDistancia(res.getFloat("distancia"));
 				vC.setFechaSalida(res.getDate("fechaSalida"));
 				vC.setHoraSalida(res.getTime("horaSalida"));
 				vC.setFechaLlegada(res.getDate("fechaLlegada"));
 				vC.setHoraLlegada(res.getTime("horaLlegada"));
+				vC.setDistancia(res.getInt("distancia"));
 				vC.setDuracion(res.getTime("duracion"));
 				vC.setPrecioClaseTur(res.getFloat("precioClaseTur"));
 				vC.setPrecioClasePrim(res.getFloat("precioClasePrim"));
@@ -215,10 +215,8 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 			vCDao.desconectar();
 
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -313,6 +311,20 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 		
 		try {
 			vCDao.baja(codigo);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void cargarVuelo(ViajeCabecera vC) {
+
+		ViajeCabeceraDao vCDao = new ViajeCabeceraDaoImpl();
+		
+		try {
+			vCDao.alta(vC);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {

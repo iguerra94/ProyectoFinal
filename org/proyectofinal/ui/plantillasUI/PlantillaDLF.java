@@ -36,6 +36,7 @@ import org.proyectofinal.bo.impl.ViajeCabeceraBoImpl;
 import org.proyectofinal.bo.interfaces.ViajeCabeceraBo;
 import org.proyectofinal.model.impl.ViajeCabeceraImpl;
 import org.proyectofinal.model.interfaces.ViajeCabecera;
+import org.proyectofinal.ui.DialogLoadFlight;
 import org.proyectofinal.ui.util.CiudadUtil;
 import org.proyectofinal.ui.util.ListaCiudades;
 import org.proyectofinal.ui.util.ListaPaises;
@@ -293,6 +294,8 @@ public class PlantillaDLF extends JDialog {
 					
 					dateChooserFechaLlegada.validate();
 					dateChooserFechaLlegada.repaint();
+					
+					calcularDuracion();
 				}
 				
 			}
@@ -305,6 +308,8 @@ public class PlantillaDLF extends JDialog {
 				
 				dateChooserFechaLlegada.validate();
 				dateChooserFechaLlegada.repaint();
+				
+				calcularDuracion();
 			}
 		});
 		dateChooserFechaSalida.setBounds(180, 150, 190, 30);
@@ -317,9 +322,14 @@ public class PlantillaDLF extends JDialog {
 			public void itemStateChanged(ItemEvent e) {
 			
 				if (dateChooserFechaSalida.getDate().equals(dateChooserFechaLlegada.getDate())){
-					cmbHoraLlegada.setSelectedIndex(cmbHoraSalida.getSelectedIndex());
-					cmbMinutoLlegada.setSelectedIndex(cmbMinutoSalida.getSelectedIndex());
+					
+					if (cmbHoraSalida.getSelectedIndex() >= cmbHoraLlegada.getSelectedIndex()){
+						cmbHoraLlegada.setSelectedIndex(cmbHoraSalida.getSelectedIndex());
+						cmbMinutoLlegada.setSelectedIndex(cmbMinutoSalida.getSelectedIndex());
+					}
 				}
+				
+				calcularDuracion();
 				
 			}
 		});
@@ -338,8 +348,12 @@ public class PlantillaDLF extends JDialog {
 			public void itemStateChanged(ItemEvent e) {
 			
 				if (dateChooserFechaSalida.getDate().equals(dateChooserFechaLlegada.getDate())){
-					cmbMinutoLlegada.setSelectedIndex(cmbMinutoSalida.getSelectedIndex());
+					if (cmbMinutoSalida.getSelectedIndex() > cmbMinutoLlegada.getSelectedIndex() && cmbHoraSalida.getSelectedIndex() >= cmbHoraLlegada.getSelectedIndex()){
+						cmbMinutoLlegada.setSelectedIndex(cmbMinutoSalida.getSelectedIndex());
+					}
 				}
+			
+				calcularDuracion();
 				
 			}
 		});
@@ -576,6 +590,13 @@ public class PlantillaDLF extends JDialog {
 					
 				}
 				
+				calcularDuracion();
+				
+			}
+		});
+		dateChooserFechaLlegada.getCalendarButton().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {		
+				calcularDuracion();
 			}
 		});
 		dateChooserFechaLlegada.setBounds(180, 150, 190, 30);
@@ -594,6 +615,8 @@ public class PlantillaDLF extends JDialog {
 					}
 				}
 				
+				calcularDuracion();
+
 			}
 		});
 		cmbHoraLlegada.setBounds(180, 190, 50, 30);
@@ -616,8 +639,10 @@ public class PlantillaDLF extends JDialog {
 					if ( (cmbMinutoLlegada.getSelectedIndex() < cmbMinutoSalida.getSelectedIndex()) && (cmbHoraLlegada.getSelectedIndex() <= cmbHoraSalida.getSelectedIndex()) ){
 						cmbMinutoLlegada.setSelectedIndex(cmbMinutoSalida.getSelectedIndex());
 					}
-					
+
 				}
+				
+				calcularDuracion();
 				
 			}
 		});
@@ -649,6 +674,7 @@ public class PlantillaDLF extends JDialog {
 			}
 		}
 	}
+	
 	
 	protected void actualizarComboCiudadDestino(){
 		
@@ -982,8 +1008,8 @@ public class PlantillaDLF extends JDialog {
 
 		JFileChooser imagen1 = new JFileChooser("/home/ivang94/workspace/ProyectoFinal/src/imagenes");
 		
-		imagen1.setFileFilter(filterjpg);
 		imagen1.setFileFilter(filterpng);
+		imagen1.setFileFilter(filterjpg);
 		
 		int opcion = imagen1.showOpenDialog(this);
 		
@@ -993,12 +1019,13 @@ public class PlantillaDLF extends JDialog {
 		
 	}
 	
+	
 	private void actionBtnImagen2(){
 		
 		JFileChooser imagen2 = new JFileChooser("/home/ivang94/workspace/ProyectoFinal/src/imagenes");
 		
-		imagen2.setFileFilter(filterjpg);
 		imagen2.setFileFilter(filterpng);
+		imagen2.setFileFilter(filterjpg);
 		
 		int opcion = imagen2.showOpenDialog(this);
 		
@@ -1006,6 +1033,7 @@ public class PlantillaDLF extends JDialog {
 			txtImagen2.setText(imagen2.getSelectedFile().getPath());
 		}
 	}
+	
 	
 	private void agregarPanelInfoExtra() {
 		
@@ -1036,7 +1064,7 @@ public class PlantillaDLF extends JDialog {
 
 	private void agregarCamposPanelInfoExtra() {
 
-		String[] modelHora = new String[] {"00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"};
+		String[] modelHora = new String[] {"00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"};
 		String[] modelMinuto = new String[] {"00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"};
 		
 		txtDistancia = new JTextField();
@@ -1045,9 +1073,9 @@ public class PlantillaDLF extends JDialog {
 			public void focusLost(FocusEvent e) {
 				
 				if (txtDistancia.getText().trim().length() > 0){
-					vC.setDistancia(Float.parseFloat(txtDistancia.getText()));						
+					vC.setDistancia(Integer.parseInt(txtDistancia.getText()));						
 				}else{
-					vC.setDistancia(-1f);
+					vC.setDistancia(-1);
 				}
 			}
 		});
@@ -1059,9 +1087,9 @@ public class PlantillaDLF extends JDialog {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				if (txtDistancia.getText().trim().length() > 0){
-					vC.setDistancia(Float.parseFloat(txtDistancia.getText()));						
+					vC.setDistancia(Integer.parseInt(txtDistancia.getText()));						
 				}else{
-					vC.setDistancia(-1f);
+					vC.setDistancia(-1);
 				}
 			}
 
@@ -1092,11 +1120,57 @@ public class PlantillaDLF extends JDialog {
 		txtCupo.setBounds(620, 30, 165, 30);
 		panelInfoExtra.add(txtCupo);
 		
-		vC.setDistancia(-1f);
+		vC.setDistancia(-1);
 		vC.setDuracion(Time.valueOf("00:00:00"));
 		vC.setCupo(Integer.parseInt(txtCupo.getText()));
 	}
 
+	private void calcularDuracion(){
+		
+		Integer horaSalida = Integer.parseInt(cmbHoraSalida.getSelectedItem().toString());
+		Integer minutoSalida = Integer.parseInt(cmbMinutoSalida.getSelectedItem().toString());
+		
+		Integer horaLlegada = Integer.parseInt(cmbHoraLlegada.getSelectedItem().toString());
+		Integer minutoLlegada = Integer.parseInt(cmbMinutoLlegada.getSelectedItem().toString());
+		
+		Integer diferenciaHoras = null;
+		Integer diferenciaMinutos = null;
+	
+		diferenciaHoras = horaLlegada-horaSalida;
+		diferenciaMinutos = minutoLlegada-minutoSalida;
+
+		if (dateChooserFechaSalida.getDate().equals( dateChooserFechaLlegada.getDate() )){
+			
+			if (diferenciaMinutos < 0){
+				diferenciaHoras -= 1;
+				diferenciaMinutos += 60;
+			}
+			
+		}else{
+
+			diferenciaHoras += 24;
+			
+			if (diferenciaMinutos < 0){
+				diferenciaHoras -= 1;
+				diferenciaMinutos += 60;
+			}
+			
+		}
+
+		if (diferenciaHoras<10){
+			cmbHoraDuracion.setSelectedItem(new String("0"+diferenciaHoras.toString()));
+		}else{
+			cmbHoraDuracion.setSelectedItem(new String(diferenciaHoras.toString()));
+		}
+		
+		if (diferenciaMinutos<10){
+			cmbMinutoDuracion.setSelectedItem(new String("0"+diferenciaMinutos.toString()));
+		}else{
+			cmbMinutoDuracion.setSelectedItem(new String(diferenciaMinutos.toString()));	
+		}
+		
+	}
+	
 	private void agregarBotonGuardarCambios() {
 		
 		btnCargarVuelo = new JButton("Cargar vuelo");
@@ -1126,34 +1200,26 @@ public class PlantillaDLF extends JDialog {
 				String duracion = cmbHoraDuracion.getSelectedItem() + ":" + cmbMinutoDuracion.getSelectedItem() + ":00";
 				vC.setDuracion(Time.valueOf(duracion));
 				
-				System.out.println(vC.getImagen1());
-				System.out.println(vC.getImagen2());
-				System.out.println(vC.getPrecioClaseTur());
-				System.out.println(vC.getPrecioClasePrim());
-				System.out.println(vC.getDuracion());
+				vC.setOferta(0f);
 				
 				vCBo = new ViajeCabeceraBoImpl();
 				
 				try {
+					
 					vCBo.verificarTodos(vC);
+					
+					vCBo.cargarVuelo(vC);
+					
+					JOptionPane.showMessageDialog(null, "Se ha cargado el vuelo con exito!"); 
+
+					dispose();
+					
+					continuarCargando();
+					
 				} catch (ViajeCabeceraNotValidException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage());
 				}
 				
-//				if (getBtnRealizarCambios().getText() == "Cargar vuelo"){
-//					
-//					try {
-//						vCDao.alta(vC);
-//					} catch (ClassNotFoundException e1) {
-//						JOptionPane.showMessageDialog(null, e1.getMessage());
-//					} catch (SQLException e1) {
-//						JOptionPane.showMessageDialog(null, e1.getMessage());
-//					}
-//					
-//					JOptionPane.showMessageDialog(null, "Se ha cargado el vuelo con exito!");
-//					
-//				}
-//				
 //				if (getBtnRealizarCambios().getText() == "Guardar cambios"){
 //				
 //					try {
@@ -1167,12 +1233,25 @@ public class PlantillaDLF extends JDialog {
 //					JOptionPane.showMessageDialog(null, "Se ha modificado el vuelo con exito!");
 //					
 //				}
-//				
-//				dispose();				
+
 			}
 		});
 		btnCargarVuelo.setBounds(25, 605, 170, 35);
 		getContentPane().add(btnCargarVuelo);
+	}
+	
+	private void continuarCargando() {
+		
+		String ObjButtons[] = {"No","Si"};
+	    
+		int PromptResult = JOptionPane.showOptionDialog(null, 
+	        "¿Desea seguir cargando vuelos?", "Mensaje", 
+	        JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, 
+	        ObjButtons,ObjButtons[0]);
+
+		if (PromptResult == 1){
+			DialogLoadFlight dlf = new DialogLoadFlight();
+		}
 	}
 
 }

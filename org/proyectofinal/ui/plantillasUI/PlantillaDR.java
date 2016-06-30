@@ -456,8 +456,6 @@ public class PlantillaDR extends JDialog {
 
 			JOptionPane.showMessageDialog(null, "Se ha registrado el usuario con exito!"); 
 
-			System.out.println(p);
-
 			setVisible(false);
 			
 		} catch (UserNotValidException e) {
