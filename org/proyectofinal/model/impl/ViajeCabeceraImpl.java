@@ -24,7 +24,8 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 	private Time duracion = null;
 	private Float precioClaseTur = null;
 	private Float precioClasePrim = null;
-	private Float oferta = null;
+	private String oferta = null;
+	private String imagenOferta = null;
 	private String imagen1 = null;
 	private String imagen2 = null;
 	private Integer cupo = null;
@@ -169,12 +170,20 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 		this.precioClasePrim = precioClasePrim;
 	}
 	
-	public Float getOferta() {
+	public String getOferta() {
 		return oferta;
 	}
 
-	public void setOferta(Float oferta) {
+	public void setOferta(String oferta) {
 		this.oferta = oferta;
+	}
+
+	public String getImagenOferta() {
+		return imagenOferta;
+	}
+
+	public void setImagenOferta(String imagenOferta) {
+		this.imagenOferta = imagenOferta;
 	}
 	
 	public String getImagen1() {
@@ -211,7 +220,7 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 		res += "Pais de origen: " + getPaisOrigen() + " (" + getShortPaisOrigen() + ")" + "\n";
 		res += "Plataforma de origen: " + getPlataformaOrigen() + "\n";
 		res += "Ciudad de destino: " + getCiudadDestino() + "\n";
-		res += "Pais de destino: " + getPaisDestino() + "(" + getShortPaisDestino() + ")" + "\n";
+		res += "Pais de destino: " + getPaisDestino() + " (" + getShortPaisDestino() + ")" + "\n";
 		res += "Plataforma de destino: " + getPlataformaDestino() + "\n";
 		res += "Distancia: " + getDistancia() + "\n";
 		res += "Fecha de Salida: " + getFechaSalida() + "\n";
@@ -245,6 +254,7 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 		vC.setPrecioClaseTur(getPrecioClaseTur());
 		vC.setPrecioClasePrim(getPrecioClasePrim());
 		vC.setOferta(getOferta());
+		vC.setImagenOferta(getImagenOferta());
 		vC.setImagen1(getImagen1());
 		vC.setImagen2(getImagen2());
 		vC.setCupo(getCupo());
@@ -268,6 +278,7 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 		result = prime * result + ((horaSalida == null) ? 0 : horaSalida.hashCode());
 		result = prime * result + ((imagen1 == null) ? 0 : imagen1.hashCode());
 		result = prime * result + ((imagen2 == null) ? 0 : imagen2.hashCode());
+		result = prime * result + ((imagenOferta == null) ? 0 : imagenOferta.hashCode());
 		result = prime * result + ((oferta == null) ? 0 : oferta.hashCode());
 		result = prime * result + ((paisDestino == null) ? 0 : paisDestino.hashCode());
 		result = prime * result + ((paisOrigen == null) ? 0 : paisOrigen.hashCode());
@@ -348,6 +359,11 @@ public class ViajeCabeceraImpl implements ViajeCabecera {
 			if (other.imagen2 != null)
 				return false;
 		} else if (!imagen2.equals(other.imagen2))
+			return false;
+		if (imagenOferta == null) {
+			if (other.imagenOferta != null)
+				return false;
+		} else if (!imagenOferta.equals(other.imagenOferta))
 			return false;
 		if (oferta == null) {
 			if (other.oferta != null)

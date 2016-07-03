@@ -10,6 +10,14 @@ import org.proyectofinal.model.interfaces.Pasajero;
 
 public class PasajeroDaoImpl extends AbstractDao implements PasajeroDao {
 	
+	public void conectar() throws ClassNotFoundException, SQLException{
+		super.conectar();
+	}
+	
+	public void desconectar() throws SQLException{
+		super.desconectar();
+	}
+	
 	public ResultSet consultar() throws SQLException, ClassNotFoundException {
 		
 		conectar();
@@ -27,16 +35,23 @@ public class PasajeroDaoImpl extends AbstractDao implements PasajeroDao {
 	
 	public ResultSet consultarPorDni(Pasajero p) throws SQLException, ClassNotFoundException {
 		
-		this.conectar();
-		
 		PreparedStatement sentencia = getConexion().prepareStatement("select * from Pasajero p inner join PersonaGenerica pg on pg.dni = p.dni where pg.dni = ?");
 		
 		sentencia.setString(1, p.getDni());
 		
 		ResultSet resultado = sentencia.executeQuery();
 
-//		desconectar();
+		return resultado;
+	}
+	
+	public ResultSet consultarPorDni(String dniPasajero) throws SQLException, ClassNotFoundException {
 		
+		PreparedStatement sentencia = getConexion().prepareStatement("select * from Pasajero p inner join PersonaGenerica pg on pg.dni = p.dni where pg.dni = ?");
+		
+		sentencia.setString(1, dniPasajero);
+		
+		ResultSet resultado = sentencia.executeQuery();
+
 		return resultado;
 	}
 	

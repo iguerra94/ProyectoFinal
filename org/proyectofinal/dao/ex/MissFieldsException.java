@@ -2,10 +2,11 @@ package org.proyectofinal.dao.ex;
 
 public class MissFieldsException extends Exception {
 	
+	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -5431279917975862341L;
+	private static final long serialVersionUID = -3533001076891102793L;
 
 	public MissFieldsException(){
 		

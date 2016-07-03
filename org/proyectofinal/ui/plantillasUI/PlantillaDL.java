@@ -4,20 +4,13 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Insets;
 import java.awt.Rectangle;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.sql.SQLException;
 
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -37,13 +30,11 @@ import org.proyectofinal.model.impl.UsuarioImpl;
 import org.proyectofinal.model.interfaces.Usuario;
 import org.proyectofinal.ui.DialogMissedPass;
 import org.proyectofinal.ui.DialogRegistrarse;
-import org.proyectofinal.ui.MainFrameUI;
 
 public class PlantillaDL extends JDialog {
 	
 	private JTextField txtUsuario;
 	private JPasswordField txtContrasea;
-	private JComboBox cmbTipoUsuario;
 	private JButton btnIngresar;
 	private Usuario u;
 	private UsuarioBo uBo;
@@ -56,7 +47,7 @@ public class PlantillaDL extends JDialog {
 		setTitle("Iniciar Sesión");
 		getContentPane().setBackground(Color.WHITE);
 		setModal(true);
-		setBounds(new Rectangle(0, 0, 310, 500));
+		setBounds(new Rectangle(0, 0, 310, 420));
 		getContentPane().setLayout(null);
 		setLocationRelativeTo(null);
 	}
@@ -94,12 +85,6 @@ public class PlantillaDL extends JDialog {
 		lblContrasea.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblContrasea.setBounds(15, 236, 284, 39);
 		getContentPane().add(lblContrasea);
-		
-		JLabel lblTipoUsuario = new JLabel("TIPO DE USUARIO:");
-		lblTipoUsuario.setLabelFor(cmbTipoUsuario);
-		lblTipoUsuario.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTipoUsuario.setBounds(15, 340, 284, 39);
-		getContentPane().add(lblTipoUsuario);
 	}
 	
 	private void agregarCampos() {
@@ -137,24 +122,7 @@ public class PlantillaDL extends JDialog {
 				setearPass();
 			}
 		});
-		getContentPane().add(txtContrasea);
-		
-		cmbTipoUsuario = new JComboBox();
-		cmbTipoUsuario.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		cmbTipoUsuario.addPropertyChangeListener(new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent arg0) {
-				setearTipoUsuario();
-			}
-		});
-		cmbTipoUsuario.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent arg0) {
-				setearTipoUsuario();
-			}
-
-		});
-		cmbTipoUsuario.setModel(new DefaultComboBoxModel(new String[] {"","COMÚN", "ADMINISTRADOR"}));
-		cmbTipoUsuario.setBounds(45, 384, 220, 30);
-		getContentPane().add(cmbTipoUsuario);
+		getContentPane().add(txtContrasea);		
 	}
 	
 	private void agregarBotones() {
@@ -162,7 +130,7 @@ public class PlantillaDL extends JDialog {
 		uBo = new UsuarioBoImpl();
 		
 		btnIngresar = new JButton("Ingresar");
-		btnIngresar.setBounds(75, 430, 160, 34);
+		btnIngresar.setBounds(75, 355, 160, 34);
 		btnIngresar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
@@ -173,14 +141,6 @@ public class PlantillaDL extends JDialog {
 					uBo.verificarDatosCorrectos(u);
 					
 					dispose();
-
-//					if (persona.getInt("tipoUsuario") == 0){
-//						pU.getLblBienvenido().setText("Bienvenido Administrador!");
-//						pU.getLblBienvenido().setForeground(Color.RED);	
-//					}else if (persona.getInt("tipoUsuario") == 1){
-//						pU.getLblBienvenido().setText("Bienvenido " + persona.getString("nombre") + "!");
-//						pU.getLblBienvenido().setForeground(Color.BLACK);								
-//					}
 						
 				} catch (UserNotValidException e) {
 					JOptionPane.showMessageDialog(null, e.getMessage());
@@ -250,16 +210,6 @@ public class PlantillaDL extends JDialog {
 			u.setPassword(pass);
 		}else{
 			u.setPassword("");
-		}
-	}
-
-	private void setearTipoUsuario() {
-		if (cmbTipoUsuario.getSelectedIndex() == 1){
-			u.setTipoUsuario(1);
-		} else if (cmbTipoUsuario.getSelectedIndex() == 2){
-			u.setTipoUsuario(0);
-		} else {
-			u.setTipoUsuario(-1);
 		}
 	}
 	

@@ -9,9 +9,22 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
 
+import javax.print.Doc;
+import javax.print.DocFlavor;
+import javax.print.DocPrintJob;
+import javax.print.PrintService;
+import javax.print.PrintServiceLookup;
+import javax.print.SimpleDoc;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -22,7 +35,6 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-//nstants;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
@@ -33,20 +45,22 @@ import org.proyectofinal.bo.impl.UsuarioBoImpl;
 import org.proyectofinal.bo.interfaces.PersonaRegistradaBo;
 import org.proyectofinal.bo.interfaces.ReservaViajeBo;
 import org.proyectofinal.bo.interfaces.UsuarioBo;
-import org.proyectofinal.dao.ex.PersonAlreadyExistsException;
 import org.proyectofinal.dao.ex.UserNotExistsException;
 import org.proyectofinal.model.impl.PersonaRegistradaImpl;
 import org.proyectofinal.model.interfaces.PersonaRegistrada;
+import org.proyectofinal.model.interfaces.ReservaViaje;
 import org.proyectofinal.model.interfaces.Usuario;
 import org.proyectofinal.ui.util.Carnet;
 
 import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.FontFactory;
 
 public class PlantillaDP extends JDialog {
 	
 	private JPanel panelPersona;
 	private JLabel labelAvatar;
+	private JLabel lblNomPersona;
+	private JLabel lblSaldo;
+
 	private JPanel panelMostrarInfo;
 	private JPasswordField txtContraseniaActual;
 	private JPasswordField txtNuevaContrasenia;
@@ -59,17 +73,28 @@ public class PlantillaDP extends JDialog {
 	private JTextField txtTelefono;
 	private JButton btnGuardarCambiosDatosPersona;
 	private JButton btnGuardarCambiosClave;
+	String nombre;
+	String apellido;
+	Carnet c;
+	private String ruta;
+
+	public String getRuta() {
+		return ruta;
+	}
+
+	public void setRuta(String ruta) {
+		this.ruta = ruta;
+	}
 
 	public PlantillaDP(){
-//		inicializarAtributos();
-//		inicializarComponentes();
+		
 	}
 
 	protected void inicializarAtributos(){
 		setTitle("Perfil de usuario");
 		getContentPane().setBackground(Color.WHITE);
 		setResizable(false);
-		setSize(710,535);
+		setSize(710,550);
 		setLocationRelativeTo(null);
 		setModal(true);
 		
@@ -77,12 +102,13 @@ public class PlantillaDP extends JDialog {
 	}
 	
 	protected void inicializarComponentes(){
+		agregarPanelPersona();
 		agregarBotones();
 		agregarPanelMostrarInfo();
 	}
 
 	//PANEL PERSONA
-	public void agregarPanelPersona(PersonaRegistrada pR) {
+	public void agregarPanelPersona() {
 		
 		panelPersona = new JPanel();
 		panelPersona.setBorder(new MatteBorder(0, 4, 4, 0, (Color) new Color(0, 0, 0)));
@@ -91,11 +117,6 @@ public class PlantillaDP extends JDialog {
 		getContentPane().add(panelPersona);
 		panelPersona.setLayout(null);
 		
-		agregarLabelAvatar();
-		agregarLabelsInfo(pR);
-	}
-	
-	private void agregarLabelAvatar() {
 		labelAvatar = new JLabel("");
 		labelAvatar.setBounds(40, 15, 120, 120);
 		
@@ -103,23 +124,30 @@ public class PlantillaDP extends JDialog {
 		Icon icono = new ImageIcon(imagen.getImage().getScaledInstance(labelAvatar.getWidth(), labelAvatar.getHeight(), Image.SCALE_DEFAULT));
 	
 		labelAvatar.setIcon(icono);
+		
 		panelPersona.add(labelAvatar);
 	}
 	
-	private void agregarLabelsInfo(PersonaRegistrada pR) {
-		JLabel lblNomPersona = new JLabel(pR.getNombre() + " " + pR.getApellido());
+	protected void agregarLabelsInfo(PersonaRegistrada pR) {
+
+		lblNomPersona = new JLabel(pR.getNombre() + " " + pR.getApellido());
 		lblNomPersona.setBounds(0, 145, 200, 20);
 		lblNomPersona.setForeground(Color.WHITE);
 		lblNomPersona.setFont(new Font("Arial", Font.BOLD, 16));
 		lblNomPersona.setHorizontalAlignment(SwingConstants.CENTER);
 		panelPersona.add(lblNomPersona);
 				
-		JLabel lblSaldo = new JLabel("Saldo: " + pR.getSaldo() + " KMS");
+		lblSaldo = new JLabel("Saldo: " + pR.getSaldo() + " KMS");
 		lblSaldo.setBounds(0,170,200,20);
 		lblSaldo.setHorizontalAlignment(SwingConstants.CENTER);
 		lblSaldo.setForeground(new Color(255, 193, 7));
 		lblSaldo.setFont(new Font("Arial", Font.BOLD, 14));
 		panelPersona.add(lblSaldo);
+	}
+	
+	protected void removerLabelsInfo(){
+		panelPersona.remove(lblNomPersona);
+		panelPersona.remove(lblSaldo);
 	}
 	
 	//BOTONES
@@ -149,6 +177,10 @@ public class PlantillaDP extends JDialog {
 				
 				agregarPanelEstadoCuenta(pR, cantReservas);
 				
+				List<ReservaViaje> listaReservas = rVBo.retornarReservasSegunDni(pR.getDni());
+				
+				agregarReservas(listaReservas);
+				
 				panelMostrarInfo.validate();
 				panelMostrarInfo.repaint();
 			}
@@ -167,28 +199,35 @@ public class PlantillaDP extends JDialog {
 				
 				panelMostrarInfo.removeAll();
 
-				
 				PersonaRegistradaBo pRBo = new PersonaRegistradaBoImpl();
 				
 				PersonaRegistrada pR = pRBo.retornarPersonaPorUsuario(getLabelAvatar().getToolTipText());
+			
+				String ruta = "/home/ivang94/workspace/ProyectoFinal/bin/carnets/png/carnet" + pR.getNombre().substring(0, 1) + pR.getApellido().substring(0, 1) + pR.getDni().substring(5) + ".png";
+				File fichero = new File(ruta);
+				
+				c = new Carnet();
+				
+				if (!fichero.exists()){
 
-				Carnet c = new Carnet();
+					try {
 
-				try {
-					c.crearCarnet(pR);
-					c.mostrarCarnet();
-				} catch (MalformedURLException e1) {
-					e1.printStackTrace();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				} catch (DocumentException e1) {
-					e1.printStackTrace();
+						c.crearCarnet(pR);
+											
+					} catch (MalformedURLException e1) {
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					} catch (DocumentException e1) {
+						e1.printStackTrace();
+					}
+					
 				}
 				
 				agregarPanelCarnet(pR);
+				getContentPane().validate();
+				getContentPane().repaint();
 				
-				panelMostrarInfo.validate();
-				panelMostrarInfo.repaint();
 			}
 		});
 		btnCarnet.setBounds(20, 290, 200, 40);
@@ -318,27 +357,47 @@ public class PlantillaDP extends JDialog {
 		label6.setHorizontalAlignment(SwingConstants.CENTER);
 	}
 
-	private void agregarPanelInfoReservas() {
+	public void agregarReservas(List<ReservaViaje> listaReservas){
+		
+		int i = 0;
+		
+		for (ReservaViaje reservaViaje : listaReservas) {
+
+			if (i>9){
+				break;
+			}
+			
+			agregarPanelInfoReservas(reservaViaje, i);
+			i++;
+		}
+		
+	}
+	
+	private void agregarPanelInfoReservas(ReservaViaje rV, int i) {
 
 		JPanel panelReservas = new JPanel();
-		panelReservas.setBackground(Color.LIGHT_GRAY);
-		panelReservas.setBounds(20, 175, 410, 30);
+		if (i % 2 == 0){
+			panelReservas.setBackground(Color.LIGHT_GRAY);
+		}else{
+			panelReservas.setBackground(Color.WHITE);
+		}
+		panelReservas.setBounds(20, 175 + (30*i), 410, 30);
 		panelMostrarInfo.add(panelReservas);
 		panelReservas.setLayout(null);
 		
-		JLabel lblOrigen = new JLabel("San Francisco (SFO)");
+		JLabel lblOrigen = new JLabel(rV.getViaje().getCiudadOrigen() + " (" + rV.getViaje().getPlataformaOrigen() + ")");
 		lblOrigen.setBounds(0, 0, 160, 30);
 		panelReservas.add(lblOrigen);
 		lblOrigen.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblOrigen.setHorizontalAlignment(SwingConstants.CENTER);
 	
-		JLabel lblDestino = new JLabel("Buenos Aires (EZE)");
+		JLabel lblDestino = new JLabel(rV.getViaje().getCiudadDestino() + " (" + rV.getViaje().getPlataformaDestino() + ")");
 		lblDestino.setBounds(160, 0, 160, 30);
 		panelReservas.add(lblDestino);
 		lblDestino.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblDestino.setHorizontalAlignment(SwingConstants.CENTER);
-	
-		JLabel lblFecha = new JLabel("20/10/2016");
+		
+		JLabel lblFecha = new JLabel(rV.getFechaReserva().toString().substring(8, 10) + "/" + rV.getFechaReserva().toString().substring(5, 7) + "/" + rV.getFechaReserva().toString().substring(0, 4));
 		lblFecha.setBounds(320, 0, 90, 30);
 		panelReservas.add(lblFecha);
 		lblFecha.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -346,43 +405,110 @@ public class PlantillaDP extends JDialog {
 	}
 	
 	//PANEL CARNET
-	private void agregarPanelCarnet(PersonaRegistrada pR){
+	private void agregarPanelCarnet(final PersonaRegistrada pR){
 		
 		JLabel label1 = new JLabel("Carnet Viajero Frecuente AeroManagementPass");
 		label1.setBounds(20, 20, 320, 30);
 		panelMostrarInfo.add(label1);
-	
-		JLabel lblCarnet = new JLabel("");
-		lblCarnet.setBounds(25, 60, 400, 200);
+		
+		JButton btnVerCarnet = new JButton("Ver carnet");
+		btnVerCarnet.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				verCarnet(pR);
+			}
+		});
+		btnVerCarnet.setBounds(25, 60, 100, 35);
+		panelMostrarInfo.add(btnVerCarnet);
+		
 
-		ImageIcon imagen = new ImageIcon(getClass().getResource("/imagenes/carnetNuevo.png"));
-		
-		Icon icono = new ImageIcon(imagen.getImage().getScaledInstance(lblCarnet.getWidth(), lblCarnet.getHeight(), Image.SCALE_DEFAULT));
-		
-		lblCarnet.setIcon(icono);
-		lblCarnet.validate();
-		lblCarnet.repaint();
-		panelMostrarInfo.add(lblCarnet);
-		
 		JButton btnImprimirCarnet = new JButton("Imprimir carnet");
 		btnImprimirCarnet.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-//				c.mostrarEnVentana();
+				imprimirCarnet(pR);
 			}
+	
 		});
-		btnImprimirCarnet.setBounds(20, 290, 150, 35);
+		btnImprimirCarnet.setBounds(145, 60, 150, 35);
 		panelMostrarInfo.add(btnImprimirCarnet);
 	}
 	
+	private void verCarnet(PersonaRegistrada pR){
+		
+		JDialog verCarnet = new JDialog();
+		verCarnet.setTitle("Carnet AMPass");
+		verCarnet.setBounds(100,100,227,142);
+		verCarnet.setModal(true);
+		verCarnet.setResizable(false);
+		verCarnet.setLocationRelativeTo(null);
+		verCarnet.getContentPane().setLayout(null);
+		
+		JLabel lblCarnet = new JLabel("Imagen Carnet");
+		lblCarnet.setBounds(0, 0, 227, 142);
+	
+		String ruta = "/carnets/png/carnet"+pR.getNombre().substring(0, 1) + pR.getApellido().substring(0, 1) + pR.getDni().substring(5) + ".png";
+		
+		lblCarnet.setIcon(new ImageIcon(getClass().getResource(ruta)));
+		
+		verCarnet.getContentPane().add(lblCarnet);
+		
+		verCarnet.setVisible(true);
+	}
+	
+	private void imprimirCarnet(PersonaRegistrada pR) {
+		
+		FileInputStream inputStream = null;
+        
+		String ruta = "/home/ivang94/workspace/ProyectoFinal/src/carnets/pdf/carnet" + pR.getNombre().substring(0, 1) + pR.getApellido().substring(0, 1) + pR.getDni().substring(5) + ".pdf";
+		
+		try {
+            inputStream = new FileInputStream(ruta);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+		
+        if (inputStream == null) {
+            return;
+        }
+ 
+        DocFlavor docFormat = DocFlavor.INPUT_STREAM.AUTOSENSE;
+        
+        Doc document = new SimpleDoc(inputStream, docFormat, null);
+ 
+        PrintRequestAttributeSet attributeSet = new HashPrintRequestAttributeSet();
+ 
+        PrintService defaultPrintService = PrintServiceLookup.lookupDefaultPrintService();
+ 
+ 
+        if (defaultPrintService != null) {
+            DocPrintJob printJob = defaultPrintService.createPrintJob();
+            try {
+                printJob.print(document, attributeSet);
+ 
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+        	JOptionPane.showMessageDialog(null, "No existen impresoras instaladas");
+        }
+ 
+        try {
+			inputStream.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	//PANEL DATOS
-	private void agregarPanelDatos(PersonaRegistrada pR) {
+	public void agregarPanelDatos(PersonaRegistrada pR) {
 		agregarLabelsPanelDatos();
 		agregarCamposPanelDatos(pR);
 		agregarBotonPanelDatos();
 	}
-
 
 	private void agregarLabelsPanelDatos() {
 		JLabel lblDni = new JLabel("Dni: ");
@@ -406,10 +532,12 @@ public class PlantillaDP extends JDialog {
 		panelMostrarInfo.add(lblTelefono);
 	}
 
-
 	private void agregarCamposPanelDatos(final PersonaRegistrada pR) {
 		
 		persona = new PersonaRegistradaImpl();
+		
+		nombre = pR.getNombre();
+		apellido = pR.getApellido();
 		
 		txtDni = new JTextField(pR.getDni());
 		txtDni.setEditable(false);
@@ -431,8 +559,9 @@ public class PlantillaDP extends JDialog {
 		});
 		txtNombre.addKeyListener(new KeyAdapter() {	
 			@Override
+			
 			public void keyTyped(KeyEvent e) {			
-				controlarCaracteresLetras(e);			
+				controlarCaracteresLetrasApellidoNombre(e);			
 			}
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -456,7 +585,7 @@ public class PlantillaDP extends JDialog {
 		txtApellido.addKeyListener(new KeyAdapter() {	
 			@Override
 			public void keyTyped(KeyEvent e) {			
-				controlarCaracteresLetras(e);
+				controlarCaracteresLetrasApellidoNombre(e);
 			}
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -537,6 +666,21 @@ public class PlantillaDP extends JDialog {
 				PersonaRegistradaBo pRBo = new PersonaRegistradaBoImpl();
 	            
 				pRBo.modificarPersona(persona);
+			
+				if (!nombre.equals(persona.getNombre()) || !apellido.equals(persona.getApellido())) {
+
+					c = new Carnet();
+					
+					try {
+						c.crearCarnet(persona);
+					} catch (MalformedURLException e1) {
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					} catch (DocumentException e1) {
+						e1.printStackTrace();
+					}
+				}
 				
 				JOptionPane.showMessageDialog(null, "Se ha modificado los datos de la persona con exito!");
 				
@@ -545,35 +689,15 @@ public class PlantillaDP extends JDialog {
 				txtNombre.setText(p.getNombre());
 				txtApellido.setText(p.getApellido());
 				txtEmail.setText(p.getEmail());
-				txtTelefono.setText(p.getTelefono());			
+				txtTelefono.setText(p.getTelefono());		
+				
+				nombre = p.getNombre();
+				apellido = p.getApellido();
 			}
 		});
 		btnGuardarCambiosDatosPersona.setBounds(25, 230, 155, 40);
 		panelMostrarInfo.add(btnGuardarCambiosDatosPersona);
 	}
-	
-//	private void setearCampos(PersonaRegistrada pR){
-//		
-//		if ( !pR.getNombre().equals(txtNombre.getText()) || 
-//			 !pR.getApellido().equals(txtApellido.getText()) || 
-//			 !pR.getEmail().equals(txtEmail.getText()) || 
-//			 !pR.getTelefono().equals(txtTelefono.getText())
-//		   ) {
-//			
-//			persona.setDni(txtDni.getText());
-//			persona.setNombre(txtDni.getText());
-//			persona.setApellido(txtDni.getText());
-//			persona.setEmail(txtDni.getText());
-//			persona.setTelefono(txtDni.getText());
-//				
-//            btnGuardarCambiosDatosPersona.setEnabled(true);
-//		
-//		}else{
-//			btnGuardarCambiosDatosPersona.setEnabled(false);
-//		}
-//		
-//	}
-		
 	
 	private void controlarCaracteresLetras(KeyEvent e) {
 		
@@ -583,7 +707,15 @@ public class PlantillaDP extends JDialog {
 			e.consume();
 		}
 	}
-
+	
+	private void controlarCaracteresLetrasApellidoNombre(KeyEvent e) {
+		
+		char c = e.getKeyChar();
+		
+		if ((c < 'a' || c > 'z') && (c < 'A' || c > 'Z') && (c != KeyEvent.VK_KP_LEFT) && c != (KeyEvent.VK_KP_RIGHT) && (c != KeyEvent.VK_BACK_SPACE)){
+			e.consume();
+		}
+	}
 	
 	private void controlarCaracteresNumericos(KeyEvent e) {
 		
@@ -712,8 +844,6 @@ public class PlantillaDP extends JDialog {
 		txtConfirmarContrasenia.setEnabled(false);
 		btnGuardarCambiosClave.setEnabled(false);
 	}
-	
-	
 	
 	public JLabel getLabelAvatar() {
 		return labelAvatar;

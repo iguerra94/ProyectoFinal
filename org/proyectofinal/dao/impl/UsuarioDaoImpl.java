@@ -32,14 +32,11 @@ public class UsuarioDaoImpl extends AbstractDao implements UsuarioDao {
 	}
 	
 	public ResultSet consultarPorUsuario(Usuario u) throws ClassNotFoundException, SQLException {
-		
-		conectar();
 
-		PreparedStatement sentencia = getConexion().prepareStatement("select * from Usuario where usuario = ? and contrasenia = ? and tipoUsuario = ?");
+		PreparedStatement sentencia = getConexion().prepareStatement("select usuario, contrasenia from Usuario where usuario = ? and contrasenia = ?");
 		
 		sentencia.setString(1, u.getNombreUsuario());
 		sentencia.setString(2, u.getPassword());
-		sentencia.setInt(3, u.getTipoUsuario());
 		
 		ResultSet resultado = sentencia.executeQuery();
 

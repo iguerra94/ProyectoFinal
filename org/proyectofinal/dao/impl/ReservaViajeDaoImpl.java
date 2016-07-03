@@ -62,7 +62,6 @@ public class ReservaViajeDaoImpl extends AbstractDao implements ReservaViajeDao 
 		
 		ResultSet resultado = sentencia.executeQuery();
 		
-//		sentencia.close();
 		return resultado;
 	}
 	
@@ -75,9 +74,6 @@ public class ReservaViajeDaoImpl extends AbstractDao implements ReservaViajeDao 
 		sentencia.setString(1, rV.getViaje().getCodigoViaje());
 		
 		ResultSet resultado = sentencia.executeQuery();
-		
-//		sentencia.close();
-//		desconectar();
 		
 		return resultado;
 	}

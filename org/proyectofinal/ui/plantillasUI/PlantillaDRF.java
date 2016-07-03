@@ -14,6 +14,8 @@ import javax.swing.SwingConstants;
 
 import org.proyectofinal.bo.impl.ViajeCabeceraBoImpl;
 import org.proyectofinal.bo.interfaces.ViajeCabeceraBo;
+import org.proyectofinal.model.interfaces.ViajeCabecera;
+import org.proyectofinal.ui.DialogAlterFlight;
 import org.proyectofinal.ui.DialogRemoveFlight;
 
 import javax.swing.JComboBox;
@@ -38,11 +40,26 @@ public class PlantillaDRF extends JDialog{
 		getContentPane().setLayout(null);
 	}
 	
+	public void inicializarAtributosSF(){
+		setTitle("Seleccionar Vuelo");
+		setModal(true);
+		setBounds(10,10,200,170);
+		setResizable(false);
+		getContentPane().setBackground(Color.WHITE);
+		setLocationRelativeTo(null);
+		getContentPane().setLayout(null);
+	}
+	
 	public void inicializarComponentes(){
 		agregarLabel();
 		agregarBotonEliminar();	
 	}
 	
+	public void inicializarComponentesSF(){
+		agregarLabel();
+		agregarBotonSeleccionar();	
+	}
+		
 	private void agregarLabel() {
 		JLabel lblListadoDeVuelos = new JLabel("Listado de vuelos");
 		lblListadoDeVuelos.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -52,10 +69,20 @@ public class PlantillaDRF extends JDialog{
 		getContentPane().add(lblListadoDeVuelos);
 	}
 
-	private void agregarCmbVuelos(String[] modeloVuelos) {
+	private void agregarCmbVuelos(List<String> modeloVuelos) {
+		
+		String[] listaVuelos = new String[modeloVuelos.size()];
+		
+		int i = 0;
+		
+		for (String vuelo : modeloVuelos) {
+			listaVuelos[i] = vuelo;
+			i++;
+		}
+		
 		cmbVuelos = new JComboBox();
 		cmbVuelos.setBounds(40, 55, 120, 30);
-		cmbVuelos.setModel(new DefaultComboBoxModel<>(modeloVuelos));
+		cmbVuelos.setModel(new DefaultComboBoxModel<>(listaVuelos));
 		getContentPane().add(cmbVuelos);
 	}
 
@@ -87,6 +114,30 @@ public class PlantillaDRF extends JDialog{
 		btnEliminarVuelo.setFont(new Font("Arial", Font.BOLD, 16));
 		btnEliminarVuelo.setBounds(30, 100, 140, 40);
 		getContentPane().add(btnEliminarVuelo);
+	}
+	
+	private void agregarBotonSeleccionar() {
+		JButton btnSeleccionarVuelo = new JButton("Seleccionar");
+		btnSeleccionarVuelo.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				String codigo = (String)cmbVuelos.getSelectedItem();
+
+				ViajeCabeceraBo vCBo = new ViajeCabeceraBoImpl();
+				
+				ViajeCabecera viaje = vCBo.retornarViaje(codigo);
+				
+				DialogAlterFlight daf = new DialogAlterFlight(viaje);
+	
+				dispose();
+				
+			}
+		});
+		btnSeleccionarVuelo.setFont(new Font("Arial", Font.BOLD, 16));
+		btnSeleccionarVuelo.setBounds(30, 100, 140, 40);
+		getContentPane().add(btnSeleccionarVuelo);
 	}
 	
 	private int confirmarEliminacion(String codigo) {
@@ -122,7 +173,7 @@ public class PlantillaDRF extends JDialog{
 		vCBo.eliminarVuelo(codigo);
 	}
 	
-	protected void cargarVuelos(String[] modeloVuelos){
+	protected void cargarVuelos(List<String> modeloVuelos){
 		agregarCmbVuelos(modeloVuelos);		
 	}
 

@@ -23,4 +23,9 @@ public interface ViajeCabeceraDao {
 	public void actualizarCupo(ViajeCabecera vC) throws SQLException, ClassNotFoundException;
 	public void modificacion(ViajeCabecera vC) throws SQLException, ClassNotFoundException;
 	public ResultSet consultarPorFechaActualYFutura(Date fecha) throws SQLException, ClassNotFoundException;
+	public void altaOferta(ViajeCabecera vC) throws SQLException, ClassNotFoundException;
+	public ResultSet consultarOrigenesYDestinos() throws SQLException, ClassNotFoundException;
+	public void bajaOferta(ViajeCabecera vC) throws SQLException, ClassNotFoundException;
+	public ResultSet consultarOrigenesDestinos() throws SQLException, ClassNotFoundException;
+	public ResultSet consultarDatosOferta() throws SQLException, ClassNotFoundException;
 }

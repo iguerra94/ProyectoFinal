@@ -5,7 +5,11 @@ import java.awt.event.ComponentListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.awt.event.WindowListener;
+import java.util.List;
 
+import org.proyectofinal.bo.impl.ViajeCabeceraBoImpl;
+import org.proyectofinal.bo.interfaces.ViajeCabeceraBo;
+import org.proyectofinal.model.interfaces.ViajeCabecera;
 import org.proyectofinal.ui.plantillasUI.PlantillaMF;
 
 public class MainFrameUI extends PlantillaMF implements WindowListener, WindowFocusListener, ComponentListener {
@@ -19,12 +23,28 @@ public class MainFrameUI extends PlantillaMF implements WindowListener, WindowFo
 		addWindowFocusListener(this);
 		addComponentListener(this);
 		
+		getPanelOfertas().removeAll();
+		
+		ViajeCabeceraBo vCBo = new ViajeCabeceraBoImpl();
+		
+		List<ViajeCabecera> listaViajes = vCBo.retornarListaOfertas();
+		
+		cargarOfertas(listaViajes);
+		
 		setVisible(true);
 		
 	}
 
 	@Override
 	public void windowGainedFocus(WindowEvent e) {
+		
+//		getPanelOfertas().removeAll();
+//		
+//		ViajeCabeceraBo vCBo = new ViajeCabeceraBoImpl();
+//		
+//		List<ViajeCabecera> listaViajes = vCBo.retornarListaOfertas();
+//		
+//		cargarOfertas(listaViajes);		
 	}
 
 	@Override
@@ -39,10 +59,6 @@ public class MainFrameUI extends PlantillaMF implements WindowListener, WindowFo
 		}else{
 			agregarBotonesNoLogueado();
 		}
-		
-		agregarInfoPanelOferta1();
-		agregarInfoPanelOferta2();
-		agregarInfoPanelOferta3();
 	}
 
 	@Override

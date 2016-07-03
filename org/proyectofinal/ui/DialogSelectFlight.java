@@ -2,24 +2,31 @@ package org.proyectofinal.ui;
 
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.List;
 
-import org.proyectofinal.ui.plantillasUI.PlantillaDLF;
+import org.proyectofinal.bo.impl.ViajeCabeceraBoImpl;
+import org.proyectofinal.bo.interfaces.ViajeCabeceraBo;
+import org.proyectofinal.ui.plantillasUI.PlantillaDRF;
 
-public class DialogLoadFlight extends PlantillaDLF implements WindowListener {
-
-	public DialogLoadFlight() {
+public class DialogSelectFlight extends PlantillaDRF implements WindowListener {
 	
-		inicializarAtributosLF();
-		inicializarComponentesLF();
+	public DialogSelectFlight(){
+	
+		inicializarAtributosSF();
+		inicializarComponentesSF();
 		addWindowListener(this);
 		
 		setVisible(true);
 	}
 
-	
 	@Override
 	public void windowOpened(WindowEvent e) {
-		cargarPaisesOrigen();
+
+		ViajeCabeceraBo vCBo = new ViajeCabeceraBoImpl();
+		
+		List<String> modeloVuelos = vCBo.retornarCodigosViaje();
+		
+		cargarVuelos(modeloVuelos);
 	}
 
 	@Override
@@ -51,5 +58,5 @@ public class DialogLoadFlight extends PlantillaDLF implements WindowListener {
 	public void windowDeactivated(WindowEvent e) {
 		
 	}
-	
+
 }

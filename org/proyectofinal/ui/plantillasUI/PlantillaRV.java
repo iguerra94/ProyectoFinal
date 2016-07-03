@@ -58,11 +58,6 @@ import com.itextpdf.text.DocumentException;
 
 public class PlantillaRV extends JDialog implements MouseListener{
 
-//	public static void main(String[] a){
-//		PlantillaRV rv = new PlantillaRV();
-//		rv.setVisible(true);
-//	}
-
 	private JPanel panelAsientos;
 	private JPanel panel1;
 	private JPanel panel2;
@@ -76,6 +71,7 @@ public class PlantillaRV extends JDialog implements MouseListener{
 	private JLabel lblSalida;
 	private JLabel lblLlegada;
 	private JLabel lblDuracion;
+	private JLabel lblAcumula;
 
 	private JPanel panelPasajeros;
 	private JLabel lblSeleccioneCantPasajeros;
@@ -115,7 +111,7 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		setTitle("Reserva de Boleto");
 		getContentPane().setBackground(Color.WHITE);
 		setModal(true);
-		setSize(970,675);
+		setSize(970,710);
 		setResizable(false);
 		getContentPane().setLayout(null);
 		setLocationRelativeTo(null);
@@ -146,7 +142,7 @@ public class PlantillaRV extends JDialog implements MouseListener{
 	
 	private void agregarAsientosPrimera(ViajeCabecera viaje) {
 
-		Float precioPrim = viaje.getPrecioClasePrim()*(1-viaje.getOferta());
+		Float precioPrim = viaje.getPrecioClasePrim()*(1-Float.parseFloat(viaje.getOferta()));
 
 		String precioFormateado = String.format(Locale.ROOT, "%.2f", precioPrim);
 		
@@ -373,7 +369,7 @@ public class PlantillaRV extends JDialog implements MouseListener{
 
 	private void agregarAsientosTurista(ViajeCabecera viaje) {
 		
-		Float precioTur = viaje.getPrecioClaseTur()*(1-viaje.getOferta());
+		Float precioTur = viaje.getPrecioClaseTur()*(1-Float.parseFloat(viaje.getOferta()));
 
 		String precioFormateado = String.format(Locale.ROOT, "%.2f", precioTur);
 		
@@ -931,9 +927,10 @@ public class PlantillaRV extends JDialog implements MouseListener{
 	
 	private void agregarInfoSobreAsientosPanelAsientos() {
 	
-		JButton btnAsientoDisp = new JButton("");
+		JButton btnAsientoDisp = new JButton("10");
 		btnAsientoDisp.setContentAreaFilled(false);
 		btnAsientoDisp.setMargin(new Insets(2, 0, 2, 0));
+		btnAsientoDisp.setForeground(Color.BLACK);
 		btnAsientoDisp.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnAsientoDisp.setBorder(new LineBorder(Color.BLACK, 1));
 		btnAsientoDisp.setBackground(Color.GRAY);
@@ -944,9 +941,10 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		lblAsientoDisp.setBounds(429, 142, 93, 36);
 		panelAsientos.add(lblAsientoDisp);
 
-		JButton btnAsientoSelec = new JButton("");
+		JButton btnAsientoSelec = new JButton("10");
 		btnAsientoSelec.setBounds(397, 190, 25, 36);
 		btnAsientoSelec.setMargin(new Insets(2, 0, 2, 0));
+		btnAsientoSelec.setForeground(Color.BLACK);
 		btnAsientoSelec.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnAsientoSelec.setBorder(new LineBorder(Color.BLACK, 1));
 		btnAsientoSelec.setBackground(new Color(0, 128, 0));
@@ -956,14 +954,17 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		lblAsientoSelecc.setBounds(429, 190, 93, 36);
 		panelAsientos.add(lblAsientoSelecc);
 		
-		JButton btnAsientoOcup = new JButton("");
-		btnAsientoOcup.setMargin(new Insets(2, 0, 2, 0));
-		btnAsientoOcup.setHorizontalTextPosition(SwingConstants.CENTER);
-		btnAsientoOcup.setBorder(new LineBorder(Color.BLACK, 1));
-		btnAsientoOcup.setBackground(Color.BLACK);
+		JButton btnAsientoOcup = new JButton("10");
 		btnAsientoOcup.setBounds(397, 238, 25, 36);
-		panelAsientos.add(btnAsientoOcup);
-
+		btnAsientoOcup.setContentAreaFilled(true);
+		btnAsientoOcup.setBackground(Color.BLACK);
+		btnAsientoOcup.setForeground(Color.BLACK);
+		btnAsientoOcup.setBorder(new LineBorder(Color.BLACK, 1));
+		btnAsientoOcup.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnAsientoOcup.setMargin(new Insets(2, 0, 2, 0));
+		panelAsientos.add(btnAsientoOcup);		
+		btnAsientoOcup.setEnabled(false);
+	
 		JLabel lblAsientoOcup = new JLabel("<html><center>Asiento Ocupado</center></html>");
 		lblAsientoOcup.setBounds(429, 238, 93, 36);
 		panelAsientos.add(lblAsientoOcup);
@@ -990,9 +991,8 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		lblAvion.setBounds(0, 0, 537, 584);
 		panelAsientos.add(lblAvion);
 		lblAvion.setHorizontalAlignment(SwingConstants.CENTER);
-		lblAvion.setIcon(new ImageIcon(getClass().getResource("/imagenes/avion.png")));
+		lblAvion.setIcon(new ImageIcon(getClass().getResource("/imagenes/avionC.png")));
 	}
-
 
 	private void setearToolTipBotonesDisponibles() {
 		for(BotonPasajero boton: botones){
@@ -1015,7 +1015,7 @@ public class PlantillaRV extends JDialog implements MouseListener{
 			boton.setToolTipText("OCUPADO");
 			boton.setContentAreaFilled(true);
 			boton.setBackground(Color.BLACK);
-			boton.setForeground(Color.WHITE);
+			boton.setForeground(Color.BLACK);
 			boton.setEnabled(false);
 			boton.validate();
 			boton.repaint();
@@ -1091,7 +1091,6 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		agregarBotonAnterior();
 	}
 
-
 	private void agregarCmbCantPasajeros() {
 		cmbCantPasajeros = new JComboBox();
 		cmbCantPasajeros.setModel(new DefaultComboBoxModel<>(new Integer[]{0,1,2}));
@@ -1126,7 +1125,8 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		getContentPane().remove(lblSeleccioneCantPasajeros);
 		getContentPane().add(panelAsientos);
 		
-		panelDatosPasajeros.setBorder(new TitledBorder(null, "Pasajero " + a +"/" + opcion, TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.PLAIN, 16), Color.WHITE));
+		panelDatosPasajeros.setBorder(new TitledBorder(null, "Pasajero " + a +"/" + opcion, TitledBorder.LEADING, TitledBorder.TOP, new Font("Arial", Font.PLAIN, 16), Color.WHITE));			
+		
 
 		panelPasajeros.add(panelDatosPasajeros);
 		panelPasajeros.add(btnSiguiente);
@@ -1155,7 +1155,6 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		getContentPane().validate();
 		getContentPane().repaint();
 	}
-
 
 	private void actionCmbCantPasajerosItemSeleccionadoIgualACero() {
 		
@@ -1377,8 +1376,10 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		
 		vCBo = new ViajeCabeceraBoImpl();
 		pBo = new PasajeroBoImpl();
-		rVBo = new ReservaViajeBoImpl();
 
+		rVBo = new ReservaViajeBoImpl();
+		
+		
 		btnSiguiente = new JButton("Siguiente");
 		btnSiguiente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -1410,7 +1411,7 @@ public class PlantillaRV extends JDialog implements MouseListener{
 					if (a > 1){
 						panelPasajeros.add(btnAnterior);
 						
-						if (a == (Integer) opcion){
+						if (a == opcion){
 							btnSiguiente.setText("Finalizar");						
 						} else{
 							btnSiguiente.setText("Siguiente");
@@ -1445,47 +1446,10 @@ public class PlantillaRV extends JDialog implements MouseListener{
 						
 						botonesSeleccionados.add(b);
 						
-						if (a > (Integer)opcion){
-							
-							for (int i = 0; i < reservas.getListReservas().size(); i++){									
-								
-								pBo.agregarPasajero(reservas.getListReservas().get(i).getPasajero());
-								
-								rVBo.agregarReserva(reservas.getListReservas().get(i));
-
-								vCBo.actualizarCupo(reservas.getListReservas().get(0).getViaje());
-							}
-							
-							//Generar PDF
-							
-							Boleto boleto = new Boleto();
-							
-							BoletoEmail bE = new BoletoEmail();
-							
-							
-							pRBo = new PersonaRegistradaBoImpl();
-							
-							String email = pRBo.retornarEmail(reservas.getListReservas().get(0).getDniPersona());
-							
-							try {
-
-								boleto.crearBoleto(reservas);
-								dispose();
-								JOptionPane.showMessageDialog(null, "Se esta enviando un mail a su correo con su boleto.");
-								bE.enviarMail(email, boleto.retornarBoleto());
-							} catch (IOException e2) {
-								e2.printStackTrace();
-							} catch (DocumentException e2) {
-								e2.printStackTrace();
-							} finally {
-							
-								JOptionPane.showMessageDialog(null, "El mail ha sido enviado a su correo con el boleto para que este disponible para su descarga cuando lo requiera. Gracias.");
-								
-								boleto.abrirBoleto();
-							}
-							
+						if (a > opcion){							
+							agregarReserva();							
 						}
-						
+					
 						txtNombre.setText("");
 						txtApellido.setText("");
 						txtDni.setText("");
@@ -1497,12 +1461,53 @@ public class PlantillaRV extends JDialog implements MouseListener{
 						rV.setDniPersona(reservas.getListReservas().get(0).getDniPersona());
 						
 						pasajero = new PasajeroImpl();
+					
 					}
 				}
 			}
 
 		});
 		btnSiguiente.setBounds(225, 320, 120, 30);
+	}
+	
+	private void agregarReserva() {
+		
+		for (int i = 0; i < reservas.getListReservas().size(); i++){									
+			
+			pBo.agregarPasajero(reservas.getListReservas().get(i).getPasajero());
+			
+			rVBo.agregarReserva(reservas.getListReservas().get(i));
+
+			vCBo.actualizarCupo(reservas.getListReservas().get(0).getViaje());
+		}
+		
+		//Generar PDF
+		
+		Boleto boleto = new Boleto();
+		
+		BoletoEmail bE = new BoletoEmail();
+		
+		
+		pRBo = new PersonaRegistradaBoImpl();
+		
+		String email = pRBo.retornarEmail(reservas.getListReservas().get(0).getDniPersona());
+		
+		try {
+
+			boleto.crearBoleto(reservas);
+			dispose();
+			JOptionPane.showMessageDialog(null, "Se esta enviando un mail a su correo con su boleto.");
+			bE.enviarMail(email, boleto.retornarBoleto());
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		} catch (DocumentException e2) {
+			e2.printStackTrace();
+		} finally {
+		
+			JOptionPane.showMessageDialog(null, "El mail ha sido enviado a su correo con el boleto para que este disponible para su descarga cuando lo requiera. Gracias.");
+			
+			boleto.abrirBoleto();
+		}
 	}
 		
 	private void accionesEstadoAnterior() {
@@ -1579,17 +1584,17 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		btnAnterior.setBounds(25, 320, 120, 30);
 	}
 	
-	private void agregarPanelInfoViaje(ViajeCabecera viaje) {
+	private void agregarPanelInfoViaje(ViajeCabecera viaje, Boolean acumula) {
 		
 		panelInfoVuelo = new JPanel();
 		panelInfoVuelo.setBorder(new MatteBorder(0,5,5,0, new Color(25,35,90)));
 		panelInfoVuelo.setBackground(new Color(48,63,159));
-		panelInfoVuelo.setBounds(580, 415, 370, 240);
+		panelInfoVuelo.setBounds(580, 415, 370, 265);
 		panelInfoVuelo.setLayout(null);
 		getContentPane().add(panelInfoVuelo);
 
 		agregarLabelsEtiquetasPanelInfoVuelo();
-		agregarLabelsInfoPanelPanelInfoVuelo(viaje);
+		agregarLabelsInfoPanelPanelInfoVuelo(viaje, acumula);
 	}
 
 	private void agregarLabelsEtiquetasPanelInfoVuelo() {
@@ -1624,9 +1629,16 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		label5.setBounds(25, 195, 120, 20);
 		label5.setForeground(Color.WHITE);
 		panelInfoVuelo.add(label5);
+		
+		JLabel label6 = new JLabel("¿Acumula Kilometros AMPass? ");
+		label6.setFont(new Font("Arial", Font.PLAIN, 14));
+		label6.setBounds(25, 225, 210, 20);
+		label6.setForeground(Color.WHITE);
+		panelInfoVuelo.add(label6);
+		
 	}
 	
-	private void agregarLabelsInfoPanelPanelInfoVuelo(ViajeCabecera viaje) {
+	private void agregarLabelsInfoPanelPanelInfoVuelo(ViajeCabecera viaje, Boolean acumula) {
 		
 		lblCodigoViaje = new JLabel(viaje.getCodigoViaje());
 		lblCodigoViaje.setFont(new Font("Arial", Font.BOLD, 14));
@@ -1663,6 +1675,17 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		lblDuracion.setForeground(Color.WHITE);
 		lblDuracion.setHorizontalAlignment(SwingConstants.LEFT);
 		panelInfoVuelo.add(lblDuracion);		
+		
+		if (acumula){			
+			lblAcumula = new JLabel("SI");
+		}else{
+			lblAcumula = new JLabel("NO");
+		}
+		lblAcumula.setFont(new Font("Arial", Font.BOLD, 14));
+		lblAcumula.setBounds(235, 225, 40, 20);
+		lblAcumula.setForeground(Color.WHITE);
+		lblAcumula.setHorizontalAlignment(SwingConstants.LEFT);
+		panelInfoVuelo.add(lblAcumula);		
 	}
 	
 	private void cambioItemSeleccionadoCmbCantPasajeros() {
@@ -1679,8 +1702,8 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		}
 	}
 	
-	public void cargarInfoVuelo(ViajeCabecera viaje) {
-		agregarPanelInfoViaje(viaje);	
+	public void cargarInfoVuelo(ViajeCabecera viaje, Boolean acumula) {
+		agregarPanelInfoViaje(viaje, acumula);	
 	}
 	
 	public ReservaViaje getrV() {

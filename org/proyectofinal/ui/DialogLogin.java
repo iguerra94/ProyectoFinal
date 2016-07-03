@@ -6,6 +6,10 @@ import java.awt.event.WindowListener;
 
 import javax.swing.JButton;
 
+import org.proyectofinal.bo.impl.UsuarioBoImpl;
+import org.proyectofinal.bo.interfaces.UsuarioBo;
+import org.proyectofinal.dao.ex.UserNotExistsException;
+import org.proyectofinal.model.interfaces.Usuario;
 import org.proyectofinal.ui.plantillasUI.PlantillaDL;
 import org.proyectofinal.ui.plantillasUI.PlantillaMF;
 
@@ -23,13 +27,12 @@ public class DialogLogin extends PlantillaDL implements WindowListener {
 
 	@Override
 	public void windowOpened(WindowEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void windowClosing(WindowEvent e) {
-		// TODO Auto-generated method stub
+		
 		PlantillaMF ui = new MainFrameUI();
 		ui.setLogueado(false);
 	}
@@ -45,36 +48,41 @@ public class DialogLogin extends PlantillaDL implements WindowListener {
 		
 		ui.getBtnPerfil().setText(getUsuario().getNombreUsuario());
 		
-		if (getUsuario().getTipoUsuario() == 0){
-			ui.agregarMenuAdmin();
-			ui.getBtnPerfil().setForeground(Color.RED);
-		}else if (getUsuario().getTipoUsuario() == 1){
-			ui.getBtnPerfil().setForeground(Color.BLACK);
+		UsuarioBo uBo = new UsuarioBoImpl();
+		
+		try {
+			
+			Usuario u = uBo.retornarUsuario(getUsuario().getNombreUsuario());
+			
+			if (u.getTipoUsuario() == 0){
+				ui.agregarMenuAdmin();
+				ui.getBtnPerfil().setForeground(Color.RED);
+			} else {
+				ui.getBtnPerfil().setForeground(Color.BLACK);
+			}
+		} catch (UserNotExistsException e1) {
+			e1.printStackTrace();
 		}
 		
 	}
 
 	@Override
 	public void windowIconified(WindowEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void windowDeiconified(WindowEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void windowActivated(WindowEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void windowDeactivated(WindowEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 }

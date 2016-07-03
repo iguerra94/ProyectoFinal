@@ -23,8 +23,7 @@ public class UsuarioBoImpl implements UsuarioBo {
 	public void verificar(Usuario u) throws UserNotValidException{
 		
 		if (u.getNombreUsuario().length() == 0 || u.getNombreUsuario() == null ||
-			u.getPassword().length() == 0 || u.getPassword() == null || 
-			u.getTipoUsuario() == -1 || u.getTipoUsuario() == null) {
+			u.getPassword().length() == 0 || u.getPassword() == null) {
 			
 			throw new UserNotValidException();
 		}
@@ -42,11 +41,17 @@ public class UsuarioBoImpl implements UsuarioBo {
 		UsuarioDao uDao = new UsuarioDaoImpl();
 		
 		try {
+			
+			uDao.conectar();
+			
 			ResultSet res = uDao.consultarPorUsuario(u);
 			
 			if (!res.next()){
 				throw new UserNotCorrectException();
 			}
+			
+			uDao.desconectar();
+			
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {

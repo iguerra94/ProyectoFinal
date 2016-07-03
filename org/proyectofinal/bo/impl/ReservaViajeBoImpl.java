@@ -6,9 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.proyectofinal.bo.ex.NotValidPassengerException;
+import org.proyectofinal.bo.interfaces.PasajeroBo;
 import org.proyectofinal.bo.interfaces.ReservaViajeBo;
+import org.proyectofinal.bo.interfaces.ViajeCabeceraBo;
 import org.proyectofinal.dao.impl.ReservaViajeDaoImpl;
 import org.proyectofinal.dao.interfaces.ReservaViajeDao;
+import org.proyectofinal.model.impl.ReservaViajeImpl;
 import org.proyectofinal.model.interfaces.ReservaViaje;
 import org.proyectofinal.model.interfaces.ViajeCabecera;
 
@@ -86,6 +89,48 @@ public class ReservaViajeBoImpl implements ReservaViajeBo {
 		}
 		
 		return cantReservas;
+		
+	}
+
+	@Override
+	public List<ReservaViaje> retornarReservasSegunDni(String dni) {
+		
+		List<ReservaViaje> listaReservas = new ArrayList<ReservaViaje>();
+		
+
+		ViajeCabeceraBo vCBo = new ViajeCabeceraBoImpl();
+		PasajeroBo pBo = new PasajeroBoImpl();
+		
+		ReservaViajeDao rVDao = new ReservaViajeDaoImpl();
+
+		try {
+		
+			rVDao.conectar();
+			
+			ResultSet res = rVDao.consultarPorPersonaQueReserva(dni);
+			
+			while(res.next()){
+				ReservaViaje r = new ReservaViajeImpl();
+
+				r.setViaje(vCBo.retornarViaje(res.getString("codViaje")));
+				r.setPasajero(pBo.retornarPasajero(res.getString("dniPasajero")));
+				r.setDniPersona(dni);
+				r.setFechaReserva(res.getTimestamp("fechaReserva"));
+				r.setAsiento(res.getInt("asiento"));
+				r.setPrecio(res.getFloat("precio"));
+				
+				listaReservas.add(r);
+			}
+			
+			rVDao.desconectar();
+		
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return listaReservas;
 		
 	}
 

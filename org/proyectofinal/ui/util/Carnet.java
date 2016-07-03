@@ -5,12 +5,12 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -38,7 +38,7 @@ public class Carnet {
 		
 	}
 	
-	public void convertirAImagen(String path){
+	private void convertirAImagen(String path, PersonaRegistrada pR){
 		
 		try {
 
@@ -64,21 +64,25 @@ public class Carnet {
 				
 			//se añade la imagen
 			graphics2D.drawImage(image, 0, 0, w, h, null);
-				
-			pathImagen = "/home/ivang94/workspace/ProyectoFinal/src/imagenes/carnetNuevo.png";
-			
+
+			pathImagen = "/home/ivang94/workspace/ProyectoFinal/src/carnets/png/carnet" + pR.getNombre().substring(0, 1) + pR.getApellido().substring(0, 1) + pR.getDni().substring(5) + ".png";
+	    	
 			ImageIO.write(escala, "png", new File(pathImagen));
 			
 		
 			document.close();//cerramos el pdf
+			
+			String rutaImagenBIN = "/home/ivang94/workspace/ProyectoFinal/bin/carnets/png/carnet" + pR.getNombre().substring(0, 1) + pR.getApellido().substring(0, 1) + pR.getDni().substring(5) + ".png";
+	    	
+			copiarArchivo(pathImagen, rutaImagenBIN);
 
 		} catch (IOException ex) {
 			
 		}  
 	}
 	
-	public void mostrarCarnet(){
-		convertirAImagen(getPathPdf());
+	private void crearImagenCarnet(PersonaRegistrada pR){
+		convertirAImagen(getPathPdf(), pR);
 	}
 
 	public void crearCarnet(PersonaRegistrada pR) throws MalformedURLException, IOException, DocumentException {
@@ -90,11 +94,11 @@ public class Carnet {
 		Image imagen = null;
 		Phrase myText = null;
 		
-		Rectangle rect = new Rectangle(0, 0, 400, 200);
+		Rectangle rect = new Rectangle(0, 0, 227, 142);
     	
     	Document document = new Document(rect, 0,0,0,0);
-    	
-    	pathPdf = "/home/ivang94/workspace/ProyectoFinal/src/imagenes/carnetNuevo.pdf";
+
+    	pathPdf = "/home/ivang94/workspace/ProyectoFinal/src/carnets/pdf/carnet" + pR.getNombre().substring(0, 1) + pR.getApellido().substring(0, 1) + pR.getDni().substring(5) + ".pdf";
     	
     	FileOutputStream ficheroPdf = new FileOutputStream(pathPdf);
     	
@@ -102,8 +106,9 @@ public class Carnet {
 		
 		document.open();
 
+//	    imagen = Image.getInstance("/home/ivang94/workspace/ProyectoFinal/src/imagenes/carnet.png");
 		
-	    imagen = Image.getInstance("/home/ivang94/workspace/ProyectoFinal/src/imagenes/carnet.png");
+	    imagen = Image.getInstance("/home/ivang94/workspace/ProyectoFinal/src/imagenes/carnetReal.png");
 
 	    document.add(imagen);
 	    
@@ -116,22 +121,50 @@ public class Carnet {
 		ct = new ColumnText(cb);
 	
 		//Apellido y Nombre
-		myText = new Phrase(pR.getApellido() + ", " + pR.getNombre(), FontFactory.getFont("Arial",12f, Font.BOLD, new BaseColor(0, 20, 133)));
-		ct.setSimpleColumn(myText, 19, 39, 180, 22, 1, Element.ALIGN_LEFT);
+		myText = new Phrase(pR.getApellido() + ", " + pR.getNombre(), FontFactory.getFont("Arial",10f, Font.BOLD, new BaseColor(0, 20, 133)));
+		ct.setSimpleColumn(myText, 14, 26, 175, 9, 1, Element.ALIGN_LEFT);
 		ct.go();
 		
 		cb = writer.getDirectContent();
 		ct = new ColumnText(cb);
 
 		//DNI
-		myText = new Phrase(pR.getDni(), FontFactory.getFont("Arial",12f, Font.BOLD, new BaseColor(0, 20, 133)));
-		ct.setSimpleColumn(myText, 225, 39, 405, 22, 1, Element.ALIGN_LEFT);
+		myText = new Phrase(pR.getDni(), FontFactory.getFont("Arial",10f, Font.BOLD, new BaseColor(0, 20, 133)));
+		ct.setSimpleColumn(myText, 125, 26, 305, 9, 1, Element.ALIGN_LEFT);
 		ct.go();
 		
 		document.close();
+		
+		String rutaPdfBIN = "/home/ivang94/workspace/ProyectoFinal/bin/carnets/pdf/carnet" + pR.getNombre().substring(0, 1) + pR.getApellido().substring(0, 1) + pR.getDni().substring(5) + ".pdf";
+    	
+		copiarArchivo(pathPdf, rutaPdfBIN);
+		
+		//CONVERTIR A IMAGEN
+		crearImagenCarnet(pR);
     }
-
 	
+	public void copiarArchivo(String sourceFile, String destinationFile) {
+//		System.out.println("Desde: " + sourceFile);
+//		System.out.println("Hacia: " + destinationFile);
+
+		try {
+			File inFile = new File(sourceFile);
+			File outFile = new File(destinationFile);
+
+			FileInputStream in = new FileInputStream(inFile);
+			FileOutputStream out = new FileOutputStream(outFile);
+
+			int c;
+			while( (c = in.read() ) != -1)
+				out.write(c);
+
+			in.close();
+			out.close();
+		} catch(IOException e) {
+			System.err.println("Hubo un error de entrada/salida!");
+		}
+	}
+
 	public String getPathPdf() {
 		return pathPdf;
 	}

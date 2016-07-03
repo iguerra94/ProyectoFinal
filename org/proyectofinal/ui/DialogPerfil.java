@@ -12,24 +12,26 @@ public class DialogPerfil extends PlantillaDP implements WindowFocusListener {
 
 	public DialogPerfil() {
 		inicializarAtributos();
-		inicializarComponentes();	
+		inicializarComponentes();
 		addWindowFocusListener(this);
 	}
 
 	@Override
 	public void windowGainedFocus(WindowEvent e) {
 		
-//		PersonaRegistradaBo pBo = new PersonaRegistradaBoImpl();
-//		
-//		PersonaRegistrada pR = pBo.retornarPersonaPorUsuario(getLabelAvatar().getToolTipText());
-//		
-//		agregarPanelPersona(pR);
+		PersonaRegistradaBo pBo = new PersonaRegistradaBoImpl();
 		
+		PersonaRegistrada pR = pBo.retornarPersonaPorUsuario(getLabelAvatar().getToolTipText());
+		
+		removerLabelsInfo();
+		agregarLabelsInfo(pR);
+		
+		getContentPane().validate();
+		getContentPane().repaint();
 	}
 
 	@Override
 	public void windowLostFocus(WindowEvent e) {
-		
 	}
 
 }

@@ -4,16 +4,20 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
+import org.proyectofinal.bo.ex.NotOffersFoundException;
 import org.proyectofinal.bo.impl.ViajeCabeceraBoImpl;
 import org.proyectofinal.bo.interfaces.ViajeCabeceraBo;
 import org.proyectofinal.ui.plantillasUI.PlantillaDRF;
+import org.proyectofinal.ui.plantillasUI.PlantillaDRO;
 
-public class DialogRemoveFlight extends PlantillaDRF implements WindowListener {
+public class DialogRemoveOffer extends PlantillaDRO implements WindowListener {
 	
-	public DialogRemoveFlight(){
+	public DialogRemoveOffer(){
 	
-		inicializarAtributos();
-		inicializarComponentes();
+		inicializarAtributosRO();
+		inicializarComponentesRO();
 		addWindowListener(this);
 		
 		setVisible(true);
@@ -24,9 +28,18 @@ public class DialogRemoveFlight extends PlantillaDRF implements WindowListener {
 
 		ViajeCabeceraBo vCBo = new ViajeCabeceraBoImpl();
 		
-		List<String> modeloVuelos = vCBo.retornarCodigosViaje();
+		List<String> modeloOfertas;
 		
-		cargarVuelos(modeloVuelos);
+		try {
+		
+			modeloOfertas = vCBo.retornarOfertas();
+			
+			cargarOfertas(modeloOfertas);
+	
+		} catch (NotOffersFoundException e1) {
+			JOptionPane.showMessageDialog(null, e1.getMessage());
+		}
+		
 	}
 
 	@Override

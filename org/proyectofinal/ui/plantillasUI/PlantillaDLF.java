@@ -49,6 +49,7 @@ import com.toedter.calendar.JDateChooser;
 public class PlantillaDLF extends JDialog {
 	
 	private JTextField txtCodigoViaje;
+	List<String> codigos;
 	
 	private JPanel panelSalida;
 	private JComboBox cmbPaisOrigen;
@@ -96,10 +97,21 @@ public class PlantillaDLF extends JDialog {
 
 	}
 	
-	public void inicializarAtributos(){
+	protected void inicializarAtributosLF(){
 		setResizable(false);
 		setModal(true);
 		setTitle("Cargar Vuelo..");
+		getContentPane().setBackground(Color.WHITE);
+		setBounds(100, 100, 870, 670);
+		setLocationRelativeTo(null);
+		
+		getContentPane().setLayout(null);	
+	}
+	
+	protected void inicializarAtributosAF(){
+		setResizable(false);
+		setModal(true);
+		setTitle("Modificar Vuelo..");
 		getContentPane().setBackground(Color.WHITE);
 		setBounds(100, 100, 870, 660);
 		setLocationRelativeTo(null);
@@ -107,19 +119,33 @@ public class PlantillaDLF extends JDialog {
 		getContentPane().setLayout(null);	
 	}
 	
-	public void inicializarComponentes(){
+	protected void inicializarComponentesLF(){
 		agregarCodigoViaje();
 		agregarPanelSalida();
 		agregarPanelLlegada();
 		agregarPanelPrecios();
 		agregarPanelImagenes();
 		agregarPanelInfoExtra();
+		agregarBotonCargarVuelo();
+	}
+	
+	public void inicializarComponentesAF(ViajeCabecera viaje){
+		agregarCodigoViajeAF(viaje);
+		agregarPanelSalidaAF(viaje);
+		agregarPanelLlegadaAF(viaje);
+		agregarPanelPreciosAF(viaje);
+		agregarPanelImagenesAF(viaje);
+		agregarPanelInfoExtraAF(viaje);
 		agregarBotonGuardarCambios();
 	}
 
 	private void agregarCodigoViaje() {
 		
 		vC = new ViajeCabeceraImpl();
+
+		vCBo = new ViajeCabeceraBoImpl();
+		
+		codigos = vCBo.retornarCodigosViaje();
 		
 		JLabel lblCodigoDeViaje = new JLabel("Codigo de Viaje: ");
 		lblCodigoDeViaje.setBounds(25, 20, 120, 30);
@@ -146,28 +172,47 @@ public class PlantillaDLF extends JDialog {
 			@Override
 			public void keyReleased(KeyEvent e) {
 			
-//				if (txtCodigoViaje.getText().trim().length() > 0){
-//					
-////					for (Integer codigo : codigos) {
-//						
-//						if (Integer.parseInt(txtCodigoViaje.getText()) == codigo){
-//							JOptionPane.showMessageDialog(null, "El vuelo ingresado ya existe. Ingrese otro Codigo de Viaje");
-//							txtCodigoViaje.setText("");
-//							break;
-//						}else{
-//							vC.setCodigoViaje("");
-//						}						
-//					}
-//					
-//				}else{
-//					vC.setCodigoViaje("");
-//				}
+				if (txtCodigoViaje.getText().trim().length() > 0){
+					
+					vC.setCodigoViaje(txtCodigoViaje.getText());						
+					
+					for (String codigo : codigos) {
+						
+						if (txtCodigoViaje.getText().equals(codigo)) {
+							JOptionPane.showMessageDialog(null, "El vuelo ingresado ya existe. Ingrese otro Codigo de Viaje");
+							txtCodigoViaje.setText("");
+							vC.setCodigoViaje("");
+							break;
+						}						
+					}
+					
+				}else{
+					vC.setCodigoViaje("");
+				}
 			}
 		});
 		txtCodigoViaje.setBounds(145, 20, 190, 30);
 		getContentPane().add(txtCodigoViaje);
 		
 		vC.setCodigoViaje("");
+	}
+	
+	private void agregarCodigoViajeAF(ViajeCabecera viaje) {
+		
+		vC = new ViajeCabeceraImpl();
+
+		vCBo = new ViajeCabeceraBoImpl();
+
+		JLabel lblCodigoDeViaje = new JLabel("Codigo de Viaje: ");
+		lblCodigoDeViaje.setBounds(25, 20, 120, 30);
+		getContentPane().add(lblCodigoDeViaje);
+		
+		txtCodigoViaje = new JTextField(viaje.getCodigoViaje());
+		txtCodigoViaje.setEditable(false);
+		txtCodigoViaje.setBounds(145, 20, 190, 30);
+		getContentPane().add(txtCodigoViaje);
+		
+		vC.setCodigoViaje(viaje.getCodigoViaje());
 	}
 	
 	private void controlarTeclasAlfanumericas(KeyEvent e) {
@@ -189,6 +234,19 @@ public class PlantillaDLF extends JDialog {
 		
 		agregarLabelsPanelSalida();
 		agregarCamposPanelSalida();		
+	}
+	
+	private void agregarPanelSalidaAF(ViajeCabecera viaje) {
+		
+		panelSalida = new JPanel();
+		panelSalida.setBorder(new TitledBorder(null, "Salida", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(59, 59, 59)));
+		panelSalida.setBounds(20, 70, 400, 250);
+		panelSalida.setBackground(Color.WHITE);
+		getContentPane().add(panelSalida);
+		panelSalida.setLayout(null);
+		
+		agregarLabelsPanelSalida();
+		agregarCamposPanelSalidaAF(viaje);
 	}
 
 	private void agregarLabelsPanelSalida() {
@@ -220,7 +278,6 @@ public class PlantillaDLF extends JDialog {
 
 		cmbPaisOrigen = new JComboBox();
 		cmbPaisOrigen.setBounds(180, 30, 190, 30);
-		panelSalida.add(cmbPaisOrigen);
 		cmbPaisOrigen.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 
@@ -238,6 +295,7 @@ public class PlantillaDLF extends JDialog {
 				
 			}
 		});
+		panelSalida.add(cmbPaisOrigen);
 		
 		cmbCiudadOrigen = new JComboBox();
 		cmbCiudadOrigen.setBounds(180, 70, 190, 30);
@@ -245,10 +303,10 @@ public class PlantillaDLF extends JDialog {
 		cmbCiudadOrigen.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				
-				actualizarComboPlatOrigen();
 				cargarPlataformasOrigen();
 				actualizarComboPaisDestino();
 				cargarPaisesDestino();
+				actualizarComboPlatOrigen();
 				
 				if (cmbCiudadOrigen.getSelectedIndex() != 0){
 					CiudadUtil ciudad = (CiudadUtil)cmbCiudadOrigen.getSelectedItem();
@@ -368,6 +426,176 @@ public class PlantillaDLF extends JDialog {
 		vC.setHoraSalida(Time.valueOf("00:00:00"));
 		
 	}
+	
+	private void agregarCamposPanelSalidaAF(ViajeCabecera viaje) {
+
+		String[] modelHora = new String[] {"00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"};
+		String[] modelMinuto = new String[] {"00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"};
+
+		PaisUtil p = new PaisUtil(viaje.getPaisOrigen(), viaje.getShortPaisOrigen());
+		CiudadUtil c = new CiudadUtil(viaje.getCiudadOrigen(), viaje.getShortPaisOrigen());
+		PlataformaUtil pl = new PlataformaUtil(viaje.getPlataformaOrigen(), viaje.getCiudadOrigen());
+		
+		
+		cmbPaisOrigen = new JComboBox();
+		cargarPaisesOrigen();
+		cmbPaisOrigen.getModel().setSelectedItem(p);
+		cmbPaisOrigen.setBounds(180, 30, 190, 30);
+		panelSalida.add(cmbPaisOrigen);
+		cmbPaisOrigen.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+
+				actualizarComboCiudadOrigen();
+				cargarCiudadesOrigen();
+				
+				if (cmbPaisOrigen.getSelectedIndex() != 0){
+					PaisUtil pais = (PaisUtil)cmbPaisOrigen.getSelectedItem();
+					vC.setPaisOrigen(pais.getPais());
+					vC.setShortPaisOrigen(pais.getShortPais());
+				}else{
+					vC.setPaisOrigen("");
+					vC.setShortPaisOrigen("");
+				}
+				
+			}
+		});
+		
+		cmbCiudadOrigen = new JComboBox();
+		cargarCiudadesOrigen();
+		cmbCiudadOrigen.getModel().setSelectedItem(c);
+		cmbCiudadOrigen.setBounds(180, 70, 190, 30);
+		cmbCiudadOrigen.setEnabled(false);
+		cmbCiudadOrigen.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				
+				cargarPlataformasOrigen();
+				actualizarComboPaisDestino();
+				cargarPaisesDestino();
+				actualizarComboPlatOrigen();
+				
+				if (cmbCiudadOrigen.getSelectedIndex() != 0){
+					CiudadUtil ciudad = (CiudadUtil)cmbCiudadOrigen.getSelectedItem();
+					vC.setCiudadOrigen(ciudad.getCiudad());
+				}else{
+					vC.setCiudadOrigen("");
+				}
+				
+			}
+		});
+		panelSalida.add(cmbCiudadOrigen);
+		
+		cmbPlatOrigen = new JComboBox();
+		cargarPlataformasOrigen();
+		cmbPlatOrigen.getModel().setSelectedItem(pl);
+		cmbPlatOrigen.setEnabled(false);
+		cmbPlatOrigen.setBounds(180, 110, 190, 30);
+		cmbPlatOrigen.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				
+				if (cmbPlatOrigen.getSelectedIndex() != 0){
+					PlataformaUtil plat = (PlataformaUtil) cmbPlatOrigen.getSelectedItem();
+					vC.setPlataformaOrigen(plat.getPlataforma());
+				}else{
+					vC.setPlataformaOrigen("");
+				}
+				
+			}
+		});
+		panelSalida.add(cmbPlatOrigen);
+
+		now = new java.util.Date();
+		
+		dateChooserFechaSalida = new JDateChooser();
+		dateChooserFechaSalida.setDate(viaje.getFechaSalida());
+		dateChooserFechaSalida.setMinSelectableDate(now);
+		dateChooserFechaSalida.addPropertyChangeListener(new PropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				
+				if (dateChooserFechaSalida.getDate() != null){
+					
+					dateChooserFechaLlegada.setDate(dateChooserFechaSalida.getDate());
+					dateChooserFechaLlegada.setMinSelectableDate(dateChooserFechaSalida.getDate());
+					
+					dateChooserFechaLlegada.validate();
+					dateChooserFechaLlegada.repaint();
+					
+					calcularDuracion();
+				}
+				
+			}
+		});
+		dateChooserFechaSalida.getCalendarButton().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+	
+				dateChooserFechaLlegada.setDate(dateChooserFechaSalida.getDate());
+				dateChooserFechaLlegada.setMinSelectableDate(dateChooserFechaSalida.getDate());
+				
+				dateChooserFechaLlegada.validate();
+				dateChooserFechaLlegada.repaint();
+				
+				calcularDuracion();
+			}
+		});
+		dateChooserFechaSalida.setBounds(180, 150, 190, 30);
+		panelSalida.add(dateChooserFechaSalida);
+		
+		cmbHoraSalida = new JComboBox();
+		cmbHoraSalida.setModel(new DefaultComboBoxModel(modelHora));
+		cmbHoraSalida.getModel().setSelectedItem(viaje.getHoraSalida().toString().substring(0, 2));
+		cmbHoraSalida.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+			
+				if (dateChooserFechaSalida.getDate().equals(dateChooserFechaLlegada.getDate())){
+					
+					if (cmbHoraSalida.getSelectedIndex() >= cmbHoraLlegada.getSelectedIndex()){
+						cmbHoraLlegada.setSelectedIndex(cmbHoraSalida.getSelectedIndex());
+						cmbMinutoLlegada.setSelectedIndex(cmbMinutoSalida.getSelectedIndex());
+					}
+				}
+				
+				calcularDuracion();
+				
+			}
+		});
+		cmbHoraSalida.setBounds(180, 190, 50, 30);
+		panelSalida.add(cmbHoraSalida);
+		
+		JLabel label1 = new JLabel(":");
+		label1.setBounds(240, 190, 15, 30);
+		panelSalida.add(label1);
+		
+		cmbMinutoSalida = new JComboBox();
+		cmbMinutoSalida.setModel(new DefaultComboBoxModel(modelMinuto));
+		cmbMinutoSalida.getModel().setSelectedItem(viaje.getHoraSalida().toString().substring(3, 5));
+		cmbMinutoSalida.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+			
+				if (dateChooserFechaSalida.getDate().equals(dateChooserFechaLlegada.getDate())){
+					if (cmbMinutoSalida.getSelectedIndex() > cmbMinutoLlegada.getSelectedIndex() && cmbHoraSalida.getSelectedIndex() >= cmbHoraLlegada.getSelectedIndex()){
+						cmbMinutoLlegada.setSelectedIndex(cmbMinutoSalida.getSelectedIndex());
+					}
+				}
+			
+				calcularDuracion();
+				
+			}
+		});
+		cmbMinutoSalida.setBounds(255, 190, 50, 30);
+		panelSalida.add(cmbMinutoSalida);
+		
+		vC.setPaisOrigen(viaje.getPaisOrigen());
+		vC.setShortPaisOrigen(viaje.getShortPaisOrigen());
+		vC.setCiudadOrigen(viaje.getCiudadOrigen());
+		vC.setPlataformaOrigen(viaje.getPlataformaOrigen());
+		vC.setFechaSalida(viaje.getFechaSalida());
+		vC.setHoraSalida(viaje.getHoraSalida());
+		
+	}
 		
 	protected void actualizarComboCiudadOrigen(){
 		
@@ -385,7 +613,6 @@ public class PlantillaDLF extends JDialog {
 		
 		if (cmbCiudadOrigen.getSelectedIndex() != 0){
 			cmbPlatOrigen.setEnabled(true);
-			cmbPlatOrigen.requestFocus();
 		}else{
 			cmbPlatOrigen.setEnabled(false);
 			if (cmbPlatOrigen.getModel().getSize()>0){
@@ -485,6 +712,19 @@ public class PlantillaDLF extends JDialog {
 		agregarLabelsPanelLlegada();
 		agregarCamposPanelLlegada();
 	}
+		
+	private void agregarPanelLlegadaAF(ViajeCabecera viaje) {
+		
+		panelLlegada = new JPanel();
+		panelLlegada.setLayout(null);
+		panelLlegada.setBackground(Color.WHITE);
+		panelLlegada.setBorder(new TitledBorder(null, "Llegada", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(59, 59, 59)));
+		panelLlegada.setBounds(440, 70, 400, 250);
+		getContentPane().add(panelLlegada);
+
+		agregarLabelsPanelLlegada();
+		agregarCamposPanelLlegadaAF(viaje);
+	}
 
 	private void agregarLabelsPanelLlegada() {
 		JLabel lblPaisDestino = new JLabel("Pais de Destino: ");
@@ -512,6 +752,7 @@ public class PlantillaDLF extends JDialog {
 
 		String[] modelHora = new String[] {"00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"};
 		String[] modelMinuto = new String[] {"00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"};
+		
 		
 		cmbPaisDestino = new JComboBox();
 		cmbPaisDestino.addItemListener(new ItemListener() {
@@ -596,7 +837,7 @@ public class PlantillaDLF extends JDialog {
 		});
 		dateChooserFechaLlegada.getCalendarButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {		
-				calcularDuracion();
+				//calcularDuracion();
 			}
 		});
 		dateChooserFechaLlegada.setBounds(180, 150, 190, 30);
@@ -658,6 +899,170 @@ public class PlantillaDLF extends JDialog {
 	
 	}
 
+	private void agregarCamposPanelLlegadaAF(ViajeCabecera viaje) {
+
+		String[] modelHora = new String[] {"00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"};
+		String[] modelMinuto = new String[] {"00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"};
+		
+		PaisUtil p = new PaisUtil(viaje.getPaisDestino(), viaje.getShortPaisDestino());
+		CiudadUtil c = new CiudadUtil(viaje.getCiudadDestino(), viaje.getShortPaisDestino());
+		PlataformaUtil pl = new PlataformaUtil(viaje.getPlataformaDestino(), viaje.getCiudadDestino());
+		
+		
+		cmbPaisDestino = new JComboBox();
+		cargarPaisesDestino();
+		cmbPaisDestino.getModel().setSelectedItem(p);
+		cmbPaisDestino.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+
+				actualizarComboCiudadDestino();
+				cargarCiudadesDestino();
+				actualizarComboPlatDestino();
+				
+				if (cmbPaisDestino.getSelectedIndex() != 0){
+					PaisUtil pais = (PaisUtil)cmbPaisDestino.getSelectedItem();
+					vC.setPaisDestino(pais.getPais());
+					vC.setShortPaisDestino(pais.getShortPais());
+				}else{
+					vC.setPaisDestino("");
+					vC.setShortPaisDestino("");
+				}
+				
+			}
+		});
+		cmbPaisDestino.setBounds(180, 30, 190, 30);
+		panelLlegada.add(cmbPaisDestino);
+		
+		cmbCiudadDestino = new JComboBox();
+		cargarCiudadesDestino();
+		cmbCiudadDestino.getModel().setSelectedItem(c);
+		cmbCiudadDestino.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+
+				actualizarComboPlatDestino();
+				cargarPlataformasDestino();
+				
+				if (cmbCiudadDestino.getSelectedIndex() != 0){
+					CiudadUtil ciudad = (CiudadUtil)cmbCiudadDestino.getSelectedItem();
+					vC.setCiudadDestino(ciudad.getCiudad());
+				}else{
+					vC.setCiudadDestino("");
+				}
+				
+			}
+		});
+		cmbCiudadDestino.setEnabled(false);
+		cmbCiudadDestino.setBounds(180, 70, 190, 30);
+		panelLlegada.add(cmbCiudadDestino);
+		
+		cmbPlatDestino = new JComboBox();
+		cargarPlataformasDestino();
+		cmbPlatDestino.getModel().setSelectedItem(pl);
+		cmbPlatDestino.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				
+				if (cmbPlatDestino.getSelectedIndex() != 0){
+					PlataformaUtil plat = (PlataformaUtil) cmbPlatDestino.getSelectedItem();
+					vC.setPlataformaDestino(plat.getPlataforma());
+				}else{
+					vC.setPlataformaDestino("");
+				}
+				
+			}
+		});
+		cmbPlatDestino.setEnabled(false);
+		cmbPlatDestino.setBounds(180, 110, 190, 30);
+		panelLlegada.add(cmbPlatDestino);
+		
+		dateChooserFechaLlegada = new JDateChooser();
+		dateChooserFechaLlegada.setDate(viaje.getFechaLlegada());
+		dateChooserFechaLlegada.addPropertyChangeListener(new PropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				
+				if (dateChooserFechaSalida.getDate().equals(dateChooserFechaLlegada.getDate())){
+					
+					if (cmbHoraLlegada.getSelectedIndex() < cmbHoraSalida.getSelectedIndex()){
+						cmbHoraLlegada.setSelectedIndex(cmbHoraSalida.getSelectedIndex());
+					}
+					
+					if ( (cmbMinutoLlegada.getSelectedIndex() < cmbMinutoSalida.getSelectedIndex()) && (cmbHoraLlegada.getSelectedIndex() <= cmbHoraSalida.getSelectedIndex()) ){
+						cmbMinutoLlegada.setSelectedIndex(cmbMinutoSalida.getSelectedIndex());
+					}
+					
+				}
+				
+				calcularDuracion();
+				
+			}
+		});
+		dateChooserFechaLlegada.getCalendarButton().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {		
+				calcularDuracion();
+			}
+		});
+		dateChooserFechaLlegada.setBounds(180, 150, 190, 30);
+		panelLlegada.add(dateChooserFechaLlegada);
+		
+		cmbHoraLlegada = new JComboBox();
+		cmbHoraLlegada.setModel(new DefaultComboBoxModel(modelHora));
+		cmbHoraLlegada.getModel().setSelectedItem(viaje.getHoraLlegada().toString().substring(0, 2));
+		cmbHoraLlegada.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				
+				if (dateChooserFechaSalida.getDate().equals(dateChooserFechaLlegada.getDate())){
+					
+					if (cmbHoraLlegada.getSelectedIndex() < cmbHoraSalida.getSelectedIndex()){
+						cmbHoraLlegada.setSelectedIndex(cmbHoraSalida.getSelectedIndex());
+					}
+				}
+				
+				calcularDuracion();
+
+			}
+		});
+		cmbHoraLlegada.setBounds(180, 190, 50, 30);
+		panelLlegada.add(cmbHoraLlegada);
+		
+		JLabel label2 = new JLabel(":");
+		label2.setFont(new Font("DejaVu Sans", Font.PLAIN, 14));
+		label2.setBounds(240, 190, 15, 30);
+		panelLlegada.add(label2);
+		
+		cmbMinutoLlegada = new JComboBox();
+		cmbMinutoLlegada.setModel(new DefaultComboBoxModel(modelMinuto));
+		cmbMinutoLlegada.getModel().setSelectedItem(viaje.getHoraLlegada().toString().substring(3, 5));
+		cmbMinutoLlegada.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				
+				if (dateChooserFechaSalida.getDate().equals(dateChooserFechaLlegada.getDate())){
+					
+					if ( (cmbMinutoLlegada.getSelectedIndex() < cmbMinutoSalida.getSelectedIndex()) && (cmbHoraLlegada.getSelectedIndex() <= cmbHoraSalida.getSelectedIndex()) ){
+						cmbMinutoLlegada.setSelectedIndex(cmbMinutoSalida.getSelectedIndex());
+					}
+
+				}
+				
+				calcularDuracion();
+				
+			}
+		});
+		cmbMinutoLlegada.setBounds(255, 190, 50, 30);
+		panelLlegada.add(cmbMinutoLlegada);
+
+		vC.setPaisDestino(viaje.getPaisDestino());
+		vC.setShortPaisDestino(viaje.getShortPaisDestino());
+		vC.setCiudadDestino(viaje.getCiudadDestino());
+		vC.setPlataformaDestino(viaje.getPlataformaDestino());
+		vC.setFechaLlegada(viaje.getFechaLlegada());
+		vC.setHoraLlegada(viaje.getHoraLlegada());
+	
+	}
+	
 	protected void actualizarComboPaisDestino(){
 		
 		if (cmbCiudadOrigen.getSelectedIndex() != 0){
@@ -674,7 +1079,6 @@ public class PlantillaDLF extends JDialog {
 			}
 		}
 	}
-	
 	
 	protected void actualizarComboCiudadDestino(){
 		
@@ -796,6 +1200,18 @@ public class PlantillaDLF extends JDialog {
 		agregarLabelsPanelPrecios();
 		agregarCamposPanelPrecios();
 	}
+	
+	private void agregarPanelPreciosAF(ViajeCabecera viaje) {
+		panelPrecios = new JPanel();
+		panelPrecios.setLayout(null);
+		panelPrecios.setBackground(Color.WHITE);
+		panelPrecios.setBorder(new TitledBorder(null, "Precios", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(59, 59, 59)));
+		panelPrecios.setBounds(20, 345, 290, 130);
+		getContentPane().add(panelPrecios);
+		
+		agregarLabelsPanelPrecios();
+		agregarCamposPanelPreciosAF(viaje);
+	}
 
 	private void agregarLabelsPanelPrecios() {
 		JLabel lblPrecioClaseTurista = new JLabel("Precio Clase Turista:");
@@ -816,7 +1232,13 @@ public class PlantillaDLF extends JDialog {
 			public void focusLost(FocusEvent e) {
 				
 				if (txtPrecioTurista.getText().trim().length() > 0){
-					vC.setPrecioClaseTur(Float.parseFloat(txtPrecioTurista.getText()));						
+					vC.setPrecioClaseTur(Float.parseFloat(txtPrecioTurista.getText()));	
+
+					Float precioTur = Float.parseFloat(txtPrecioTurista.getText());
+					Float precioPrim = 1.5f*precioTur;
+					
+					txtPrecioPrimera.setText(precioPrim.toString());
+					
 				}else{
 					vC.setPrecioClaseTur(-1f);
 				}
@@ -831,9 +1253,16 @@ public class PlantillaDLF extends JDialog {
 			public void keyReleased(KeyEvent e) {
 				if (txtPrecioTurista.getText().trim().length() > 0){
 					vC.setPrecioClaseTur(Float.parseFloat(txtPrecioTurista.getText()));						
+					
+					Float precioTur = Float.parseFloat(txtPrecioTurista.getText());
+					Float precioPrim = 1.5f*precioTur;
+					
+					txtPrecioPrimera.setText(precioPrim.toString());
+					
 				}else{
 					vC.setPrecioClaseTur(-1f);
 				}
+
 			}
 
 		});
@@ -841,38 +1270,125 @@ public class PlantillaDLF extends JDialog {
 		panelPrecios.add(txtPrecioTurista);
 	
 		txtPrecioPrimera = new JTextField();
-		txtPrecioPrimera.setToolTipText("SOLO NUMEROS Y .(PUNTO). POR EJ: 120.04");
-		txtPrecioPrimera.addFocusListener(new FocusAdapter() {
+		txtPrecioPrimera.setEditable(false);
+		txtPrecioPrimera.getDocument().addDocumentListener(new DocumentListener() {
+			
 			@Override
-			public void focusLost(FocusEvent e) {
+			public void removeUpdate(DocumentEvent e) {
 				
-				if (txtPrecioPrimera.getText().trim().length() > 0){
-					vC.setPrecioClasePrim(Float.parseFloat(txtPrecioPrimera.getText()));						
+				if (txtPrecioPrimera.getText().length() > 0){
+					vC.setPrecioClasePrim(Float.parseFloat(txtPrecioPrimera.getText()));				
 				}else{
 					vC.setPrecioClasePrim(-1f);
 				}
+				
 			}
-		});
-		txtPrecioPrimera.addKeyListener(new KeyAdapter() {
+			
 			@Override
-			public void keyTyped(KeyEvent e) {
-				controlarTeclasParaTiposFlotantes(e);
-			}
-			@Override
-			public void keyReleased(KeyEvent e) {
-				if (txtPrecioPrimera.getText().trim().length() > 0){
-					vC.setPrecioClasePrim(Float.parseFloat(txtPrecioPrimera.getText()));						
+			public void insertUpdate(DocumentEvent e) {
+				
+				if (txtPrecioPrimera.getText().length() > 0){
+					vC.setPrecioClasePrim(Float.parseFloat(txtPrecioPrimera.getText()));				
 				}else{
 					vC.setPrecioClasePrim(-1f);
 				}
+				
 			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
 
+			}
 		});
 		txtPrecioPrimera.setBounds(170, 70, 100, 30);
 		panelPrecios.add(txtPrecioPrimera);
 		
 		vC.setPrecioClaseTur(-1f);
 		vC.setPrecioClasePrim(-1f);
+	}
+
+	private void agregarCamposPanelPreciosAF(ViajeCabecera viaje) {
+
+		txtPrecioTurista = new JTextField(viaje.getPrecioClaseTur().toString());
+		txtPrecioTurista.setToolTipText("SOLO NUMEROS Y .(PUNTO). POR EJ: 120.04");
+		txtPrecioTurista.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				
+				if (txtPrecioTurista.getText().trim().length() > 0){
+					vC.setPrecioClaseTur(Float.parseFloat(txtPrecioTurista.getText()));	
+
+					Float precioTur = Float.parseFloat(txtPrecioTurista.getText());
+					Float precioPrim = 1.5f*precioTur;
+					
+					txtPrecioPrimera.setText(precioPrim.toString());
+					
+				}else{
+					vC.setPrecioClaseTur(-1f);
+				}
+			}
+		});
+		txtPrecioTurista.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				controlarTeclasParaTiposFlotantes(e);
+			}
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if (txtPrecioTurista.getText().trim().length() > 0){
+					vC.setPrecioClaseTur(Float.parseFloat(txtPrecioTurista.getText()));						
+					
+					Float precioTur = Float.parseFloat(txtPrecioTurista.getText());
+					Float precioPrim = 1.5f*precioTur;
+					
+					txtPrecioPrimera.setText(precioPrim.toString());
+					
+				}else{
+					vC.setPrecioClaseTur(-1f);
+				}
+
+			}
+
+		});
+		txtPrecioTurista.setBounds(170, 30, 100, 30);
+		panelPrecios.add(txtPrecioTurista);
+	
+		txtPrecioPrimera = new JTextField(viaje.getPrecioClasePrim().toString());
+		txtPrecioPrimera.setEditable(false);
+		txtPrecioPrimera.getDocument().addDocumentListener(new DocumentListener() {
+			
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				
+				if (txtPrecioPrimera.getText().length() > 0){
+					vC.setPrecioClasePrim(Float.parseFloat(txtPrecioPrimera.getText()));				
+				}else{
+					vC.setPrecioClasePrim(-1f);
+				}
+				
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				
+				if (txtPrecioPrimera.getText().length() > 0){
+					vC.setPrecioClasePrim(Float.parseFloat(txtPrecioPrimera.getText()));				
+				}else{
+					vC.setPrecioClasePrim(-1f);
+				}
+				
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+
+			}
+		});
+		txtPrecioPrimera.setBounds(170, 70, 100, 30);
+		panelPrecios.add(txtPrecioPrimera);
+		
+		vC.setPrecioClaseTur(viaje.getPrecioClaseTur());
+		vC.setPrecioClasePrim(viaje.getPrecioClasePrim());
 	}
 
 	private void controlarTeclasParaTiposFlotantes(KeyEvent e) {
@@ -894,6 +1410,19 @@ public class PlantillaDLF extends JDialog {
 		
 		agregarLabelsPanelImagenes();
 		agregarCamposPanelImagenes();
+	}
+	
+	private void agregarPanelImagenesAF(ViajeCabecera viaje) {
+
+		panelImagenes = new JPanel();
+		panelImagenes.setLayout(null);
+		panelImagenes.setBackground(Color.WHITE);		
+		panelImagenes.setBorder(new TitledBorder(null, "Imagenes", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(59, 59, 59)));
+		panelImagenes.setBounds(330, 345, 510, 130);
+		getContentPane().add(panelImagenes);
+		
+		agregarLabelsPanelImagenes();
+		agregarCamposPanelImagenesAF(viaje);
 	}
 
 	private void agregarLabelsPanelImagenes() {
@@ -1004,6 +1533,104 @@ public class PlantillaDLF extends JDialog {
 		vC.setImagen2("");
 	}
 	
+	private void agregarCamposPanelImagenesAF(ViajeCabecera viaje) {
+
+		txtImagen1 = new JTextField(viaje.getImagen1());
+		txtImagen1.getDocument().addDocumentListener(new DocumentListener() {
+			
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+
+				if (txtImagen1.getText().length() > 0){
+					vC.setImagen1(txtImagen1.getText());				
+				}else{
+					vC.setImagen1("");
+				}
+				
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+			
+				if (txtImagen1.getText().length() > 0){
+					vC.setImagen1(txtImagen1.getText());				
+				}else{
+					vC.setImagen1("");
+				}
+				
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				
+			}
+		});
+		txtImagen1.setEditable(false);
+		txtImagen1.setBounds(100, 30, 215, 30);
+		panelImagenes.add(txtImagen1);
+		
+		JButton btnImagen1 = new JButton("Agregar Imagen..");
+		btnImagen1.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				actionBtnImagen1();				
+			}
+
+		});
+		btnImagen1.setBounds(330, 30, 150, 30);
+		panelImagenes.add(btnImagen1);
+		
+		txtImagen2 = new JTextField(viaje.getImagen2());
+		txtImagen2.getDocument().addDocumentListener(new DocumentListener() {
+			
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				
+				if (txtImagen2.getText().length() > 0){
+					vC.setImagen2(txtImagen2.getText());				
+				}else{
+					vC.setImagen2("");
+				}
+				
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				
+				if (txtImagen2.getText().length() > 0){
+					vC.setImagen2(txtImagen2.getText());				
+				}else{
+					vC.setImagen2("");
+				}
+				
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+
+			}
+		});
+		txtImagen2.setEditable(false);
+		txtImagen2.setBounds(100, 70, 215, 30);
+		panelImagenes.add(txtImagen2);
+		
+		JButton btnImagen2 = new JButton("Agregar Imagen..");
+		btnImagen2.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				actionBtnImagen2();				
+			}
+
+		});
+		btnImagen2.setBounds(330, 70, 150, 30);
+		panelImagenes.add(btnImagen2);
+		
+		vC.setImagen1(viaje.getImagen1());
+		vC.setImagen2(viaje.getImagen2());
+	}
+	
 	private void actionBtnImagen1() {
 
 		JFileChooser imagen1 = new JFileChooser("/home/ivang94/workspace/ProyectoFinal/src/imagenes");
@@ -1014,11 +1641,10 @@ public class PlantillaDLF extends JDialog {
 		int opcion = imagen1.showOpenDialog(this);
 		
 		if (opcion == JFileChooser.APPROVE_OPTION){
-			txtImagen1.setText(imagen1.getSelectedFile().getPath());
+			txtImagen1.setText(imagen1.getSelectedFile().getPath().substring(41));
 		}
 		
 	}
-	
 	
 	private void actionBtnImagen2(){
 		
@@ -1030,10 +1656,9 @@ public class PlantillaDLF extends JDialog {
 		int opcion = imagen2.showOpenDialog(this);
 		
 		if (opcion == JFileChooser.APPROVE_OPTION){
-			txtImagen2.setText(imagen2.getSelectedFile().getPath());
+			txtImagen2.setText(imagen2.getSelectedFile().getPath().substring(41));
 		}
 	}
-	
 	
 	private void agregarPanelInfoExtra() {
 		
@@ -1046,6 +1671,19 @@ public class PlantillaDLF extends JDialog {
 		
 		agregarLabelsPanelInfoExtra();
 		agregarCamposPanelInfoExtra();		
+	}
+	
+	private void agregarPanelInfoExtraAF(ViajeCabecera viaje) {
+		
+		panelInfoExtra = new JPanel();
+		panelInfoExtra.setBounds(25, 495, 815, 90);
+		panelInfoExtra.setBackground(Color.WHITE);
+		getContentPane().add(panelInfoExtra);
+		panelInfoExtra.setLayout(null);
+		panelInfoExtra.setBorder(new TitledBorder(null, "Informacion extra", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(59, 59, 59)));
+		
+		agregarLabelsPanelInfoExtra();
+		agregarCamposPanelInfoExtraAF(viaje);
 	}
 
 	private void agregarLabelsPanelInfoExtra() {
@@ -1125,6 +1763,71 @@ public class PlantillaDLF extends JDialog {
 		vC.setCupo(Integer.parseInt(txtCupo.getText()));
 	}
 
+	private void agregarCamposPanelInfoExtraAF(ViajeCabecera viaje) {
+
+		String[] modelHora = new String[] {"00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"};
+		String[] modelMinuto = new String[] {"00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"};
+		
+		txtDistancia = new JTextField(viaje.getDistancia().toString());
+		txtDistancia.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				
+				if (txtDistancia.getText().trim().length() > 0){
+					vC.setDistancia(Integer.parseInt(txtDistancia.getText()));						
+				}else{
+					vC.setDistancia(-1);
+				}
+			}
+		});
+		txtDistancia.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				controlarTeclasParaTiposFlotantes(e);
+			}
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if (txtDistancia.getText().trim().length() > 0){
+					vC.setDistancia(Integer.parseInt(txtDistancia.getText()));						
+				}else{
+					vC.setDistancia(-1);
+				}
+			}
+
+		});
+		txtDistancia.setBounds(120, 30, 125, 30);
+		panelInfoExtra.add(txtDistancia);
+
+		cmbHoraDuracion = new JComboBox();
+		cmbHoraDuracion.setModel(new DefaultComboBoxModel<>(modelHora));
+		cmbHoraDuracion.getModel().setSelectedItem(viaje.getDuracion().toString().substring(0, 2));
+		cmbHoraDuracion.setEnabled(false);
+		cmbHoraDuracion.setBounds(375, 30, 50, 30);
+		panelInfoExtra.add(cmbHoraDuracion);
+		
+		JLabel label3 = new JLabel(":");
+		label3.setFont(new Font("DejaVu Sans", Font.PLAIN, 14));
+		label3.setBounds(435, 30, 15, 30);
+		panelInfoExtra.add(label3);
+		
+		cmbMinutoDuracion = new JComboBox();
+		cmbMinutoDuracion.setModel(new DefaultComboBoxModel<>(modelMinuto));
+		cmbMinutoDuracion.getModel().setSelectedItem(viaje.getDuracion().toString().substring(3, 5));
+		cmbMinutoDuracion.setEnabled(false);
+		cmbMinutoDuracion.setBounds(450, 30, 50, 30);
+		panelInfoExtra.add(cmbMinutoDuracion);
+		
+		txtCupo = new JTextField(viaje.getCupo());
+		txtCupo.setEditable(false);
+		txtCupo.setText("66");
+		txtCupo.setBounds(620, 30, 165, 30);
+		panelInfoExtra.add(txtCupo);
+		
+		vC.setDistancia(viaje.getDistancia());
+		vC.setDuracion(viaje.getDuracion());
+		vC.setCupo(viaje.getCupo());
+	}
+	
 	private void calcularDuracion(){
 		
 		Integer horaSalida = Integer.parseInt(cmbHoraSalida.getSelectedItem().toString());
@@ -1171,7 +1874,7 @@ public class PlantillaDLF extends JDialog {
 		
 	}
 	
-	private void agregarBotonGuardarCambios() {
+	private void agregarBotonCargarVuelo() {
 		
 		btnCargarVuelo = new JButton("Cargar vuelo");
 		btnCargarVuelo.addActionListener(new ActionListener() {
@@ -1200,9 +1903,8 @@ public class PlantillaDLF extends JDialog {
 				String duracion = cmbHoraDuracion.getSelectedItem() + ":" + cmbMinutoDuracion.getSelectedItem() + ":00";
 				vC.setDuracion(Time.valueOf(duracion));
 				
-				vC.setOferta(0f);
-				
-				vCBo = new ViajeCabeceraBoImpl();
+				vC.setOferta("0.0");
+				vC.setImagenOferta("");
 				
 				try {
 					
@@ -1219,21 +1921,59 @@ public class PlantillaDLF extends JDialog {
 				} catch (ViajeCabeceraNotValidException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage());
 				}
-				
-//				if (getBtnRealizarCambios().getText() == "Guardar cambios"){
-//				
-//					try {
-//						vCDao.modificacion(vC);
-//					} catch (ClassNotFoundException e1) {
-//						JOptionPane.showMessageDialog(null, e1.getMessage());
-//					} catch (SQLException e1) {
-//						JOptionPane.showMessageDialog(null, e1.getMessage());
-//					}
-//					
-//					JOptionPane.showMessageDialog(null, "Se ha modificado el vuelo con exito!");
-//					
-//				}
 
+			}
+		});
+		btnCargarVuelo.setBounds(25, 605, 170, 35);
+		getContentPane().add(btnCargarVuelo);
+	}
+	
+	private void agregarBotonGuardarCambios() {
+		
+		btnCargarVuelo = new JButton("Guardar Cambios");
+		btnCargarVuelo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+		
+				if (dateChooserFechaSalida.getDate() != null){
+					Date salida = new Date(dateChooserFechaSalida.getDate().getTime());
+					vC.setFechaSalida(salida);
+				}else{
+					vC.setFechaSalida(null);
+				}
+				
+				if (dateChooserFechaLlegada.getDate() != null){
+					Date llegada = new Date(dateChooserFechaLlegada.getDate().getTime());
+					vC.setFechaLlegada(llegada);
+				}else{
+					vC.setFechaLlegada(null);
+				}
+			
+				String horaSalida = cmbHoraSalida.getSelectedItem() + ":" + cmbMinutoSalida.getSelectedItem() + ":00";
+				vC.setHoraSalida(Time.valueOf(horaSalida));
+				
+				String horaLlegada = cmbHoraLlegada.getSelectedItem() + ":" + cmbMinutoLlegada.getSelectedItem() + ":00";
+				vC.setHoraLlegada(Time.valueOf(horaLlegada));
+			
+				String duracion = cmbHoraDuracion.getSelectedItem() + ":" + cmbMinutoDuracion.getSelectedItem() + ":00";
+				vC.setDuracion(Time.valueOf(duracion));
+				
+				vC.setOferta("0.0");
+				vC.setImagenOferta("");
+				
+				try {
+					
+					vCBo.verificarTodos(vC);
+					
+					vCBo.modificarVuelo(vC);
+					
+					JOptionPane.showMessageDialog(null, "Se ha modificado el vuelo con exito!"); 
+
+					dispose();
+					
+				} catch (ViajeCabeceraNotValidException e1) {
+					JOptionPane.showMessageDialog(null, e1.getMessage());
+				}
+				
 			}
 		});
 		btnCargarVuelo.setBounds(25, 605, 170, 35);

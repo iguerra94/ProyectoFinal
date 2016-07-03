@@ -11,7 +11,9 @@ public class NotValidPassengerException extends Exception {
 	public NotValidPassengerException(){
 		
 	}
-	
+	/**
+	 * Excepcion de negocio que lanza un mensaje descriptivo cuando los datos del pasajero no son validos, es decir, que faltan ingresar datos del pasajero.
+	 */
 	public String getMessage(){
 		return "Faltan ingresar datos del pasajero. Complete los campos faltantes.";
 	}

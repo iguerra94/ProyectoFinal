@@ -1,5 +1,6 @@
 package org.proyectofinal.dao.impl;
 
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,6 +18,10 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 	
 	public void desconectar() throws SQLException{
 		super.desconectar();
+	}
+	
+	public Connection getConexion() {
+		return super.getConexion();
 	}
 
 	public ResultSet consultar() throws ClassNotFoundException, SQLException {
@@ -130,7 +135,7 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		
 		conectar();
 		
-		PreparedStatement sentencia = getConexion().prepareStatement("INSERT INTO ViajeCabecera VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+		PreparedStatement sentencia = getConexion().prepareStatement("INSERT INTO ViajeCabecera VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 		
 		sentencia.setString(1, vC.getCodigoViaje());
 		sentencia.setString(2, vC.getCiudadOrigen());
@@ -149,10 +154,11 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		sentencia.setTime(15, vC.getDuracion());
 		sentencia.setFloat(16, vC.getPrecioClaseTur());
 		sentencia.setFloat(17, vC.getPrecioClasePrim());
-		sentencia.setFloat(18, vC.getOferta());
-		sentencia.setString(19, vC.getImagen1());
-		sentencia.setString(20, vC.getImagen2());
-		sentencia.setInt(21, vC.getCupo());
+		sentencia.setString(18, vC.getOferta());
+		sentencia.setString(19, vC.getImagenOferta());
+		sentencia.setString(20, vC.getImagen1());
+		sentencia.setString(21, vC.getImagen2());
+		sentencia.setInt(22, vC.getCupo());
 
 		
 		sentencia.executeUpdate();
@@ -188,31 +194,115 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		desconectar();
 	}
 	
-//	public void 
-	
 	public void modificacion(ViajeCabecera vC) throws SQLException, ClassNotFoundException{
 		
 		conectar();			
 		
 		PreparedStatement sentencia = null;
 		
-		sentencia = getConexion().prepareStatement("update ViajeCabecera set ciudadOrigen = ?, paisOrigen = ?, ciudadDestino = ?, paisDestino = ?, fechaSalida = ?, horaSalida = ?, fechaLlegada = ?, horaLlegada = ?, cupo = ? where codViaje = ?");
+		sentencia = getConexion().prepareStatement("update ViajeCabecera set ciudadOrigen = ?, paisOrigen = ?, shortPaisOrigen = ?, plataformaOrigen = ?, ciudadDestino = ?, paisDestino = ?, shortpaisDestino = ?, plataformaDestino = ?, fechaSalida = ?, horaSalida = ?, fechaLlegada = ?, horaLlegada = ?, distancia = ?, duracion = ?, precioClaseTur = ?, precioClasePrim = ?, oferta = ?, imagenOferta = ?, imagen1 = ?, imagen2 = ?, cupo = ? where codViaje = ?");
 		
 		sentencia.setString(1, vC.getCiudadOrigen());
 		sentencia.setString(2, vC.getPaisOrigen());
-		sentencia.setString(3, vC.getCiudadDestino());
-		sentencia.setString(4, vC.getPaisDestino());
-		sentencia.setDate(5, vC.getFechaSalida());
-		sentencia.setTime(6, vC.getHoraSalida());
-		sentencia.setDate(7, vC.getFechaLlegada());
-		sentencia.setTime(8, vC.getHoraLlegada());
-		sentencia.setInt(9, vC.getCupo());
-		sentencia.setString(10, vC.getCodigoViaje());
+		sentencia.setString(3, vC.getShortPaisOrigen());
+		sentencia.setString(4, vC.getPlataformaOrigen());
+		
+		sentencia.setString(5, vC.getCiudadDestino());
+		sentencia.setString(6, vC.getPaisDestino());
+		sentencia.setString(7, vC.getShortPaisDestino());
+		sentencia.setString(8, vC.getPlataformaDestino());
+		
+		sentencia.setDate(9, vC.getFechaSalida());
+		sentencia.setTime(10, vC.getHoraSalida());
+		
+		sentencia.setDate(11, vC.getFechaLlegada());
+		sentencia.setTime(12, vC.getHoraLlegada());		
+		
+		sentencia.setInt(13, vC.getDistancia());
+		sentencia.setTime(14, vC.getDuracion());
+		sentencia.setFloat(15, vC.getPrecioClaseTur());
+		sentencia.setFloat(16, vC.getPrecioClasePrim());
+		sentencia.setString(17, vC.getOferta());
+		sentencia.setString(18, vC.getImagenOferta());
+		sentencia.setString(19, vC.getImagen1());
+		sentencia.setString(20, vC.getImagen2());
+		sentencia.setInt(21, vC.getCupo());
+	
+		sentencia.setString(22, vC.getCodigoViaje());
 		
 		sentencia.executeUpdate();
-	//	sentencia.close();
 		
 		desconectar();
+	}
+
+	@Override
+	public void altaOferta(ViajeCabecera vC) throws SQLException, ClassNotFoundException {
+		
+		conectar();			
+		
+		PreparedStatement sentencia = null;
+		
+		sentencia = getConexion().prepareStatement("update ViajeCabecera set oferta = ?, imagenOferta = ? where ciudadOrigen = ? and shortPaisOrigen = ? and ciudadDestino = ? and shortPaisDestino = ?");
+
+		sentencia.setString(1, vC.getOferta());
+		sentencia.setString(2, vC.getImagenOferta());
+		
+		sentencia.setString(3, vC.getCiudadOrigen());
+		sentencia.setString(4, vC.getShortPaisOrigen());
+		sentencia.setString(5, vC.getCiudadDestino());
+		sentencia.setString(6, vC.getShortPaisDestino());
+	
+		sentencia.executeUpdate();
+		
+		desconectar();
+	}
+
+	@Override
+	public ResultSet consultarOrigenesYDestinos() throws SQLException, ClassNotFoundException {
+
+		PreparedStatement sentencia = getConexion().prepareStatement("SELECT DISTINCT ciudadOrigen, shortPaisOrigen, ciudadDestino, shortPaisDestino, oferta FROM ViajeCabecera");
+		
+		ResultSet resultado = sentencia.executeQuery();
+	
+		return resultado;		
+	}
+
+	@Override
+	public void bajaOferta(ViajeCabecera vC) throws SQLException, ClassNotFoundException {
+		
+		conectar();
+		
+		PreparedStatement sentencia = null;
+		
+		sentencia = getConexion().prepareStatement("update ViajeCabecera set oferta = 0 where ciudadOrigen = ? and shortPaisOrigen = ? and ciudadDestino = ? and shortPaisDestino = ?");
+		
+		sentencia.setString(1, vC.getCiudadOrigen());
+		sentencia.setString(2, vC.getShortPaisOrigen());
+		sentencia.setString(3, vC.getCiudadDestino());
+		sentencia.setString(4, vC.getShortPaisDestino());
+
+		sentencia.executeUpdate();
+	
+		desconectar();
+	}
+
+	@Override
+	public ResultSet consultarOrigenesDestinos() throws SQLException, ClassNotFoundException {
+		
+		PreparedStatement sentencia = getConexion().prepareStatement("SELECT DISTINCT ciudadOrigen, shortPaisOrigen, ciudadDestino, shortPaisDestino FROM ViajeCabecera");
+		
+		ResultSet resultado = sentencia.executeQuery();
+	
+		return resultado;		
+	}
+
+	public ResultSet consultarDatosOferta() throws SQLException, ClassNotFoundException {
+			
+		PreparedStatement sentencia = getConexion().prepareStatement("SELECT DISTINCT ciudadOrigen, shortPaisOrigen, ciudadDestino, shortPaisDestino, oferta, imagenOferta, precioClaseTur FROM ViajeCabecera");
+		
+		ResultSet resultado = sentencia.executeQuery();
+	
+		return resultado;		
 	}
 	
 }

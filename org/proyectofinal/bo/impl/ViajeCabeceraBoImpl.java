@@ -3,11 +3,14 @@ package org.proyectofinal.bo.impl;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.proyectofinal.bo.ex.NotOffersFoundException;
 import org.proyectofinal.bo.ex.ViajeCabeceraNotValidException;
+import org.proyectofinal.bo.ex.ViajeCabeceraOfferNotValidException;
 import org.proyectofinal.bo.interfaces.ViajeCabeceraBo;
 import org.proyectofinal.dao.ex.NoFlightsFoundException;
 import org.proyectofinal.dao.impl.ViajeCabeceraDaoImpl;
@@ -27,17 +30,27 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 			vC.getCiudadDestino().length() == 0 || 
 			vC.getPlataformaDestino().length() == 0 || 
 			vC.getFechaSalida() == null ||
-			vC.getHoraSalida().toString() == "00:00:00" ||
 			vC.getFechaLlegada() == null ||
-			vC.getHoraLlegada().toString() == "00:00:00" || 
 			vC.getDistancia() == -1 || 
-			vC.getDuracion().toString() == "00:00:00" ||								
+			vC.getDuracion().equals(Time.valueOf("00:00:00")) ||								
 			vC.getPrecioClasePrim() == -1f ||
 			vC.getPrecioClaseTur() == -1f ||
 			vC.getImagen1().length() == 0 ||
 			vC.getImagen2().length() == 0){
 
 			throw new ViajeCabeceraNotValidException();
+		}
+		
+	}
+	
+	public void verificarOferta(ViajeCabecera vC) throws ViajeCabeceraOfferNotValidException {
+
+		if (vC.getShortPaisOrigen().length() == 0 || vC.getCiudadOrigen().length() == 0 || 
+			vC.getShortPaisDestino().length() == 0 || vC.getCiudadDestino().length() == 0 || 
+			Float.parseFloat(vC.getOferta()) <= 0 || Float.parseFloat(vC.getOferta()) > 0.75 || 
+			vC.getImagenOferta().length() == 0){
+	
+			throw new ViajeCabeceraOfferNotValidException();
 		}
 		
 	}
@@ -84,6 +97,82 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 		
 		return listOrigenes;
 		
+	}
+	
+	public List<String> retornarOfertas() throws NotOffersFoundException{
+		
+		List<String> listOffers = new ArrayList<String>();
+		
+		ViajeCabeceraDao vCDao = new ViajeCabeceraDaoImpl();
+		
+		try {
+
+			vCDao.conectar();
+
+			ResultSet res = vCDao.consultarOrigenesYDestinos();
+
+			while (res.next()){
+				if (Float.parseFloat(res.getString("oferta")) > 0f){
+					listOffers.add(res.getString("ciudadOrigen")+" ("+res.getString("shortPaisOrigen")+") - " +res.getString("ciudadDestino")+" ("+res.getString("shortPaisDestino") + ")");
+				}
+			}
+			
+			vCDao.desconectar();
+
+			if (listOffers.size() == 0){
+				throw new NotOffersFoundException();
+			}
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return listOffers;
+	}
+	
+	public List<ViajeCabecera> retornarListaOfertas(){
+		
+		List<ViajeCabecera> listOffers = new ArrayList<ViajeCabecera>();
+		
+		ViajeCabeceraDao vCDao = new ViajeCabeceraDaoImpl();
+		
+		ViajeCabecera vC = null;
+		
+		try {
+
+			vCDao.conectar();
+
+			ResultSet res = vCDao.consultarDatosOferta();
+
+			while (res.next()){
+				
+				if (Float.parseFloat(res.getString("oferta")) > 0f){
+					
+					vC = new ViajeCabeceraImpl();
+					
+					vC.setCiudadOrigen(res.getString("ciudadOrigen"));
+					vC.setShortPaisOrigen(res.getString("shortPaisOrigen"));
+					vC.setCiudadDestino(res.getString("ciudadDestino"));
+					vC.setShortPaisDestino(res.getString("shortPaisDestino"));								
+					vC.setOferta(res.getString("oferta"));
+					vC.setImagenOferta(res.getString("imagenOferta"));
+					vC.setPrecioClaseTur(res.getFloat("precioClaseTur"));
+
+					listOffers.add(vC);
+				}
+			}
+			
+			vCDao.desconectar();
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return listOffers;
 	}
 	
 	public List<String> retornarDestinos(){
@@ -144,7 +233,8 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 				vC.setDuracion(res.getTime("duracion"));
 				vC.setPrecioClaseTur(res.getFloat("precioClaseTur"));
 				vC.setPrecioClasePrim(res.getFloat("precioClasePrim"));
-				vC.setOferta(res.getFloat("oferta"));
+				vC.setOferta(res.getString("oferta"));
+				vC.setImagenOferta(res.getString("imagenOferta"));
 				vC.setImagen1(res.getString("imagen1"));
 				vC.setImagen2(res.getString("imagen2"));
 				vC.setCupo(res.getInt("cupo"));
@@ -270,10 +360,8 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 	}
 
 	@Override
-	public String[] retornarCodigosViaje() {
+	public List<String> retornarCodigosViaje() {
 
-		String[] modeloVuelos = null;
-		
 		ViajeCabeceraDao vCDao = new ViajeCabeceraDaoImpl();
 		
 		List<String> listaVuelos = new ArrayList<String>();
@@ -285,23 +373,14 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 			while (res.next()){
 				listaVuelos.add(res.getString("codViaje"));
 			}
-			
-			modeloVuelos = new String[listaVuelos.size()];
-			
-			int i = 0;
-			
-			for (String codigo : listaVuelos) {
-				modeloVuelos[i] = codigo;
-				i++;
-			}
-			
+						
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 		
-		return modeloVuelos;
+		return listaVuelos;
 	}
 
 	@Override
@@ -330,6 +409,79 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void modificarVuelo(ViajeCabecera vC) {
+			
+		ViajeCabeceraDao vCDao = new ViajeCabeceraDaoImpl();
+		
+		try {
+			vCDao.modificacion(vC);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	@Override
+	public void cargarOferta(ViajeCabecera vC) {
+		
+		ViajeCabeceraDao vCDao = new ViajeCabeceraDaoImpl();
+		
+		try {
+			vCDao.altaOferta(vC);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	@Override
+	public void eliminarOferta(ViajeCabecera vC) {
+		
+		ViajeCabeceraDao vCDao = new ViajeCabeceraDaoImpl();
+		
+		try {
+			vCDao.bajaOferta(vC);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public List<String> retornarOrigenesDestinos() {
+		
+		List<String> listOrigenesDestinos = new ArrayList<String>();
+		
+		ViajeCabeceraDao vCDao = new ViajeCabeceraDaoImpl();
+		
+		try {
+
+			vCDao.conectar();
+
+			ResultSet res = vCDao.consultarOrigenesDestinos();
+
+			while (res.next()){
+				listOrigenesDestinos.add(res.getString("ciudadOrigen")+" ("+res.getString("shortPaisOrigen")+") - " + res.getString("ciudadDestino")+" ("+res.getString("shortPaisDestino")+")");
+			}
+			
+			vCDao.desconectar();
+
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	
+		return listOrigenesDestinos;
+		
 	}
 	
 }

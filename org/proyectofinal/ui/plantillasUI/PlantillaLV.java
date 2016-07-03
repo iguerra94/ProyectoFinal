@@ -26,6 +26,7 @@ import org.proyectofinal.ui.ReservaBoletoUI;
 public class PlantillaLV extends JDialog {
 	
 	private JLabel labelDni;
+	private JLabel labelAcumula;
 	private JPanel panelVuelos;
 	private JScrollPane scrollPane;
 	private JPanel panelVuelo;
@@ -45,7 +46,7 @@ public class PlantillaLV extends JDialog {
 		setTitle("Busqueda de vuelos");
 		getContentPane().setBackground(new Color(245,245,245));
 		setModal(true);
-		setSize(750, 610);
+		setSize(750, 620);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
 	}
@@ -54,7 +55,7 @@ public class PlantillaLV extends JDialog {
 		agregarPaneVuelo();		
 	}
 
-	private void agregarLabels(String dni) {
+	private void agregarLabels(String dni, Boolean acumula) {
 
 		JLabel label1 = new JLabel("Vuelo");
 		label1.setVerticalAlignment(SwingConstants.CENTER);
@@ -91,6 +92,10 @@ public class PlantillaLV extends JDialog {
 		labelDni = new JLabel("");
 		labelDni.setToolTipText(dni);
 		label4.setBounds(-10, 0, 10, 0);
+		
+		labelAcumula = new JLabel("");
+		labelAcumula.setToolTipText(acumula.toString());
+		labelAcumula.setBounds(-10, 10, 10, 0);		
 	}
 
 	private void agregarPaneVuelo() {
@@ -171,8 +176,8 @@ public class PlantillaLV extends JDialog {
 		lblFechaLlegada.setFont(new Font("Arial", Font.BOLD,14));
 		lblFechaLlegada.setBounds(292, 30, 160, 20);
 		panelVuelo.add(lblFechaLlegada);
-		
-		JLabel lblDuracion = new JLabel("01:00");
+
+		JLabel lblDuracion = new JLabel(viaje.getDuracion().toString().substring(0, 5));
 		lblDuracion.setHorizontalAlignment(SwingConstants.CENTER);
 		lblDuracion.setFont(new Font("Arial", Font.BOLD,14));
 		lblDuracion.setBounds(452, 10, 100, 20);
@@ -190,7 +195,7 @@ public class PlantillaLV extends JDialog {
 		label6.setBounds(547, 35, 93, 25);
 		panelVuelo.add(label6);
 		
-		JLabel lblPrecio = new JLabel(String.format("%.2f", ( viaje.getPrecioClaseTur() - ( viaje.getPrecioClaseTur()*viaje.getOferta() ) )));
+		JLabel lblPrecio = new JLabel(String.format("%.2f", ( viaje.getPrecioClaseTur() - ( viaje.getPrecioClaseTur()*Float.parseFloat(viaje.getOferta()) ) )));
 		lblPrecio.setHorizontalAlignment(SwingConstants.LEFT);
 		lblPrecio.setFont(new Font("Arial", Font.BOLD,14));
 		lblPrecio.setBounds(640, 35, 70, 25);
@@ -218,7 +223,7 @@ public class PlantillaLV extends JDialog {
 				
 				ui.setearViajeYDniReserva(viaje, dni);
 				
-				ui.cargarInfoVuelo(viaje);
+				ui.cargarInfoVuelo(viaje, new Boolean(labelAcumula.getToolTipText()));
 				
 				dispose();
 				
@@ -310,8 +315,8 @@ public class PlantillaLV extends JDialog {
 		panelImagenes.add(btnImagen2);		
 	}
 	
-	public void setearDni(String dni){
-		agregarLabels(dni);
+	public void setearDniyAcumula(String dni, Boolean acumula){
+		agregarLabels(dni, acumula);
 	}
 	
 	public void mostrarVuelos(List<ViajeCabecera> listaViajes){

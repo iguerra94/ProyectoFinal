@@ -4,27 +4,27 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javax.swing.JOptionPane;
-
 import org.proyectofinal.bo.ex.PersonNotValidAgeException;
 import org.proyectofinal.bo.interfaces.PersonaRegistradaBo;
 import org.proyectofinal.dao.ex.PersonAlreadyExistsException;
 import org.proyectofinal.dao.ex.PersonNotValidException;
 import org.proyectofinal.dao.impl.PersonaRegistradaDaoImpl;
-import org.proyectofinal.dao.impl.ViajeCabeceraDaoImpl;
 import org.proyectofinal.dao.interfaces.PersonaRegistradaDao;
-import org.proyectofinal.dao.interfaces.ViajeCabeceraDao;
 import org.proyectofinal.model.impl.PersonaRegistradaImpl;
-import org.proyectofinal.model.impl.ViajeCabeceraImpl;
 import org.proyectofinal.model.interfaces.PersonaRegistrada;
-import org.proyectofinal.model.interfaces.ViajeCabecera;
 
 public class PersonaRegistradaBoImpl implements PersonaRegistradaBo {
 	
+	/**
+	 * Constructor de la clase de negocio PersonaRegistraBoImpl
+	 */
 	public PersonaRegistradaBoImpl(){
 		
 	}
 	
+	/**
+	 * Metodo de negocio que verifica que todos los datos de la PersonaRegistrada sean correctos.
+	 */
 	public void verificarTodos(PersonaRegistrada p) throws PersonNotValidException{
 		
 		if (p.getDni() == null || p.getNombre() == null || p.getApellido() == null || 
@@ -36,6 +36,9 @@ public class PersonaRegistradaBoImpl implements PersonaRegistradaBo {
 		
 	}
 	
+	/**
+	 * Metodo de negocio que verifica que los datos mas importantes de la PersonaRegistrada sean correctos.
+	 */
 	public void verificarImportantes(PersonaRegistrada p) throws PersonNotValidException {
 	
 		if (p.getDni() == null || p.getDni().length() == 0 || p.getNombre() == null || p.getNombre().length() == 0 || p.getApellido() == null || 
@@ -46,6 +49,9 @@ public class PersonaRegistradaBoImpl implements PersonaRegistradaBo {
 		
 	}
 	
+	/**
+	 * Metodo de negocio que verifica que la edad de la PersonaRegistrada pasada como parametro sea mayor a 18 años.
+	 */
 	public void verificarEdad(PersonaRegistrada p) throws PersonNotValidAgeException {
 		
 		Integer edad = null;
@@ -72,6 +78,9 @@ public class PersonaRegistradaBoImpl implements PersonaRegistradaBo {
 
 	}
 	
+	/**
+	 * Metodo de negocio que accede al objeto DAO PersonaRegistrada para insertar una nueva PersonaRegistrada. 
+	 */
 	public void registrarPersona(PersonaRegistrada p) throws ClassNotFoundException, SQLException, PersonAlreadyExistsException {
 		
 		PersonaRegistradaDao pDao = new PersonaRegistradaDaoImpl();
@@ -79,6 +88,9 @@ public class PersonaRegistradaBoImpl implements PersonaRegistradaBo {
 		pDao.altaPersonaRegistrada(p);
 	}
 	
+	/**
+	 * Metodo de negocio que retorna el email de la PersonaRegistrada segun el dni pasado como parametro.
+	 */
 	public String retornarEmail(String dni){
 		
 		String email = null;
@@ -106,6 +118,9 @@ public class PersonaRegistradaBoImpl implements PersonaRegistradaBo {
 		return email;		
 	}
 	
+	/**
+	 * Metodo de negocio que retorna la PersonaRegistrada con todos sus datos a partir del usuario pasado como parametro.
+	 */
 	public PersonaRegistrada retornarPersona(String usuario) {
 		
 		PersonaRegistrada pR = new PersonaRegistradaImpl();
@@ -142,6 +157,7 @@ public class PersonaRegistradaBoImpl implements PersonaRegistradaBo {
 		
 	}
 
+	
 	@Override
 	public PersonaRegistrada retornarPersonaPorUsuario(String usuario) {
 		
@@ -150,6 +166,9 @@ public class PersonaRegistradaBoImpl implements PersonaRegistradaBo {
 		return p;
 	}
 
+	/**
+	 * Metodo de negocio modifica los datos de la Persona, a partir del objeto PersonaRegistrada pasado como parametro.
+	 */
 	@Override
 	public void modificarPersona(PersonaRegistrada pR){
 		
@@ -159,10 +178,8 @@ public class PersonaRegistradaBoImpl implements PersonaRegistradaBo {
 			pRDao.modificacion(pR);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
-//			JOptionPane.showMessageDialog(null, e.getMessage());
 		} catch (SQLException e) {
 			e.printStackTrace();
-//			JOptionPane.showMessageDialog(null, e.getMessage());
 		}
 		
 	}

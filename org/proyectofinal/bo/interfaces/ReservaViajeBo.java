@@ -12,4 +12,5 @@ public interface ReservaViajeBo {
 	public List<Integer> controlarAsientosOcupados(ViajeCabecera viaje);		
 	public void agregarReserva(ReservaViaje reservaViaje);
 	public Integer retornarCantidadDeReservas(String dni);
+	public List<ReservaViaje> retornarReservasSegunDni(String dni);
 }
