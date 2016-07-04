@@ -2,10 +2,10 @@ package org.proyectofinal.bo.interfaces;
 
 import java.util.List;
 
+import org.proyectofinal.bo.ex.NoFlightsFoundException;
 import org.proyectofinal.bo.ex.NotOffersFoundException;
 import org.proyectofinal.bo.ex.ViajeCabeceraNotValidException;
 import org.proyectofinal.bo.ex.ViajeCabeceraOfferNotValidException;
-import org.proyectofinal.dao.ex.NoFlightsFoundException;
 import org.proyectofinal.model.interfaces.ViajeCabecera;
 
 public interface ViajeCabeceraBo {
@@ -17,6 +17,7 @@ public interface ViajeCabeceraBo {
 	public ViajeCabecera retornarViaje(String codViaje);
 	public List<String> retornarOrigenes();
 	public List<String> retornarDestinos();
+	public List<String> retornarOrigenesDestinos();
 	public List<String> retornarOfertas() throws NotOffersFoundException;
 	public List<ViajeCabecera> retornarListaOfertas();
 	public List<ViajeCabecera> retornarVuelosPorFecha(ViajeCabecera vC) throws NoFlightsFoundException;
@@ -28,5 +29,5 @@ public interface ViajeCabeceraBo {
 	public void modificarVuelo(ViajeCabecera vC);
 	public void cargarOferta(ViajeCabecera vC);
 	public void eliminarOferta(ViajeCabecera vC);
-	public List<String> retornarOrigenesDestinos();
+
 }

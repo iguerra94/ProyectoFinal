@@ -6,9 +6,9 @@ import java.awt.event.WindowListener;
 
 import javax.swing.JButton;
 
+import org.proyectofinal.bo.ex.UserNotExistsException;
 import org.proyectofinal.bo.impl.UsuarioBoImpl;
 import org.proyectofinal.bo.interfaces.UsuarioBo;
-import org.proyectofinal.dao.ex.UserNotExistsException;
 import org.proyectofinal.model.interfaces.Usuario;
 import org.proyectofinal.ui.plantillasUI.PlantillaDL;
 import org.proyectofinal.ui.plantillasUI.PlantillaMF;
@@ -43,10 +43,8 @@ public class DialogLogin extends PlantillaDL implements WindowListener {
 		PlantillaMF ui = new MainFrameUI();
 		
 		ui.setLogueado(true);
-
-		ui.setBtnPerfil(new JButton(""));
 		
-		ui.getBtnPerfil().setText(getUsuario().getNombreUsuario());
+		ui.agregarBotonPerfil(getUsuario().getNombreUsuario());
 		
 		UsuarioBo uBo = new UsuarioBoImpl();
 		

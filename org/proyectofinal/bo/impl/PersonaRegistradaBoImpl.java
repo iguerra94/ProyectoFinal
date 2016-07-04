@@ -4,12 +4,14 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.proyectofinal.bo.ex.PersonAlreadyExistsException;
 import org.proyectofinal.bo.ex.PersonNotValidAgeException;
+import org.proyectofinal.bo.ex.PersonNotValidException;
 import org.proyectofinal.bo.interfaces.PersonaRegistradaBo;
-import org.proyectofinal.dao.ex.PersonAlreadyExistsException;
-import org.proyectofinal.dao.ex.PersonNotValidException;
 import org.proyectofinal.dao.impl.PersonaRegistradaDaoImpl;
+import org.proyectofinal.dao.impl.ViajeCabeceraDaoImpl;
 import org.proyectofinal.dao.interfaces.PersonaRegistradaDao;
+import org.proyectofinal.dao.interfaces.ViajeCabeceraDao;
 import org.proyectofinal.model.impl.PersonaRegistradaImpl;
 import org.proyectofinal.model.interfaces.PersonaRegistrada;
 
@@ -182,6 +184,20 @@ public class PersonaRegistradaBoImpl implements PersonaRegistradaBo {
 			e.printStackTrace();
 		}
 		
+	}
+
+	@Override
+	public void actualizarSaldo(Integer distancia, String dniPersona) {
+			
+		PersonaRegistradaDao pRDao = new PersonaRegistradaDaoImpl();
+		
+		try {
+			pRDao.modificarSaldo(distancia, dniPersona);
+		} catch (ClassNotFoundException e) {			
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

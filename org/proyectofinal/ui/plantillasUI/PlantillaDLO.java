@@ -118,7 +118,7 @@ public class PlantillaDLO extends JDialog {
 					vC.setCiudadOrigen(origen.split("[(]")[0]);
 					vC.setShortPaisOrigen(origen.substring(origen.length()-4, origen.length()-1));
 	
-					vC.setCiudadDestino(origen.split("[(]")[0]);
+					vC.setCiudadDestino(destino.split("[(]")[0]);
 					vC.setShortPaisDestino(destino.substring(destino.length()-4, destino.length()-1));
 				}
 			}
@@ -291,6 +291,7 @@ public class PlantillaDLO extends JDialog {
 					vCBo.verificarOferta(vC);
 	
 					vCBo.cargarOferta(vC);
+					
 					
 					JOptionPane.showMessageDialog(null, "Se ha cargado la oferta con exito!"); 
 					

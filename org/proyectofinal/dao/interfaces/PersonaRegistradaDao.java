@@ -3,7 +3,7 @@ package org.proyectofinal.dao.interfaces;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.proyectofinal.dao.ex.PersonAlreadyExistsException;
+import org.proyectofinal.bo.ex.PersonAlreadyExistsException;
 import org.proyectofinal.model.interfaces.PersonaRegistrada;
 import org.proyectofinal.model.interfaces.Usuario;
 
@@ -23,5 +23,6 @@ public interface PersonaRegistradaDao {
 	public void bajaPersonaRegistrada(PersonaRegistrada p) throws SQLException, ClassNotFoundException;
 	public void modificacionDni(String valor, String dni) throws SQLException, ClassNotFoundException, PersonAlreadyExistsException;
 	public void modificacion(PersonaRegistrada pR) throws SQLException, ClassNotFoundException;
+	public void modificarSaldo(Integer distancia, String dniPersona) throws SQLException, ClassNotFoundException;
 
 }

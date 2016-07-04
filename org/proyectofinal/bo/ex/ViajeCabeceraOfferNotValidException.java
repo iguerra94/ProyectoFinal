@@ -6,6 +6,7 @@ public class ViajeCabeceraOfferNotValidException extends Exception {
 		
 	}
 	
+	
 	@Override
 	public String getMessage() {
 		return "La oferta ingresada no es valida. Faltan completar campos obligatorios";

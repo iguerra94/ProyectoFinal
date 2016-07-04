@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
+import javax.swing.border.LineBorder;
 
 import org.proyectofinal.bo.impl.ViajeCabeceraBoImpl;
 import org.proyectofinal.bo.interfaces.ViajeCabeceraBo;
@@ -91,7 +92,7 @@ public class PlantillaLV extends JDialog {
 		
 		labelDni = new JLabel("");
 		labelDni.setToolTipText(dni);
-		label4.setBounds(-10, 0, 10, 0);
+		labelDni.setBounds(-10, 0, 10, 0);
 		
 		labelAcumula = new JLabel("");
 		labelAcumula.setToolTipText(acumula.toString());
@@ -216,7 +217,7 @@ public class PlantillaLV extends JDialog {
 				ViajeCabecera viaje = vCBo.retornarViaje(btnSeleccionar.getToolTipText());
 				
 				String dni = labelDni.getToolTipText();
-				
+
 				ReservaBoletoUI ui = new ReservaBoletoUI();
 				
 				ui.cargarAsientos(viaje);

@@ -13,8 +13,7 @@ public class AbstractDao implements IDao {
 	public void conectar() throws ClassNotFoundException, SQLException{
 	
 		Class.forName("com.mysql.jdbc.Driver");
-		
-//		this.conexion = DriverManager.getConnection("jdbc:mysql://localhost:3305/ReservasAvion", "root", "asd123");
+
 		this.conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/ReservasAvion", "root", "genius34");
 	}
 	

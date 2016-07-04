@@ -4,11 +4,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.proyectofinal.bo.ex.NotEqualPasswordException;
+import org.proyectofinal.bo.ex.UserAlreadyExistsException;
+import org.proyectofinal.bo.ex.UserNotCorrectException;
+import org.proyectofinal.bo.ex.UserNotExistsException;
+import org.proyectofinal.bo.ex.UserNotValidException;
 import org.proyectofinal.bo.interfaces.UsuarioBo;
-import org.proyectofinal.dao.ex.UserAlreadyExistsException;
-import org.proyectofinal.dao.ex.UserNotCorrectException;
-import org.proyectofinal.dao.ex.UserNotExistsException;
-import org.proyectofinal.dao.ex.UserNotValidException;
 import org.proyectofinal.dao.impl.UsuarioDaoImpl;
 import org.proyectofinal.dao.interfaces.UsuarioDao;
 import org.proyectofinal.model.impl.UsuarioImpl;
@@ -60,27 +60,45 @@ public class UsuarioBoImpl implements UsuarioBo {
 		
 	}
 	
-	public void registrarUsuario(Usuario u) throws ClassNotFoundException, SQLException, UserAlreadyExistsException {
+	public void registrarUsuario(Usuario u) throws  UserAlreadyExistsException {
 		
 		UsuarioDao uDao = new UsuarioDaoImpl();
 	
-		uDao.alta(u);		
+		try {
+			uDao.alta(u);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
 	}
 
-	public String recuperarPass(String usuario) throws ClassNotFoundException, SQLException, UserNotExistsException {
+	public String recuperarPass(String usuario) throws  UserNotExistsException {
 
 		String pass = "";
 
 		UsuarioDao uDao = new UsuarioDaoImpl();
 		
-		ResultSet res = uDao.consultarPorUsuario(usuario);
-		
-		if (res.next()){
-			pass = res.getString("contrasenia");
-		}else{
-			throw new UserNotExistsException();
-		}
+		try {
 			
+			ResultSet res = uDao.consultarPorUsuario(usuario);
+			
+			if (res.next()){
+				pass = res.getString("contrasenia");
+			}else{
+				throw new UserNotExistsException();
+			}
+			
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return pass;
 	}
 

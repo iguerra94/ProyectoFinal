@@ -7,7 +7,12 @@ import java.awt.event.WindowFocusListener;
 import java.awt.event.WindowListener;
 import java.util.List;
 
+import javax.swing.JButton;
+import javax.swing.JLabel;
+
+import org.proyectofinal.bo.impl.UsuarioBoImpl;
 import org.proyectofinal.bo.impl.ViajeCabeceraBoImpl;
+import org.proyectofinal.bo.interfaces.UsuarioBo;
 import org.proyectofinal.bo.interfaces.ViajeCabeceraBo;
 import org.proyectofinal.model.interfaces.ViajeCabecera;
 import org.proyectofinal.ui.plantillasUI.PlantillaMF;
@@ -18,33 +23,27 @@ public class MainFrameUI extends PlantillaMF implements WindowListener, WindowFo
 		
 		inicializarAtributos();
 		inicializarComponentes();
-	
+		
 		addWindowListener(this);
 		addWindowFocusListener(this);
 		addComponentListener(this);
-		
-		getPanelOfertas().removeAll();
-		
-		ViajeCabeceraBo vCBo = new ViajeCabeceraBoImpl();
-		
-		List<ViajeCabecera> listaViajes = vCBo.retornarListaOfertas();
-		
-		cargarOfertas(listaViajes);
-		
+			
 		setVisible(true);
-		
 	}
 
 	@Override
 	public void windowGainedFocus(WindowEvent e) {
 		
-//		getPanelOfertas().removeAll();
-//		
-//		ViajeCabeceraBo vCBo = new ViajeCabeceraBoImpl();
-//		
-//		List<ViajeCabecera> listaViajes = vCBo.retornarListaOfertas();
-//		
-//		cargarOfertas(listaViajes);		
+		ViajeCabeceraBo vCBo = new ViajeCabeceraBoImpl();
+		
+		List<ViajeCabecera> listaViajes = vCBo.retornarListaOfertas();
+		
+		cargarOfertas(listaViajes);		
+		
+		getPanelOfertas().validate();
+        getPanelOfertas().repaint();
+        
+        pack();
 	}
 
 	@Override
@@ -55,7 +54,7 @@ public class MainFrameUI extends PlantillaMF implements WindowListener, WindowFo
 	public void windowOpened(WindowEvent e) {
 		
 		if (getLogueado()){
-			agregarBotonesLogueado();			
+			agregarBotonesLogueado();	
 		}else{
 			agregarBotonesNoLogueado();
 		}

@@ -3,7 +3,7 @@ package org.proyectofinal.dao.interfaces;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.proyectofinal.dao.ex.UserAlreadyExistsException;
+import org.proyectofinal.bo.ex.UserAlreadyExistsException;
 import org.proyectofinal.model.interfaces.Usuario;
 
 public interface UsuarioDao {

@@ -1,6 +1,5 @@
 package org.proyectofinal.main;
 
-import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 

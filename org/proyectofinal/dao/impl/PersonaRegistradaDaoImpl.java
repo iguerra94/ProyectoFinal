@@ -4,8 +4,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.proyectofinal.bo.ex.PersonAlreadyExistsException;
 import org.proyectofinal.dao.abstracts.AbstractDao;
-import org.proyectofinal.dao.ex.PersonAlreadyExistsException;
 import org.proyectofinal.dao.interfaces.PersonaRegistradaDao;
 import org.proyectofinal.model.interfaces.PersonaRegistrada;
 import org.proyectofinal.model.interfaces.Usuario;
@@ -281,6 +281,23 @@ public class PersonaRegistradaDaoImpl extends AbstractDao implements PersonaRegi
 		sentencia1.executeUpdate();
 		sentencia2.executeUpdate();
 		
+		desconectar();
+	}
+
+	@Override
+	public void modificarSaldo(Integer distancia, String dniPersona) throws SQLException, ClassNotFoundException {
+		
+		conectar();
+		
+		PreparedStatement sentencia = null;
+		
+		sentencia = getConexion().prepareStatement("update PersonaRegistrada set saldo = saldo + ? where dni = ?");
+		
+		sentencia.setInt(1, distancia);
+		sentencia.setString(2, dniPersona);
+		
+		sentencia.executeUpdate();
+	
 		desconectar();
 	}
 

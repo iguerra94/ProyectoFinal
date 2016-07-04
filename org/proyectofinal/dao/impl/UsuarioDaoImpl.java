@@ -4,9 +4,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.proyectofinal.bo.ex.UserAlreadyExistsException;
+import org.proyectofinal.bo.ex.UserNotExistsException;
 import org.proyectofinal.dao.abstracts.AbstractDao;
-import org.proyectofinal.dao.ex.UserAlreadyExistsException;
-import org.proyectofinal.dao.ex.UserNotExistsException;
 import org.proyectofinal.dao.interfaces.UsuarioDao;
 import org.proyectofinal.model.interfaces.Usuario;
 

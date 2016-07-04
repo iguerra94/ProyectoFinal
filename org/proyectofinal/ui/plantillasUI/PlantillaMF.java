@@ -30,6 +30,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.MatteBorder;
 
+import org.proyectofinal.bo.ex.NoFlightsFoundException;
 import org.proyectofinal.bo.ex.NotOffersFoundException;
 import org.proyectofinal.bo.ex.ViajeCabeceraNotValidException;
 import org.proyectofinal.bo.impl.PersonaRegistradaBoImpl;
@@ -38,7 +39,6 @@ import org.proyectofinal.bo.impl.ViajeCabeceraBoImpl;
 import org.proyectofinal.bo.interfaces.PersonaRegistradaBo;
 import org.proyectofinal.bo.interfaces.UsuarioBo;
 import org.proyectofinal.bo.interfaces.ViajeCabeceraBo;
-import org.proyectofinal.dao.ex.NoFlightsFoundException;
 import org.proyectofinal.model.impl.ViajeCabeceraImpl;
 import org.proyectofinal.model.interfaces.PersonaRegistrada;
 import org.proyectofinal.model.interfaces.ViajeCabecera;
@@ -63,9 +63,8 @@ public class PlantillaMF extends JFrame {
 	
 	private static final long serialVersionUID = -9218140826797976946L;
 	
+	private JLabel lblDni = new JLabel("");
 	private Boolean logueado = false;
-	private JPanel panelDescuentoOferta;
-	private ImageIcon imagenOferta;	
 	private JMenuBar menuBar;
 	private JButton btnRegistrarse;
 	private JButton btnIniciarSesion;
@@ -74,6 +73,7 @@ public class PlantillaMF extends JFrame {
 	private JPanel panelReserva;
 	private JPanel panelFrecuente;
 	private JPanel panelOfertas;
+	private JPanel panelDescuentoOferta;
 	private JTabbedPane paneReserva;
 	private JLabel lblOrigen;
 	private JComboBox cmbOrigen;
@@ -87,10 +87,10 @@ public class PlantillaMF extends JFrame {
 	private String origen;
 	private String destino;
 	private Date fechaIda;
+	private JButton botonReservaOferta;
+	private String dni;
 	private JLabel lblOrigenOferta;
 	private JLabel lblDestinoOferta;
-	private JLabel lblDescuentoOferta;
-	private JLabel lblPrecioOferta;
 	
 	public PlantillaMF() {
 
@@ -100,7 +100,6 @@ public class PlantillaMF extends JFrame {
 		setTitle("AeroManagement");
 		setSize(1301,744);
 		getContentPane().setBackground(Color.black);
-//		getContentPane().setBackground(new Color(0,150,136));
 		setIconImage(new ImageIcon(getClass().getResource("/imagenes/icono.png")).getImage());
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -115,8 +114,6 @@ public class PlantillaMF extends JFrame {
 		agregarTabbedPaneReserva();
 		
 		agregarPanelFrecuente();
-		
-		agregarPanelOfertas();
 	}
 
 	private void agregarTabbedPaneReserva() {
@@ -272,49 +269,47 @@ public class PlantillaMF extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				vC = new ViajeCabeceraImpl();
-				
-				vC.setCiudadOrigen(origen);
-				vC.setCiudadDestino(destino);
-				vC.setFechaSalida(fechaIda);
-				
-				ViajeCabeceraBo vCBo = new ViajeCabeceraBoImpl();
-				UsuarioBo uBo = new UsuarioBoImpl();
-				
-				try {
-					
-					vCBo.verificarImportantesConFecha(vC);
-										
-					List<ViajeCabecera> listViajes = vCBo.retornarVuelosPorFecha(vC);
-					
-					if (!getLogueado()){
-						loguear();
-					}
-					
-					String dni = null;
+				if (!getLogueado()){
+					loguear();
+				} else {
 
-					if (btnPerfil != null){
-						dni = uBo.retornarDniPorUsuario(btnPerfil.getText());						
-					}
+					vC = new ViajeCabeceraImpl();
 					
-					ListadoVuelosUI ui = new ListadoVuelosUI();
+					vC.setCiudadOrigen(origen);
+					vC.setCiudadDestino(destino);
+					vC.setFechaSalida(fechaIda);
+					
+					ViajeCabeceraBo vCBo = new ViajeCabeceraBoImpl();
+					UsuarioBo uBo = new UsuarioBoImpl();
+					
+					try {
+
+						vCBo.verificarImportantesConFecha(vC);
 						
+						List<ViajeCabecera> listViajes = vCBo.retornarVuelosPorFecha(vC);
 					
-					if (chckbxAcumularKilometrosAeropass.isSelected()){
-						ui.setearDniyAcumula(dni, true);
-					}else{
-						ui.setearDniyAcumula(dni, false);
+						String dni = uBo.retornarDniPorUsuario(btnPerfil.getText());
+						
+						ListadoVuelosUI ui = new ListadoVuelosUI();
+						
+						if (chckbxAcumularKilometrosAeropass.isSelected()){
+							ui.setearDniyAcumula(dni, true);
+						}else{
+							ui.setearDniyAcumula(dni, false);
+						}
+						
+						ui.mostrarVuelos(listViajes);
+						
+						ui.setVisible(true);
+
+					} catch (ViajeCabeceraNotValidException e1) {
+						JOptionPane.showMessageDialog(null, e1.getMessage());
+					} catch (NoFlightsFoundException e1) {
+						JOptionPane.showMessageDialog(null, e1.getMessage());
 					}
 					
-					ui.mostrarVuelos(listViajes);
-					
-					ui.setVisible(true);
-					
-				} catch (NoFlightsFoundException e1) {
-					JOptionPane.showMessageDialog(null, e1.getMessage());
-				} catch (ViajeCabeceraNotValidException e1) {
-					JOptionPane.showMessageDialog(null, e1.getMessage());
-				}				
+				}
+				
 			}
 		});
 		panelReserva.add(btnBuscarVuelo);
@@ -324,7 +319,6 @@ public class PlantillaMF extends JFrame {
 		panelFrecuente = new JPanel();
 		panelFrecuente.setBounds((getWidth()/2)+30, 105, (getWidth()/2)-60, (getHeight()/4)+45);
 		panelFrecuente.setBackground(new Color(205,220,57));
-//		panelFrecuente.setBorder(new MatteBorder(6, 0, 0, 6, Color.BLACK));
 		panelFrecuente.setBorder(new MatteBorder(6, 0, 0, 6, new Color(0,80,72)));
 		getContentPane().add(panelFrecuente);
 		panelFrecuente.setLayout(null);
@@ -339,7 +333,7 @@ public class PlantillaMF extends JFrame {
 		panelFrecuente.add(lblFrecuente);
 	}
 	
-	private void agregarPanelOfertas() {
+	protected void cargarOfertas(List<ViajeCabecera> listaViajes){
 		
 		panelOfertas = new JPanel();
 		panelOfertas.setOpaque(false);
@@ -347,16 +341,16 @@ public class PlantillaMF extends JFrame {
 		getContentPane().add(panelOfertas);
 		panelOfertas.setLayout(null);
 		
-	}
-	
-	protected void cargarOfertas(List<ViajeCabecera> listaViajes){
-		
 		int i = 0;
 		
 		for (ViajeCabecera viaje : listaViajes) {		
 			agregarPanelOferta(viaje, i);
 			i++;
 		}
+	}
+	
+	protected void removePanelOfertas(){
+		getContentPane().remove(panelOfertas);
 	}
 
 	private void agregarPanelOferta(ViajeCabecera viaje, int i) {
@@ -378,7 +372,7 @@ public class PlantillaMF extends JFrame {
 		
 		String ofertaS = oferta.toString().substring(0, oferta.toString().length()-2);
 		
-		lblDescuentoOferta = new JLabel(ofertaS +"% OFF");
+		JLabel lblDescuentoOferta = new JLabel(ofertaS +"% OFF");
 		lblDescuentoOferta.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblDescuentoOferta.setBounds(0, 0, 155, 50);
 		lblDescuentoOferta.setForeground(Color.WHITE);
@@ -393,7 +387,7 @@ public class PlantillaMF extends JFrame {
 		label1.setBounds(0, 63, 94, 21);
 		panelDescuentoOferta.add(label1);
 		
-		lblPrecioOferta = new JLabel(viaje.getPrecioClaseTur().toString());
+		JLabel lblPrecioOferta = new JLabel(viaje.getPrecioClaseTur().toString());
 		lblPrecioOferta.setVerticalAlignment(SwingConstants.TOP);
 		lblPrecioOferta.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPrecioOferta.setForeground(Color.WHITE);
@@ -404,7 +398,7 @@ public class PlantillaMF extends JFrame {
 		JLabel lblImagen = new JLabel("");
 		lblImagen.setBounds(0, 0, 280, 180);
 		
-		imagenOferta = new ImageIcon(getClass().getResource(viaje.getImagenOferta()));
+		ImageIcon imagenOferta = new ImageIcon(getClass().getResource(viaje.getImagenOferta()));
 		Icon iconoOferta = new ImageIcon(imagenOferta.getImage().getScaledInstance(lblImagen.getWidth(), lblImagen.getHeight(), Image.SCALE_DEFAULT));
 
 		lblImagen.setIcon(iconoOferta);
@@ -423,54 +417,51 @@ public class PlantillaMF extends JFrame {
 		lblDestinoOferta.setFont(new Font("Roboto Bold", Font.PLAIN, 22));
 		panelOferta.add(lblDestinoOferta);
 		
-		JButton botonReservaOferta = new JButton("Reservar");
-		botonReservaOferta.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				java.util.Date dateUtil = new java.util.Date();
-				Date fechaOferta = new Date(dateUtil.getTime());
-				
-				vC = new ViajeCabeceraImpl();
-				
-				vC.setCiudadOrigen(lblOrigenOferta.getText());
-				vC.setCiudadDestino(lblDestinoOferta.getText());
-				vC.setFechaSalida(fechaOferta);
-
-				ViajeCabeceraBo vCBo = new ViajeCabeceraBoImpl();
-				UsuarioBo uBo = new UsuarioBoImpl();
-				
-				try {
-					
-					List<ViajeCabecera> listViajes = vCBo.retornarVuelosCualquierFecha(vC);
-
-					if (!getLogueado()){
-						loguear();
-					}
-
-					String dni = null;
-					
-					if (btnPerfil != null){
-						dni = uBo.retornarDniPorUsuario(btnPerfil.getText());						
-					}
-					
-					ListadoVuelosUI ui = new ListadoVuelosUI();
-					
-//					ui.setearDni(dni);
-					
-					ui.mostrarVuelos(listViajes);
-					
-					ui.setVisible(true);
-				
-				} catch (NoFlightsFoundException e1) {
-					JOptionPane.showMessageDialog(null, e1.getMessage());
-				}
-
-			}
-		});
-		botonReservaOferta.setBounds(panelOferta.getWidth()-110, panelOferta.getHeight()-50,100,40);
-		panelOferta.add(botonReservaOferta);
+//		botonReservaOferta = new JButton("Reservar");
+//		botonReservaOferta.addActionListener(new ActionListener() {
+//			
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				
+//				if (!getLogueado()){
+//					loguear();
+//				}else{
+//				
+//					java.util.Date dateUtil = new java.util.Date();
+//					Date fechaOferta = new Date(dateUtil.getTime());
+//					
+//					vC = new ViajeCabeceraImpl();
+//					
+//					vC.setCiudadOrigen(lblOrigenOferta.getText());
+//					vC.setCiudadDestino(lblDestinoOferta.getText());
+//					vC.setFechaSalida(fechaOferta);
+//					
+//					ViajeCabeceraBo vCBo = new ViajeCabeceraBoImpl();
+//					UsuarioBo uBo = new UsuarioBoImpl();
+//						
+//					try {
+//						
+//						List<ViajeCabecera> listViajes = vCBo.retornarVuelosCualquierFecha(vC);
+//	
+//						String dni = uBo.retornarDniPorUsuario(btnPerfil.getText());
+//						
+//						ListadoVuelosUI ui = new ListadoVuelosUI();
+//						
+//						ui.setearDniyAcumula(dni, true);
+//						ui.mostrarVuelos(listViajes);
+//						
+//						ui.setVisible(true);
+//					
+//					} catch (NoFlightsFoundException e1) {
+//						e1.printStackTrace();
+//					}
+//				}
+//
+//
+//			}
+//		});
+//		botonReservaOferta.setBounds(panelOferta.getWidth()-110, panelOferta.getHeight()-50,100,40);
+//		panelOferta.add(botonReservaOferta);
 	}
 
 	private void actualizarEtiquetaOrigen() {
@@ -584,8 +575,9 @@ public class PlantillaMF extends JFrame {
 		getContentPane().repaint();
 	}
 	
-	protected void agregarBotonesLogueado() {
-
+	public void agregarBotonPerfil(String usuario){
+	
+		btnPerfil = new JButton(usuario);
 		btnPerfil.setToolTipText("Ver perfil");
 		btnPerfil.setBounds(getWidth()-300, 30, 140, 35);
 		btnPerfil.addActionListener(new ActionListener() {
@@ -597,6 +589,12 @@ public class PlantillaMF extends JFrame {
 
 		});
 		getContentPane().add(btnPerfil);
+
+		getContentPane().validate();
+		getContentPane().repaint();
+	}
+	
+	protected void agregarBotonesLogueado() {
 		
 		btnCerrarSesion = new JButton("Cerrar Sesión");
 		btnCerrarSesion.setBounds(getWidth()-150, 30, 140, 35);
@@ -840,6 +838,14 @@ public class PlantillaMF extends JFrame {
 
 	public void setPanelOfertas(JPanel panelOfertas) {
 		this.panelOfertas = panelOfertas;
+	}
+	
+	public String getDni() {
+		return dni;
+	}
+
+	public void setDni(String dni) {
+		this.dni = dni;
 	}
 
 }

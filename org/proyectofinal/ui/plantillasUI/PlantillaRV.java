@@ -103,6 +103,8 @@ public class PlantillaRV extends JDialog implements MouseListener{
 	private ViajeCabeceraBo vCBo;
 	private ReservaViajeBo rVBo;
 	private PersonaRegistradaBo pRBo;	
+	private String dniPersona;
+	private Integer distancia;
 
 	public PlantillaRV(){
 	}
@@ -1373,10 +1375,13 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		
 		rV.setViaje(viaje);
 		rV.setDniPersona(dni);
+
+		distancia = rV.getViaje().getDistancia();
+		dniPersona = rV.getDniPersona();
 		
 		vCBo = new ViajeCabeceraBoImpl();
 		pBo = new PasajeroBoImpl();
-
+		pRBo = new PersonaRegistradaBoImpl();
 		rVBo = new ReservaViajeBoImpl();
 		
 		
@@ -1479,6 +1484,12 @@ public class PlantillaRV extends JDialog implements MouseListener{
 			rVBo.agregarReserva(reservas.getListReservas().get(i));
 
 			vCBo.actualizarCupo(reservas.getListReservas().get(0).getViaje());
+			
+			if (lblAcumula.getText().equals("SI")){
+				System.out.println("HOLA");
+				pRBo.actualizarSaldo(distancia, dniPersona);
+				System.out.println("HOLA");				
+			}
 		}
 		
 		//Generar PDF
@@ -1486,9 +1497,6 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		Boleto boleto = new Boleto();
 		
 		BoletoEmail bE = new BoletoEmail();
-		
-		
-		pRBo = new PersonaRegistradaBoImpl();
 		
 		String email = pRBo.retornarEmail(reservas.getListReservas().get(0).getDniPersona());
 		

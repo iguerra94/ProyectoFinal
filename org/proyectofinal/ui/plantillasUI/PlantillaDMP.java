@@ -15,10 +15,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import org.proyectofinal.bo.ex.UserNotExistsException;
+import org.proyectofinal.bo.ex.UserNotValidException;
 import org.proyectofinal.bo.impl.UsuarioBoImpl;
 import org.proyectofinal.bo.interfaces.UsuarioBo;
-import org.proyectofinal.dao.ex.UserNotExistsException;
-import org.proyectofinal.dao.ex.UserNotValidException;
 
 public class PlantillaDMP extends JDialog {
 

@@ -39,13 +39,13 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
 import org.proyectofinal.bo.ex.NotEqualPasswordException;
+import org.proyectofinal.bo.ex.UserNotExistsException;
 import org.proyectofinal.bo.impl.PersonaRegistradaBoImpl;
 import org.proyectofinal.bo.impl.ReservaViajeBoImpl;
 import org.proyectofinal.bo.impl.UsuarioBoImpl;
 import org.proyectofinal.bo.interfaces.PersonaRegistradaBo;
 import org.proyectofinal.bo.interfaces.ReservaViajeBo;
 import org.proyectofinal.bo.interfaces.UsuarioBo;
-import org.proyectofinal.dao.ex.UserNotExistsException;
 import org.proyectofinal.model.impl.PersonaRegistradaImpl;
 import org.proyectofinal.model.interfaces.PersonaRegistrada;
 import org.proyectofinal.model.interfaces.ReservaViaje;
@@ -320,7 +320,7 @@ public class PlantillaDP extends JDialog {
 	
 	private void agregarLabelsInfoPanelEstadoCuenta(PersonaRegistrada pR, Integer cantReservas) {
 		JLabel lblSaldo = new JLabel(pR.getSaldo() + " KMS");
-		lblSaldo.setBounds(110, 20, 100, 40);
+		lblSaldo.setBounds(110, 20, 300, 40);
 		panelMostrarInfo.add(lblSaldo);
 		
 		JLabel lblReservasRealizadas = new JLabel(cantReservas.toString());
@@ -417,6 +417,7 @@ public class PlantillaDP extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				verCarnet(pR);
+//				verCarnet();
 			}
 		});
 		btnVerCarnet.setBounds(25, 60, 100, 35);
@@ -452,6 +453,28 @@ public class PlantillaDP extends JDialog {
 		String ruta = "/carnets/png/carnet"+pR.getNombre().substring(0, 1) + pR.getApellido().substring(0, 1) + pR.getDni().substring(5) + ".png";
 		
 		lblCarnet.setIcon(new ImageIcon(getClass().getResource(ruta)));
+		
+		verCarnet.getContentPane().add(lblCarnet);
+		
+		verCarnet.setVisible(true);
+	}
+	
+	private void verCarnet(){
+		
+		JDialog verCarnet = new JDialog();
+		verCarnet.setTitle("Carnet AMPass");
+		verCarnet.setBounds(100,100,227,142);
+		verCarnet.setModal(true);
+		verCarnet.setResizable(false);
+		verCarnet.setLocationRelativeTo(null);
+		verCarnet.getContentPane().setLayout(null);
+		
+		JLabel lblCarnet = new JLabel("Imagen Carnet");
+		lblCarnet.setBounds(0, 0, 227, 142);
+	
+//		String ruta = "/carnets/png/carnet"+pR.getNombre().substring(0, 1) + pR.getApellido().substring(0, 1) + pR.getDni().substring(5) + ".png";
+		
+//		lblCarnet.setIcon(new ImageIcon(getClass().getResource(ruta)));
 		
 		verCarnet.getContentPane().add(lblCarnet);
 		

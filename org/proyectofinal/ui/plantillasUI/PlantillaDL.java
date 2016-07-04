@@ -22,10 +22,10 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import org.proyectofinal.bo.ex.UserNotCorrectException;
+import org.proyectofinal.bo.ex.UserNotValidException;
 import org.proyectofinal.bo.impl.UsuarioBoImpl;
 import org.proyectofinal.bo.interfaces.UsuarioBo;
-import org.proyectofinal.dao.ex.UserNotCorrectException;
-import org.proyectofinal.dao.ex.UserNotValidException;
 import org.proyectofinal.model.impl.UsuarioImpl;
 import org.proyectofinal.model.interfaces.Usuario;
 import org.proyectofinal.ui.DialogMissedPass;
@@ -47,7 +47,7 @@ public class PlantillaDL extends JDialog {
 		setTitle("Iniciar Sesión");
 		getContentPane().setBackground(Color.WHITE);
 		setModal(true);
-		setBounds(new Rectangle(0, 0, 310, 420));
+		setBounds(new Rectangle(0, 0, 310, 450));
 		getContentPane().setLayout(null);
 		setLocationRelativeTo(null);
 	}

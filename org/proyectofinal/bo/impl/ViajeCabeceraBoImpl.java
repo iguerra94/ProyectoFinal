@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.proyectofinal.bo.ex.NoFlightsFoundException;
 import org.proyectofinal.bo.ex.NotOffersFoundException;
 import org.proyectofinal.bo.ex.ViajeCabeceraNotValidException;
 import org.proyectofinal.bo.ex.ViajeCabeceraOfferNotValidException;
 import org.proyectofinal.bo.interfaces.ViajeCabeceraBo;
-import org.proyectofinal.dao.ex.NoFlightsFoundException;
 import org.proyectofinal.dao.impl.ViajeCabeceraDaoImpl;
 import org.proyectofinal.dao.interfaces.ViajeCabeceraDao;
 import org.proyectofinal.model.impl.ViajeCabeceraImpl;
@@ -20,6 +20,9 @@ import org.proyectofinal.model.interfaces.ViajeCabecera;
 
 public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 
+	/**
+	 *  Metodo de negocio que verifica que todos los datos del viaje ingresados sean correctos.
+	 */
 	public void verificarTodos(ViajeCabecera vC) throws ViajeCabeceraNotValidException{
 		
 		if (vC.getCodigoViaje().length() == 0 || 
@@ -43,6 +46,10 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 		
 	}
 	
+	/** 
+	*  Metodo de negocio que verifica que todos los datos de la oferta sean validos 
+	*/
+	
 	public void verificarOferta(ViajeCabecera vC) throws ViajeCabeceraOfferNotValidException {
 
 		if (vC.getShortPaisOrigen().length() == 0 || vC.getCiudadOrigen().length() == 0 || 
@@ -54,7 +61,11 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 		}
 		
 	}
-
+	
+	/**
+	 * Metodo de negocio que verifica que el origen, la fecha y el destino sean correctos.
+	 */
+	
 	public void verificarImportantesConFecha(ViajeCabecera vC) throws ViajeCabeceraNotValidException {
 		
 		if (vC.getCiudadOrigen().length() == 0 || vC.getCiudadDestino().length() == 0 ||
@@ -64,12 +75,20 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 		}
 	}
 	
+	/**
+	 * Metodo de negocio que verifica que el origen y el destino sean correctos.
+	 */
+	
 	public void verificarImportantesSinFecha(ViajeCabecera vC) throws ViajeCabeceraNotValidException {
 		
 		if (vC.getCiudadOrigen().length() == 0 || vC.getCiudadDestino().length() == 0) {
 			throw new ViajeCabeceraNotValidException();
 		}
 	}
+	
+	/**
+	 * Metodo de negocio que retorna una lista con las ciudades y paises de origen.
+	 */
 	
 	public List<String> retornarOrigenes(){
 		
@@ -98,6 +117,10 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 		return listOrigenes;
 		
 	}
+	
+	/**
+	 * Metodo de negocio que retorna una lista con los datos de los origenes y destinos.
+	 */
 	
 	public List<String> retornarOfertas() throws NotOffersFoundException{
 		
@@ -131,6 +154,10 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 		
 		return listOffers;
 	}
+	
+	/**
+	 * Metodo de negocio que setea los valores de las ofertas y retorna una lista con dichos valores.
+	 */
 	
 	public List<ViajeCabecera> retornarListaOfertas(){
 		
@@ -175,6 +202,10 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 		return listOffers;
 	}
 	
+	/**
+	 * Metodo de negocio que retorna una lista con los datos del destino.
+	 */
+	
 	public List<String> retornarDestinos(){
 		
 		List<String> listDestinos = new ArrayList<String>();
@@ -202,6 +233,10 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 		return listDestinos;
 		
 	}
+	
+	/**
+	 * Metodo de negocio que retorna todos los datos del viaje a partir del codigo de viaje pasado como parametro
+	 */
 	
 	public ViajeCabecera retornarViaje(String codViaje){
 		
@@ -251,7 +286,7 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 		return vC;
 		
 	}
-
+		
 	public List<ViajeCabecera> retornarVuelosPorFecha(ViajeCabecera vC) throws NoFlightsFoundException {
 		
 		List<ViajeCabecera> listVuelos = new ArrayList<ViajeCabecera>();
