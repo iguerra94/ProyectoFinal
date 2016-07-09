@@ -35,10 +35,10 @@ public class MainFrameUI extends PlantillaMF implements WindowListener, WindowFo
 		
 		cargarOfertas(listaViajes);		
 		
-		getPanelOfertas().validate();
-        getPanelOfertas().repaint();
+		getContentPane().validate();
+        getContentPane().repaint();
         
-        pack();
+//        pack();
 	}
 
 	@Override
@@ -48,9 +48,7 @@ public class MainFrameUI extends PlantillaMF implements WindowListener, WindowFo
 	@Override
 	public void windowOpened(WindowEvent e) {
 		
-		if (getLogueado()){
-			agregarBotonesLogueado();	
-		}else{
+		if (!getLogueado()){			
 			agregarBotonesNoLogueado();
 		}
 	}
@@ -101,4 +99,5 @@ public class MainFrameUI extends PlantillaMF implements WindowListener, WindowFo
 	@Override
 	public void componentHidden(ComponentEvent e) {
 	}
+	
 }
