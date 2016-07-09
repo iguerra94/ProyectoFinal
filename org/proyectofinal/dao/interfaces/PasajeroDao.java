@@ -4,6 +4,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.proyectofinal.model.interfaces.Pasajero;
 
+/**
+ * Interfaz del DAO Pasajero.
+ * 
+ * @author Ivan Guerra
+ * @version 1.0.0
+ */
+
 public interface PasajeroDao {
 	
 	public void conectar() throws ClassNotFoundException, SQLException;
@@ -13,6 +20,4 @@ public interface PasajeroDao {
 	public ResultSet consultarPorDni(String dniPasajero) throws SQLException, ClassNotFoundException;
 	public ResultSet consultarPersonaPorDni(Pasajero p) throws SQLException, ClassNotFoundException;
 	public void altaPasajero(Pasajero p) throws SQLException, ClassNotFoundException;
-	public void bajaPasajero(Pasajero p) throws SQLException, ClassNotFoundException;
-	public void modificacion(String atr, String valor, String dni) throws SQLException, ClassNotFoundException;
 }

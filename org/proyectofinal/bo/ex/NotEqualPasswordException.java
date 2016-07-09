@@ -1,14 +1,30 @@
 package org.proyectofinal.bo.ex;
 
+/**
+ * Excepcion que se lanza cuando los atributos del objeto Pasajero no son validos
+ * 
+ * @author Ivan Guerra
+ * @version 1.0.0
+ */
+
 public class NotEqualPasswordException extends Exception {
 
+	private static final long serialVersionUID = 5662687613513737464L;
+
+	/**
+	 * Instancia un nuevo objeto de la Excepcion <code>NotEqualPasswordException</code>
+	 */
+	
 	public NotEqualPasswordException(){
 		
 	}
 	
 	/**
-	 * Excepcion de negocio que lanza un mensaje descriptivo cuando las contraseñas no coinciden al cambiar la clave.
+	 * Retorna un mensaje descriptivo al usuario del sistema sobre la excepcion ocurrida.
+	 *
+	 * @return Un mensaje descriptivo al usuario del sistema sobre la excepcion ocurrida.
 	 */
+	
 	public String getMessage(){
 		return "Las contraseñas no coinciden. Asegurese que sean iguales.";
 	}

@@ -10,6 +10,13 @@ import org.proyectofinal.dao.abstracts.AbstractDao;
 import org.proyectofinal.dao.interfaces.ViajeCabeceraDao;
 import org.proyectofinal.model.interfaces.ViajeCabecera;
 
+/**
+ * Implementacion del DAO ViajeCabecera.
+ *  
+ * @author Ivan Guerra
+ * @version 1.0.0 
+ */
+
 public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDao {
 	
 	public void conectar() throws ClassNotFoundException, SQLException{

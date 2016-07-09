@@ -15,9 +15,8 @@ public class DialogRegistrarse extends PlantillaDR implements WindowFocusListene
 		agregarPanePersona();
 		agregarPaneUsuario();
 		agregarBotones();
-		addWindowFocusListener(this);
 		
-		setVisible(true);
+		addWindowFocusListener(this);
 	}
 
 	@Override

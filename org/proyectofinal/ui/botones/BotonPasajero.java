@@ -9,10 +9,8 @@ import javax.swing.JButton;
 
 public class BotonPasajero extends JButton implements ActionListener, MouseListener {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -4718785825566238975L;
+
 	private Float precio;
 	private Integer asiento;
 	private Integer cant;
@@ -80,13 +78,11 @@ public class BotonPasajero extends JButton implements ActionListener, MouseListe
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -102,7 +98,6 @@ public class BotonPasajero extends JButton implements ActionListener, MouseListe
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 

@@ -18,23 +18,15 @@ import org.proyectofinal.bo.impl.ViajeCabeceraBoImpl;
 import org.proyectofinal.bo.interfaces.ViajeCabeceraBo;
 import org.proyectofinal.model.impl.ViajeCabeceraImpl;
 import org.proyectofinal.model.interfaces.ViajeCabecera;
-import org.proyectofinal.ui.DialogRemoveFlight;
 import org.proyectofinal.ui.DialogRemoveOffer;
 
 public class PlantillaDRO extends JDialog {
 
-//	private JPanel panelOrigen;
-//	private JComboBox cmbOrigen;
-//	String origen;
-//	
-//	private JPanel panelDestino;
-//	private JComboBox cmbDestino;
-//	String destino;
-//	
-	private ViajeCabecera vC;
-	private ViajeCabeceraBo vCBo;
+	private static final long serialVersionUID = -4390353818332303704L;
 
-	private JComboBox cmbOfertas;
+	private ViajeCabecera vC;
+
+	private JComboBox<String> cmbOfertas;
 	
 	public PlantillaDRO(){
 		
@@ -54,152 +46,7 @@ public class PlantillaDRO extends JDialog {
 		agregarLabel();
 		agregarBotonEliminarOferta();
 	}
-
-//	private void agregarPanelOrigen() {
-//		
-//		panelOrigen = new JPanel();
-//		panelOrigen.setBorder(new TitledBorder(null, "Origen", TitledBorder.LEADING, TitledBorder.TOP, null, Color.BLACK));
-//		panelOrigen.setBackground(Color.WHITE);
-//		panelOrigen.setBounds(20, 20, 360, 80);
-//		getContentPane().add(panelOrigen);
-//		panelOrigen.setLayout(null);
-//		
-//		agregarLabelsPanelOrigen();
-//		agregarCamposPanelOrigen();
-//	}
-//
-//	private void agregarLabelsPanelOrigen() {
-//		
-//		JLabel label1 = new JLabel("Origen: ");
-//		label1.setBounds(20, 30, 130, 30);
-//		panelOrigen.add(label1);
-//	}
-//
-//	private void agregarCamposPanelOrigen() {
-//		
-//		vC = new ViajeCabeceraImpl();
-//
-//		vCBo = new ViajeCabeceraBoImpl();
-//
-//		cmbOrigen = new JComboBox();
-//		cmbOrigen.setBounds(150, 30, 190, 30);
-//		cmbOrigen.addPropertyChangeListener(new PropertyChangeListener() {
-//			public void propertyChange(PropertyChangeEvent arg0) {
-//				cargarComboBoxOrigen();
-//			}
-//		});
-//		cmbOrigen.addItemListener(new ItemListener() {
-//			public void itemStateChanged(ItemEvent e) {
-//				actualizarComboDestino();
-//				cargarComboBoxDestino();
-//
-//				
-//				if (cmbOrigen.getSelectedIndex() > 0){
-//					String origen = cmbOrigen.getSelectedItem().toString();
-//					vC.setCiudadOrigen(origen.split("[(]")[0]);
-//					vC.setShortPaisOrigen(origen.substring(origen.length()-4, origen.length()-1));
-//				}
-//				
-//			}
-//		});
-//		panelOrigen.add(cmbOrigen);		
-//		
-//		vC.setCiudadOrigen("");
-//		vC.setShortPaisOrigen("");
-//	}
-//	
-//	private void cargarComboBoxOrigen(){
-//		
-//		ViajeCabeceraBo vCBo = new ViajeCabeceraBoImpl();
-//		
-//		cmbOrigen.removeAllItems();
-//
-//		cmbOrigen.addItem("");
-//		
-//		for (String origen : vCBo.retornarOrigenes()) {
-//			cmbOrigen.addItem(origen);
-//		}
-//		
-//		cmbDestino.setSelectedIndex(0);
-//	}
-//
-//	private void agregarPanelDestino(){
-//		
-//		panelDestino = new JPanel();
-//		panelDestino.setLayout(null);
-//		panelDestino.setBorder(new TitledBorder(null, "Destino", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-//		panelDestino.setBackground(Color.WHITE);
-//		panelDestino.setBounds(400, 20, 360, 80);
-//		getContentPane().add(panelDestino);
-//		
-//		agregarLabelsPanelDestino();
-//		agregarCamposPanelDestino();
-//	}
-//	
-//	private void agregarLabelsPanelDestino() {
-//		
-//		JLabel label2 = new JLabel("Destino: ");
-//		label2.setBounds(20, 30, 130, 30);
-//		panelDestino.add(label2);	
-//	}
-//
-//	private void agregarCamposPanelDestino() {
-//		
-//		cmbDestino = new JComboBox();
-//		cmbDestino.setEnabled(false);
-//		cmbDestino.setModel(new DefaultComboBoxModel(new String[] {""}));
-//		cmbDestino.addPropertyChangeListener(new PropertyChangeListener() {
-//			public void propertyChange(PropertyChangeEvent arg0) {
-//				cargarComboBoxDestino();
-//			}
-//		});
-//		cmbDestino.addItemListener(new ItemListener() {
-//			public void itemStateChanged(ItemEvent e) {
-//
-//				if (cmbDestino.getSelectedIndex() > 0){
-//					String destino = cmbDestino.getSelectedItem().toString();
-//					vC.setCiudadDestino(destino.split("[(]")[0]);
-//					vC.setShortPaisDestino(destino.substring(destino.length()-4, destino.length()-1));
-//				}
-//			}
-//		});
-//		cmbDestino.setBounds(150, 30, 190, 30);
-//		panelDestino.add(cmbDestino);
-//
-//		vC.setCiudadDestino("");
-//		vC.setShortPaisDestino("");
-//	}
-//	
-//	private void actualizarComboDestino(){
-//	
-//		if (cmbOrigen.getSelectedIndex() != 0){
-//			cmbDestino.setEnabled(true);
-//		}else{
-//			cmbDestino.setEnabled(false);
-//		}
-//		
-//		validate();
-//		repaint();
-//	}
-//	
-//	private void cargarComboBoxDestino(){
-//		
-//		ViajeCabeceraBo vCBo = new ViajeCabeceraBoImpl();
-//		
-//		cmbDestino.removeAllItems();
-//		
-//		cmbDestino.addItem("");
-//		
-//		for (String destino : vCBo.retornarDestinos()) {	
-//			if (!destino.equals(cmbOrigen.getSelectedItem())){
-//				cmbDestino.addItem(destino);
-//			}
-//		}
-//		
-//		cmbDestino.setSelectedIndex(0);
-//	}
-	
-	
+		
 	private void agregarLabel() {
 		JLabel lblListadoDeOfertas = new JLabel("Listado de ofertas");
 		lblListadoDeOfertas.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -222,9 +69,9 @@ public class PlantillaDRO extends JDialog {
 			i++;
 		}
 		
-		cmbOfertas = new JComboBox();
+		cmbOfertas = new JComboBox<String>();
 		cmbOfertas.setBounds(25, 55, 300, 30);
-		cmbOfertas.setModel(new DefaultComboBoxModel<>(listaOfertas));
+		cmbOfertas.setModel(new DefaultComboBoxModel<String>(listaOfertas));
 		getContentPane().add(cmbOfertas);
 	}
 	
@@ -298,6 +145,7 @@ public class PlantillaDRO extends JDialog {
 
 		if (PromptResult == 1){
 			DialogRemoveOffer dro = new DialogRemoveOffer();
+			dro.setVisible(true);
 		}
 	}
 	

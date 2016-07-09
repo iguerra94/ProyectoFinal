@@ -8,6 +8,12 @@ import org.proyectofinal.bo.ex.ViajeCabeceraNotValidException;
 import org.proyectofinal.bo.ex.ViajeCabeceraOfferNotValidException;
 import org.proyectofinal.model.interfaces.ViajeCabecera;
 
+/**
+ * Interfaz de la Clase de Negocio ViajeCabeceraBo.
+ * 
+ * @author Ivan Guerra
+ * @version 1.0.0
+ */
 public interface ViajeCabeceraBo {
 	
 	public void verificarTodos(ViajeCabecera vC) throws ViajeCabeceraNotValidException;

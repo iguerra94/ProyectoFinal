@@ -31,7 +31,6 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.MatteBorder;
 
 import org.proyectofinal.bo.ex.NoFlightsFoundException;
-import org.proyectofinal.bo.ex.NotOffersFoundException;
 import org.proyectofinal.bo.ex.ViajeCabeceraNotValidException;
 import org.proyectofinal.bo.impl.PersonaRegistradaBoImpl;
 import org.proyectofinal.bo.impl.UsuarioBoImpl;
@@ -54,16 +53,11 @@ import org.proyectofinal.ui.ListadoVuelosUI;
 import org.proyectofinal.ui.MainFrameUI;
 
 import com.toedter.calendar.JDateChooser;
-import javax.swing.border.TitledBorder;
-import java.awt.FlowLayout;
-import java.awt.BorderLayout;
-import javax.swing.BoxLayout;
 
 public class PlantillaMF extends JFrame {
 	
 	private static final long serialVersionUID = -9218140826797976946L;
 	
-	private JLabel lblDni = new JLabel("");
 	private Boolean logueado = false;
 	private JMenuBar menuBar;
 	private JButton btnRegistrarse;
@@ -76,10 +70,10 @@ public class PlantillaMF extends JFrame {
 	private JPanel panelDescuentoOferta;
 	private JTabbedPane paneReserva;
 	private JLabel lblOrigen;
-	private JComboBox cmbOrigen;
+	private JComboBox<String> cmbOrigen;
 	private JLabel lblFlecha;
 	private JLabel lblDestino;
-	private JComboBox cmbDestino;
+	private JComboBox<String> cmbDestino;
 	private JLabel lblFechaIda;
 	private JDateChooser dateChooserFechaIda;
 	private JCheckBox chckbxAcumularKilometrosAeropass;
@@ -87,7 +81,6 @@ public class PlantillaMF extends JFrame {
 	private String origen;
 	private String destino;
 	private Date fechaIda;
-	private JButton botonReservaOferta;
 	private String dni;
 	private JLabel lblOrigenOferta;
 	private JLabel lblDestinoOferta;
@@ -170,8 +163,8 @@ public class PlantillaMF extends JFrame {
 
 	private void agregarCamposPaneReserva() {
 		
-		cmbOrigen = new JComboBox();
-		cmbOrigen.setModel(new DefaultComboBoxModel(new String[] {""}));
+		cmbOrigen = new JComboBox<String>();
+		cmbOrigen.setModel(new DefaultComboBoxModel<String>(new String[] {""}));
 		cmbOrigen.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent arg0) {
 				cargarComboBoxOrigen();
@@ -193,9 +186,9 @@ public class PlantillaMF extends JFrame {
 		cmbOrigen.setBounds(25, 30, 260, 30);
 		panelReserva.add(cmbOrigen);
 		
-		cmbDestino = new JComboBox();
+		cmbDestino = new JComboBox<String>();
 		cmbDestino.setEnabled(false);
-		cmbDestino.setModel(new DefaultComboBoxModel(new String[] {""}));
+		cmbDestino.setModel(new DefaultComboBoxModel<String>(new String[] {""}));
 		cmbDestino.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent arg0) {
 				cargarComboBoxDestino();
@@ -594,7 +587,7 @@ public class PlantillaMF extends JFrame {
 		getContentPane().repaint();
 	}
 	
-	protected void agregarBotonesLogueado() {
+	public void agregarBotonesLogueado() {
 		
 		btnCerrarSesion = new JButton("Cerrar Sesión");
 		btnCerrarSesion.setBounds(getWidth()-150, 30, 140, 35);
@@ -605,6 +598,7 @@ public class PlantillaMF extends JFrame {
 				setLogueado(false);
 				dispose();
 				PlantillaMF ui = new MainFrameUI();
+				ui.setVisible(true);
 			}
 		});
 		getContentPane().add(btnCerrarSesion);
@@ -616,10 +610,12 @@ public class PlantillaMF extends JFrame {
 	private void loguear(){
 		dispose();
 		DialogLogin d = new DialogLogin();
+		d.setVisible(true);
 	}
 	
 	private void registrar(){
 		DialogRegistrarse d = new DialogRegistrarse();
+		d.setVisible(true);
 	}
 	
 	private void verPerfil() {
@@ -757,65 +753,30 @@ public class PlantillaMF extends JFrame {
 	}
 	
 	private void cargarVuelo() {
-		DialogLoadFlight dlf = new DialogLoadFlight();			
+		DialogLoadFlight dlf = new DialogLoadFlight();
+		dlf.setVisible(true);
 	}
 	
 	private void modificarVuelo() {
-		DialogSelectFlight dlf = new DialogSelectFlight();
+		DialogSelectFlight dsf = new DialogSelectFlight();
+		dsf.setVisible(true);
 	}
 	
 	private void eliminarVuelo() {
 		DialogRemoveFlight drf = new DialogRemoveFlight();
+		drf.setVisible(true);
 	}
 	
 	private void cargarOferta() {
-		DialogLoadOffer dlo = new DialogLoadOffer();			
+		DialogLoadOffer dlo = new DialogLoadOffer();
+		dlo.setVisible(true);
 	}
 	
 	private void eliminarOferta() {
-		
-		ViajeCabeceraBo vCBo = new ViajeCabeceraBoImpl();
-		
-		List<String> modeloOfertas;
-		
-		try {
-
-			modeloOfertas = vCBo.retornarOfertas();
-
-			DialogRemoveOffer dro = new DialogRemoveOffer();			
-		
-		} catch (NotOffersFoundException e1) {
-			JOptionPane.showMessageDialog(null, e1.getMessage());
-		}
-		
-		
+		DialogRemoveOffer dro = new DialogRemoveOffer();
+		dro.setVisible(true);
 	}
 	
-	protected void agregarInfoPanelOferta(){
-		
-		ViajeCabeceraBo vCBo = new ViajeCabeceraBoImpl();
-		
-		ViajeCabecera vC = new ViajeCabeceraImpl();
-		
-//		vC.setCiudadOrigen(lblOrigenOferta1.getText());
-//		vC.setCiudadDestino(lblDestinoOferta1.getText());
-		
-		try {
-			
-			ViajeCabecera viaje = vCBo.retornarVuelosCualquierFecha(vC).get(0);
-			
-//			Integer descuento = (int)(viaje.getOferta()*100);
-			
-//			lblDescuentoOferta1.setText(descuento.toString()+"% OFF");
-			
-//			lblPrecioOferta1.setText("<html><strong>"+String.format("%.2f", viaje.getPrecioClaseTur())+"</strong></html>");
-			
-		} catch (NoFlightsFoundException e) {
-			e.printStackTrace();
-		}
-		
-	}
-
 	public Boolean getLogueado() {
 		return logueado;
 	}

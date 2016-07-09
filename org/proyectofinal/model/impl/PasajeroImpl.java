@@ -3,15 +3,19 @@ package org.proyectofinal.model.impl;
 import org.proyectofinal.model.abstracts.PersonaGenerica;
 import org.proyectofinal.model.interfaces.Pasajero;
 	
-// TODO: Auto-generated Javadoc
 /**
- * The Class PasajeroImpl.
+ * Implementacion de la clase de dominio Pasajero.
+ * 
+ * @author Ivan Guerra
+ * @version 1.0.0
  */
+
 public class PasajeroImpl extends PersonaGenerica implements Pasajero {
 
 	/**
-	 * Instantiates a new pasajero impl.
+	 * Instancia un nuevo objeto de la clase Pasajero.
 	 */
+	
 	public PasajeroImpl() {
 	
 	}
@@ -19,6 +23,7 @@ public class PasajeroImpl extends PersonaGenerica implements Pasajero {
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.model.interfaces.Pasajero#getDni()
 	 */
+	
 	public String getDni() {
 		return this.dni;
 	}
@@ -26,6 +31,7 @@ public class PasajeroImpl extends PersonaGenerica implements Pasajero {
 	/* 
 	 * @see org.proyectofinal.model.interfaces.Pasajero#setDni(java.lang.String)
 	 */
+	
 	public void setDni(String dni) {
 		this.dni = dni;
 	}
@@ -33,6 +39,7 @@ public class PasajeroImpl extends PersonaGenerica implements Pasajero {
 	/* 
 	 * @see org.proyectofinal.model.interfaces.Pasajero#getNombre()
 	 */
+	
 	public String getNombre() {
 		return this.nombre;
 	}
@@ -40,6 +47,7 @@ public class PasajeroImpl extends PersonaGenerica implements Pasajero {
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.model.interfaces.Pasajero#setNombre(java.lang.String)
 	 */
+	
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
@@ -47,6 +55,7 @@ public class PasajeroImpl extends PersonaGenerica implements Pasajero {
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.model.interfaces.Pasajero#getApellido()
 	 */
+	
 	public String getApellido() {
 		return this.apellido;
 	}
@@ -54,6 +63,7 @@ public class PasajeroImpl extends PersonaGenerica implements Pasajero {
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.model.interfaces.Pasajero#setApellido(java.lang.String)
 	 */
+	
 	public void setApellido(String apellido) {
 		this.apellido = apellido;
 	}
@@ -61,6 +71,7 @@ public class PasajeroImpl extends PersonaGenerica implements Pasajero {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
+	
 	@Override
 	public String toString() {
 
@@ -76,6 +87,7 @@ public class PasajeroImpl extends PersonaGenerica implements Pasajero {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#clone()
 	 */
+	
 	public Pasajero clone() throws CloneNotSupportedException {
 
 		Pasajero p = new PasajeroImpl();
@@ -90,6 +102,7 @@ public class PasajeroImpl extends PersonaGenerica implements Pasajero {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -103,6 +116,7 @@ public class PasajeroImpl extends PersonaGenerica implements Pasajero {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

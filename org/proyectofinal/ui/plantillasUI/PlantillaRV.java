@@ -58,6 +58,8 @@ import com.itextpdf.text.DocumentException;
 
 public class PlantillaRV extends JDialog implements MouseListener{
 
+	private static final long serialVersionUID = -8111075447874816925L;
+	
 	private JPanel panelAsientos;
 	private JPanel panel1;
 	private JPanel panel2;
@@ -75,7 +77,7 @@ public class PlantillaRV extends JDialog implements MouseListener{
 
 	private JPanel panelPasajeros;
 	private JLabel lblSeleccioneCantPasajeros;
-	private JComboBox cmbCantPasajeros;
+	private JComboBox<Integer> cmbCantPasajeros;
 	private JButton btnAnterior;
 	private JButton btnSiguiente;
 
@@ -84,7 +86,6 @@ public class PlantillaRV extends JDialog implements MouseListener{
 	private JTextField txtApellido;
 	private JTextField txtDni;
 	
-
 	private JTextField txtAsiento;
 	private JTextField txtPrecio;
 	
@@ -1028,7 +1029,7 @@ public class PlantillaRV extends JDialog implements MouseListener{
 	
 		rVBo = new ReservaViajeBoImpl();
 	
-		List<Integer> listaOcupados = rVBo.controlarAsientosOcupados(viaje);
+		List<Integer> listaOcupados = rVBo.retornarAsientosOcupados(viaje);
 
 		for (Integer asiento : listaOcupados) {
 			botonesOcupados.add(botones.get(asiento-1));					
@@ -1094,8 +1095,8 @@ public class PlantillaRV extends JDialog implements MouseListener{
 	}
 
 	private void agregarCmbCantPasajeros() {
-		cmbCantPasajeros = new JComboBox();
-		cmbCantPasajeros.setModel(new DefaultComboBoxModel<>(new Integer[]{0,1,2}));
+		cmbCantPasajeros = new JComboBox<Integer>();
+		cmbCantPasajeros.setModel(new DefaultComboBoxModel<Integer>(new Integer[]{0,1,2}));
 		cmbCantPasajeros.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {

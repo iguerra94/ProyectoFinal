@@ -6,21 +6,43 @@ import org.proyectofinal.model.abstracts.PersonaGenerica;
 import org.proyectofinal.model.interfaces.PersonaRegistrada;
 import org.proyectofinal.model.interfaces.Usuario;
 
-// TODO: Auto-generated Javadoc
 /**
- * Clase de implementacion de la entidad Persona Registrada.
+ * Implementacion de la clase de dominio PersonaRegistrada.
+ * 
+ * @author Ivan Guerra
+ * @version 1.0.0
  */
+
 public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaRegistrada {
 	
+	/** El email de la PersonaRegistrada. */
 	private String email = null;
+	
+	/** La fecha de nacimiento de la PersonaRegistrada. */
 	private Date fechaNacimiento = null;
+	
+	/** El telefono de la PersonaRegistrada. */
 	private String telefono = null;
+	
+	/** El pais de origen de la PersonaRegistrada en formato ISO 3166-1 alfa-3. */
 	private String shortPais = null;
+	
+	/** El pais de origen de la PersonaRegistrada. */
 	private String pais = null;
+	
+	/** La ciudad de origen de la PersonaRegistrada. */
 	private String ciudad = null;
+	
+	/** El saldo de kilometros acumulados de la PersonaRegistrada. */
 	private Integer saldo = null;
+	
+	/** El usuario relacionado a la PersonaRegistrada. */
 	private Usuario usuario = null;
 	
+	/**
+	 * Instancia un nuevo objeto de la clase PersonaRegistrada.
+	 */
+
 	public PersonaRegistradaImpl(){
 		
 	}
@@ -28,6 +50,7 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.model.interfaces.Persona#getDni()
 	 */
+	
 	public String getDni() {
 		return this.dni;
 	}
@@ -35,6 +58,7 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.model.interfaces.Persona#setDni(java.lang.String)
 	 */
+	
 	public void setDni(String dni) {
 		this.dni = dni;
 	}
@@ -42,6 +66,7 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.model.interfaces.Persona#getNombre()
 	 */
+	
 	public String getNombre() {
 		return this.nombre;
 	}
@@ -49,6 +74,7 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.model.interfaces.Persona#setNombre(java.lang.String)
 	 */
+	
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
@@ -56,6 +82,7 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.model.interfaces.Persona#getApellido()
 	 */
+	
 	public String getApellido() {
 		return this.apellido;
 	}
@@ -63,6 +90,7 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.model.interfaces.Persona#setApellido(java.lang.String)
 	 */
+	
 	public void setApellido(String apellido) {
 		this.apellido = apellido;
 	}
@@ -70,6 +98,7 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.model.interfaces.Persona#getEmail()
 	 */
+	
 	public String getEmail() {
 		return this.email;
 	}
@@ -77,6 +106,7 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.model.interfaces.Persona#setEmail(java.lang.String)
 	 */
+	
 	public void setEmail(String email) {
 		this.email = email;
 	}
@@ -84,6 +114,7 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.model.interfaces.Persona#getFechaNacimiento()
 	 */
+	
 	public Date getFechaNacimiento() {
 		return this.fechaNacimiento;
 	}
@@ -91,6 +122,7 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.model.interfaces.Persona#setFechaNacimiento(java.sql.Date)
 	 */
+	
 	public void setFechaNacimiento(Date fechaNacimiento) {
 		this.fechaNacimiento = fechaNacimiento;
 	}
@@ -98,6 +130,7 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.model.interfaces.Persona#getTelefono()
 	 */
+	
 	public String getTelefono() {
 		return this.telefono;
 	}
@@ -105,14 +138,23 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.model.interfaces.Persona#setTelefono(java.lang.String)
 	 */
+	
 	public void setTelefono(String telefono) {
 		this.telefono = telefono;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.model.interfaces.PersonaRegistrada#getShortPais()
+	 */
+	
 	public String getShortPais() {
 		return this.shortPais;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.model.interfaces.PersonaRegistrada#setShortPais(java.lang.String)
+	 */
+	
 	public void setShortPais(String shortPais) {
 		this.shortPais = shortPais;
 	}
@@ -120,6 +162,7 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.model.interfaces.Persona#getPais()
 	 */
+	
 	public String getPais() {
 		return this.pais;
 	}
@@ -127,6 +170,7 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.model.interfaces.Persona#setPais(java.lang.String)
 	 */
+	
 	public void setPais(String pais) {
 		this.pais = pais;
 	}
@@ -134,6 +178,7 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.model.interfaces.Persona#getCiudad()
 	 */
+	
 	public String getCiudad() {
 		return this.ciudad;
 	}
@@ -141,14 +186,23 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.model.interfaces.Persona#setCiudad(java.lang.String)
 	 */
+	
 	public void setCiudad(String ciudad) {
 		this.ciudad = ciudad;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.model.interfaces.PersonaRegistrada#getSaldo()
+	 */
+	
 	public Integer getSaldo() {
 		return saldo;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.model.interfaces.PersonaRegistrada#setSaldo(java.lang.Integer)
+	 */
+	
 	public void setSaldo(Integer saldo) {
 		this.saldo = saldo;
 	}
@@ -156,6 +210,7 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.model.interfaces.Persona#getUsuario()
 	 */
+	
 	public Usuario getUsuario() {
 		return this.usuario;
 	}
@@ -163,6 +218,7 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.model.interfaces.Persona#setUsuario(org.proyectofinal.model.interfaces.Usuario)
 	 */
+	
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
@@ -170,6 +226,7 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
+	
 	@Override
 	public String toString() {
 		
@@ -192,6 +249,7 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 	/* (non-Javadoc)
 	 * @see java.lang.Object#clone()
 	 */
+	
 	public PersonaRegistrada clone() throws CloneNotSupportedException {
 		
 		PersonaRegistrada p = new PersonaRegistradaImpl();
@@ -211,6 +269,10 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 		return p;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -226,6 +288,10 @@ public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaReg
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

@@ -8,6 +8,13 @@ import org.proyectofinal.dao.abstracts.AbstractDao;
 import org.proyectofinal.dao.interfaces.ReservaViajeDao;
 import org.proyectofinal.model.interfaces.ReservaViaje;
 
+/**
+ * Implementacion del DAO ReservaViaje.
+ *  
+ * @author Ivan Guerra
+ * @version 1.0.0 
+ */
+
 public class ReservaViajeDaoImpl extends AbstractDao implements ReservaViajeDao {
 	
 	public void conectar() throws ClassNotFoundException, SQLException{
@@ -47,12 +54,6 @@ public class ReservaViajeDaoImpl extends AbstractDao implements ReservaViajeDao 
 //		sentencia.close();
 		return resultado;
 	}
-	
-//	public ResultSet consultarPorDniPersona() throws ClassNotFoundException, SQLException{
-//		
-//		PreparedStatement sentencia = getConexion().prepareStatement("SELECT DISTINCT dniPersona FROM ReservaViaje WHERE dniPersona = ?");
-//			
-//	}
 	
 	public ResultSet consultarPorPersonaQueReserva(String dni) throws ClassNotFoundException, SQLException{
 		

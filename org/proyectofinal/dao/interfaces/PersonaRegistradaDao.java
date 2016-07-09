@@ -7,6 +7,13 @@ import org.proyectofinal.bo.ex.PersonAlreadyExistsException;
 import org.proyectofinal.model.interfaces.PersonaRegistrada;
 import org.proyectofinal.model.interfaces.Usuario;
 
+/**
+ * Interfaz del DAO PersonaRegistrada.
+ * 
+ * @author Ivan Guerra
+ * @version 1.0.0
+ */
+
 public interface PersonaRegistradaDao {
 	
 	public void conectar() throws ClassNotFoundException, SQLException;

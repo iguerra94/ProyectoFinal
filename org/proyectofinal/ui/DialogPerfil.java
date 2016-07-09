@@ -10,9 +10,12 @@ import org.proyectofinal.ui.plantillasUI.PlantillaDP;
 
 public class DialogPerfil extends PlantillaDP implements WindowFocusListener {
 
+	private static final long serialVersionUID = 5493693296072780899L;
+
 	public DialogPerfil() {
 		inicializarAtributos();
 		inicializarComponentes();
+		
 		addWindowFocusListener(this);
 	}
 

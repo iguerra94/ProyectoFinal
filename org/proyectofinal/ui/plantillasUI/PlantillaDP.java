@@ -9,14 +9,15 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.print.Doc;
 import javax.print.DocFlavor;
 import javax.print.DocPrintJob;
@@ -56,6 +57,8 @@ import com.itextpdf.text.DocumentException;
 
 public class PlantillaDP extends JDialog {
 	
+	private static final long serialVersionUID = 6944716547588591882L;
+	
 	private JPanel panelPersona;
 	private JLabel labelAvatar;
 	private JLabel lblNomPersona;
@@ -77,14 +80,6 @@ public class PlantillaDP extends JDialog {
 	String apellido;
 	Carnet c;
 	private String ruta;
-
-	public String getRuta() {
-		return ruta;
-	}
-
-	public void setRuta(String ruta) {
-		this.ruta = ruta;
-	}
 
 	public PlantillaDP(){
 		
@@ -215,11 +210,11 @@ public class PlantillaDP extends JDialog {
 						c.crearCarnet(pR);
 											
 					} catch (MalformedURLException e1) {
-						e1.printStackTrace();
+						JOptionPane.showMessageDialog(null, e1.getMessage());
 					} catch (IOException e1) {
-						e1.printStackTrace();
+						JOptionPane.showMessageDialog(null, e1.getMessage());
 					} catch (DocumentException e1) {
-						e1.printStackTrace();
+						JOptionPane.showMessageDialog(null, e1.getMessage());
 					}
 					
 				}
@@ -417,7 +412,6 @@ public class PlantillaDP extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				verCarnet(pR);
-//				verCarnet();
 			}
 		});
 		btnVerCarnet.setBounds(25, 60, 100, 35);
@@ -450,35 +444,22 @@ public class PlantillaDP extends JDialog {
 		JLabel lblCarnet = new JLabel("Imagen Carnet");
 		lblCarnet.setBounds(0, 0, 227, 142);
 	
-		String ruta = "/carnets/png/carnet"+pR.getNombre().substring(0, 1) + pR.getApellido().substring(0, 1) + pR.getDni().substring(5) + ".png";
+		String ruta = "/home/ivang94/workspace/ProyectoFinal/bin/carnets/png/carnet"+pR.getNombre().substring(0, 1) + pR.getApellido().substring(0, 1) + pR.getDni().substring(5) + ".png";
+
+		try {
 		
-		lblCarnet.setIcon(new ImageIcon(getClass().getResource(ruta)));
+			BufferedImage imagen = ImageIO.read(new File(ruta));
+
+			lblCarnet.setIcon(new ImageIcon(imagen));
+			
+			verCarnet.getContentPane().add(lblCarnet);
+			
+			verCarnet.setVisible(true);
 		
-		verCarnet.getContentPane().add(lblCarnet);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
-		verCarnet.setVisible(true);
-	}
-	
-	private void verCarnet(){
-		
-		JDialog verCarnet = new JDialog();
-		verCarnet.setTitle("Carnet AMPass");
-		verCarnet.setBounds(100,100,227,142);
-		verCarnet.setModal(true);
-		verCarnet.setResizable(false);
-		verCarnet.setLocationRelativeTo(null);
-		verCarnet.getContentPane().setLayout(null);
-		
-		JLabel lblCarnet = new JLabel("Imagen Carnet");
-		lblCarnet.setBounds(0, 0, 227, 142);
-	
-//		String ruta = "/carnets/png/carnet"+pR.getNombre().substring(0, 1) + pR.getApellido().substring(0, 1) + pR.getDni().substring(5) + ".png";
-		
-//		lblCarnet.setIcon(new ImageIcon(getClass().getResource(ruta)));
-		
-		verCarnet.getContentPane().add(lblCarnet);
-		
-		verCarnet.setVisible(true);
 	}
 	
 	private void imprimirCarnet(PersonaRegistrada pR) {
@@ -507,13 +488,17 @@ public class PlantillaDP extends JDialog {
  
  
         if (defaultPrintService != null) {
-            DocPrintJob printJob = defaultPrintService.createPrintJob();
+            
+        	DocPrintJob printJob = defaultPrintService.createPrintJob();
+            
             try {
-                printJob.print(document, attributeSet);
+ 
+            	printJob.print(document, attributeSet);
  
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            
         } else {
         	JOptionPane.showMessageDialog(null, "No existen impresoras instaladas");
         }
@@ -521,7 +506,6 @@ public class PlantillaDP extends JDialog {
         try {
 			inputStream.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -722,15 +706,6 @@ public class PlantillaDP extends JDialog {
 		panelMostrarInfo.add(btnGuardarCambiosDatosPersona);
 	}
 	
-	private void controlarCaracteresLetras(KeyEvent e) {
-		
-		char c = e.getKeyChar();
-		
-		if ((c < 'a' || c > 'z') && (c < 'A' || c > 'Z') && (c != KeyEvent.VK_KP_LEFT) && c != (KeyEvent.VK_KP_RIGHT) && (c != KeyEvent.VK_SPACE) && (c != KeyEvent.VK_BACK_SPACE)){
-			e.consume();
-		}
-	}
-	
 	private void controlarCaracteresLetrasApellidoNombre(KeyEvent e) {
 		
 		char c = e.getKeyChar();
@@ -817,7 +792,7 @@ public class PlantillaDP extends JDialog {
 						
 						String contraseña = new String(txtNuevaContrasenia.getPassword());
 						
-						uBo.modificarUsuario(contraseña, getLabelAvatar().getToolTipText());
+						uBo.modificarContrasenia(contraseña, getLabelAvatar().getToolTipText());
 						
 						JOptionPane.showMessageDialog(null, "Se ha modificado la clave con exito!");
 						
@@ -874,6 +849,14 @@ public class PlantillaDP extends JDialog {
 
 	public void setLabelAvatar(JLabel labelAvatar) {
 		this.labelAvatar = labelAvatar;
+	}
+
+	public String getRuta() {
+		return ruta;
+	}
+
+	public void setRuta(String ruta) {
+		this.ruta = ruta;
 	}
 
 }

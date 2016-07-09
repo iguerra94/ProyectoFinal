@@ -10,9 +10,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
@@ -34,19 +31,14 @@ import org.proyectofinal.bo.impl.ViajeCabeceraBoImpl;
 import org.proyectofinal.bo.interfaces.ViajeCabeceraBo;
 import org.proyectofinal.model.impl.ViajeCabeceraImpl;
 import org.proyectofinal.model.interfaces.ViajeCabecera;
-import org.proyectofinal.ui.DialogLoadFlight;
 import org.proyectofinal.ui.DialogLoadOffer;
-import org.proyectofinal.ui.DialogRemoveFlight;
-import org.proyectofinal.ui.util.CiudadUtil;
-import org.proyectofinal.ui.util.ListaCiudades;
-import org.proyectofinal.ui.util.ListaPaises;
-import org.proyectofinal.ui.util.PaisUtil;
 
 public class PlantillaDLO extends JDialog {
 	
+	private static final long serialVersionUID = -8133388323936797157L;
 	
 	private JPanel panelOrigenDestino;
-	private JComboBox cmbOrigenDestino;
+	private JComboBox<String> cmbOrigenDestino;
 	
 	private JPanel panelOferta;
 	private JTextField txtOferta;
@@ -105,9 +97,9 @@ public class PlantillaDLO extends JDialog {
 			i++;
 		}
 		
-		cmbOrigenDestino = new JComboBox();
+		cmbOrigenDestino = new JComboBox<String>();
 		cmbOrigenDestino.setBounds(20, 30, 300, 30);
-		cmbOrigenDestino.setModel(new DefaultComboBoxModel<>(listaOrigenDestino));
+		cmbOrigenDestino.setModel(new DefaultComboBoxModel<String>(listaOrigenDestino));
 		cmbOrigenDestino.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				
@@ -133,19 +125,6 @@ public class PlantillaDLO extends JDialog {
 
 		vC.setCiudadDestino(destino.split("[(]")[0]);
 		vC.setShortPaisDestino(destino.substring(destino.length()-4, destino.length()-1));
-	}
-	
-	private void cargarComboBoxOrigenDestino(){
-		
-		ViajeCabeceraBo vCBo = new ViajeCabeceraBoImpl();
-		
-		cmbOrigenDestino.removeAllItems();
-
-		for (String origenDestino : vCBo.retornarOrigenesDestinos()) {
-			cmbOrigenDestino.addItem(origenDestino);
-		}
-		
-		cmbOrigenDestino.setSelectedIndex(0);
 	}
 	
 	private void agregarPanelOferta() {
@@ -321,6 +300,7 @@ public class PlantillaDLO extends JDialog {
 
 		if (PromptResult == 1){
 			DialogLoadOffer dlo = new DialogLoadOffer();
+			dlo.setVisible(true);
 		}
 	}
 

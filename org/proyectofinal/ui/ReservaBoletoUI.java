@@ -4,19 +4,20 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.awt.event.WindowListener;
 
-import org.proyectofinal.model.interfaces.ReservaViaje;
 import org.proyectofinal.ui.plantillasUI.PlantillaRV;
 
 public class ReservaBoletoUI extends PlantillaRV implements WindowListener, WindowFocusListener {
 
+	private static final long serialVersionUID = -7926334781725184834L;
+
 	public ReservaBoletoUI() {
+		
 		inicializarAtributos();
 		addWindowListener(this);
+		
 		addWindowFocusListener(this);
 	}
 
-
-	@Override
 	public void windowOpened(WindowEvent e) {
 		
 	}
@@ -53,10 +54,6 @@ public class ReservaBoletoUI extends PlantillaRV implements WindowListener, Wind
 	@Override
 	public void windowGainedFocus(WindowEvent e) {
 		accionesCmbCantPasajerosAlTenerFocoLaVentana();
-//		setearNombre();
-//		setearApellido();
-//		setearDni();
-//		setearAsientoYPrecio();
 	}
 
 	@Override

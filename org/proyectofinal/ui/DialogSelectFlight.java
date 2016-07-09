@@ -10,13 +10,14 @@ import org.proyectofinal.ui.plantillasUI.PlantillaDRF;
 
 public class DialogSelectFlight extends PlantillaDRF implements WindowListener {
 	
+	private static final long serialVersionUID = 3422959414855062805L;
+	
 	public DialogSelectFlight(){
 	
 		inicializarAtributosSF();
 		inicializarComponentesSF();
-		addWindowListener(this);
 		
-		setVisible(true);
+		addWindowListener(this);
 	}
 
 	@Override

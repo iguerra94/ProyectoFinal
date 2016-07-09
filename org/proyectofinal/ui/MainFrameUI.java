@@ -7,18 +7,15 @@ import java.awt.event.WindowFocusListener;
 import java.awt.event.WindowListener;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-
-import org.proyectofinal.bo.impl.UsuarioBoImpl;
 import org.proyectofinal.bo.impl.ViajeCabeceraBoImpl;
-import org.proyectofinal.bo.interfaces.UsuarioBo;
 import org.proyectofinal.bo.interfaces.ViajeCabeceraBo;
 import org.proyectofinal.model.interfaces.ViajeCabecera;
 import org.proyectofinal.ui.plantillasUI.PlantillaMF;
 
 public class MainFrameUI extends PlantillaMF implements WindowListener, WindowFocusListener, ComponentListener {
 	
+	private static final long serialVersionUID = -1621781631832124940L;
+
 	public MainFrameUI() {
 		
 		inicializarAtributos();
@@ -27,8 +24,6 @@ public class MainFrameUI extends PlantillaMF implements WindowListener, WindowFo
 		addWindowListener(this);
 		addWindowFocusListener(this);
 		addComponentListener(this);
-			
-		setVisible(true);
 	}
 
 	@Override
@@ -92,22 +87,18 @@ public class MainFrameUI extends PlantillaMF implements WindowListener, WindowFo
 
 	@Override
 	public void componentResized(ComponentEvent e) {
-		// TODO Auto-generated method stub
 		pintarComponentes();
 	}
 
 	@Override
 	public void componentMoved(ComponentEvent e) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void componentShown(ComponentEvent e) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void componentHidden(ComponentEvent e) {
-		// TODO Auto-generated method stub
 	}
 }

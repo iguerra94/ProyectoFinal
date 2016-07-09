@@ -14,7 +14,6 @@ import java.awt.event.KeyEvent;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -32,6 +31,8 @@ import org.proyectofinal.ui.DialogMissedPass;
 import org.proyectofinal.ui.DialogRegistrarse;
 
 public class PlantillaDL extends JDialog {
+	
+	private static final long serialVersionUID = -6234766295289047065L;
 	
 	private JTextField txtUsuario;
 	private JPasswordField txtContrasea;
@@ -187,10 +188,12 @@ public class PlantillaDL extends JDialog {
 
 	private void registrar() {
 		DialogRegistrarse ui = new DialogRegistrarse();
+		ui.setVisible(true);
 	}
 	
 	private void recuperarPass(){
 		DialogMissedPass d = new DialogMissedPass();
+		d.setVisible(true);
 	}
 	
 	private void setearUsuario() {

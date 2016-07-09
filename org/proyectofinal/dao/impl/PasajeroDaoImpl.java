@@ -8,6 +8,13 @@ import org.proyectofinal.dao.abstracts.AbstractDao;
 import org.proyectofinal.dao.interfaces.PasajeroDao;
 import org.proyectofinal.model.interfaces.Pasajero;
 
+/**
+ * Implementacion del DAO Pasajero.
+ *  
+ * @author Ivan Guerra
+ * @version 1.0.0 
+ */
+
 public class PasajeroDaoImpl extends AbstractDao implements PasajeroDao {
 	
 	public void conectar() throws ClassNotFoundException, SQLException{
@@ -20,15 +27,9 @@ public class PasajeroDaoImpl extends AbstractDao implements PasajeroDao {
 	
 	public ResultSet consultar() throws SQLException, ClassNotFoundException {
 		
-		conectar();
-		
 		PreparedStatement sentencia = getConexion().prepareStatement("select p.dni, p.nombre, p.apellido from Pasajero p inner join PersonaGenerica pg on p.dni = pg.dni");
 		
 		ResultSet resultado = sentencia.executeQuery();
-
-//		sentencia.close();
-		
-//		desconectar();
 		
 		return resultado;
 	}
@@ -57,22 +58,18 @@ public class PasajeroDaoImpl extends AbstractDao implements PasajeroDao {
 	
 	public ResultSet consultarPersonaPorDni(Pasajero p) throws SQLException, ClassNotFoundException {
 		
-		conectar();
-		
 		PreparedStatement sentencia = getConexion().prepareStatement("select dni from PersonaGenerica where dni = ?");
 		
 		sentencia.setString(1, p.getDni());
 		
 		ResultSet resultado = sentencia.executeQuery();
 
-//		desconectar();
-		
 		return resultado;
 	}
 	
 	public void altaPasajero(Pasajero p) throws SQLException, ClassNotFoundException {
 		
-		this.conectar();
+		conectar();
 		
 		ResultSet res1 = this.consultarPersonaPorDni(p);
 		
@@ -92,39 +89,7 @@ public class PasajeroDaoImpl extends AbstractDao implements PasajeroDao {
 
 		sentencia1.executeUpdate();
 		
-//		sentencia1.close();
-//		this.desconectar();
-	}
-
-	public void bajaPasajero(Pasajero p) throws SQLException, ClassNotFoundException{
-		
-		this.conectar();
-		
-//		PreparedStatement sentencia = getConexion().prepareStatement("delete from Pasajero where dni = ?");
-//
-//		sentencia.setString(1, p.getDni());
-//		
-//		sentencia.executeUpdate();
-		
-		this.desconectar();
-	}
-
-	public void modificacion(String atr, String valor, String dni) throws SQLException, ClassNotFoundException{	
-
-		this.conectar();			
-		
-//		PreparedStatement sentencia = null;
-//		
-//		if (atr.equals("dni")) {
-//			sentencia = getConexion().prepareStatement("update PersonaGenerica set dni = ? where dni = ?");
-//		}
-//
-//		sentencia.setString(1, valor);
-//		sentencia.setString(2, dni);
-//		
-//		sentencia.executeUpdate();
-
-		this.desconectar();
+		desconectar();
 	}
 
 }

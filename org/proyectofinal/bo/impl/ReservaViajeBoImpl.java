@@ -15,14 +15,37 @@ import org.proyectofinal.model.impl.ReservaViajeImpl;
 import org.proyectofinal.model.interfaces.ReservaViaje;
 import org.proyectofinal.model.interfaces.ViajeCabecera;
 
+/**
+ * Implementacion de la Clase de Negocio ReservaViajeBo.
+ * 
+ * @author Ivan Guerra
+ * @version 1.0.0
+ */
+
 public class ReservaViajeBoImpl implements ReservaViajeBo {
+
+	/**
+	 * Instancia un nuevo Objeto de la Clase de Negocio ReservaViajeBo.
+	 */
+	
+	public ReservaViajeBoImpl(){
+		
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.bo.interfaces.ReservaViajeBo#verificarReserva(org.proyectofinal.model.interfaces.ReservaViaje)
+	 */
 	
 	public void verificarReserva(ReservaViaje rV) throws NotValidPassengerException {
 		if (rV.getAsiento() == -1){ throw new NotValidPassengerException(); }
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.bo.interfaces.ReservaViajeBo#controlarAsientosOcupados(org.proyectofinal.model.interfaces.ViajeCabecera)
+	 */
+	
 	@Override
-	public List<Integer> controlarAsientosOcupados(ViajeCabecera viaje) {
+	public List<Integer> retornarAsientosOcupados(ViajeCabecera viaje) {
 		
 		ReservaViajeDao rVDao = new ReservaViajeDaoImpl();
 		
@@ -49,20 +72,10 @@ public class ReservaViajeBoImpl implements ReservaViajeBo {
 		return listaOcupados;
 	}
 
-	@Override
-	public void agregarReserva(ReservaViaje reservaViaje) {
-		
-		ReservaViajeDao rVDao = new ReservaViajeDaoImpl();
-		
-		try {
-			rVDao.alta(reservaViaje);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.bo.interfaces.ReservaViajeBo#retornarCantidadDeReservas(java.lang.String)
+	 */
+	
 	@Override
 	public Integer retornarCantidadDeReservas(String dni) {
 		
@@ -92,6 +105,10 @@ public class ReservaViajeBoImpl implements ReservaViajeBo {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.bo.interfaces.ReservaViajeBo#retornarReservasSegunDni(java.lang.String)
+	 */
+	
 	@Override
 	public List<ReservaViaje> retornarReservasSegunDni(String dni) {
 		
@@ -132,6 +149,24 @@ public class ReservaViajeBoImpl implements ReservaViajeBo {
 		
 		return listaReservas;
 		
+	}
+
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.bo.interfaces.ReservaViajeBo#agregarReserva(org.proyectofinal.model.interfaces.ReservaViaje)
+	 */
+	
+	@Override
+	public void agregarReserva(ReservaViaje reservaViaje) {
+		
+		ReservaViajeDao rVDao = new ReservaViajeDaoImpl();
+		
+		try {
+			rVDao.alta(reservaViaje);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

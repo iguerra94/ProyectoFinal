@@ -7,7 +7,6 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -21,6 +20,8 @@ import org.proyectofinal.bo.impl.UsuarioBoImpl;
 import org.proyectofinal.bo.interfaces.UsuarioBo;
 
 public class PlantillaDMP extends JDialog {
+
+	private static final long serialVersionUID = 3722630771177336425L;
 
 	private JTextField txtUsuario;
 	private JButton btnRecuperar;
@@ -116,10 +117,6 @@ public class PlantillaDMP extends JDialog {
 				JOptionPane.showMessageDialog(null, "Contraseña: " + contrasenia);
 			}
 			
-		} catch (ClassNotFoundException e1) {
-			JOptionPane.showMessageDialog(null, "No se pudo conectar a la base de datos.");
-		} catch (SQLException e1) {
-			JOptionPane.showMessageDialog(null, "Ocurrio en error en la base de datos. Compruebe su conexión y vuelva a intentarlo.");
 		} catch (UserNotExistsException e1) {
 			JOptionPane.showMessageDialog(null, e1.getMessage());
 		} catch (UserNotValidException e1) {

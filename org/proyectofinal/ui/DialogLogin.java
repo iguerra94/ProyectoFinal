@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-import javax.swing.JButton;
-
 import org.proyectofinal.bo.ex.UserNotExistsException;
 import org.proyectofinal.bo.impl.UsuarioBoImpl;
 import org.proyectofinal.bo.interfaces.UsuarioBo;
@@ -15,14 +13,13 @@ import org.proyectofinal.ui.plantillasUI.PlantillaMF;
 
 public class DialogLogin extends PlantillaDL implements WindowListener {
 
+	private static final long serialVersionUID = 7573163474919271943L;
+
 	public DialogLogin() {
-		
 		inicializarAtributos();
 		inicializarComponentes();
 		
 		addWindowListener(this);
-		
-		setVisible(true);
 	}
 
 	@Override
@@ -34,7 +31,10 @@ public class DialogLogin extends PlantillaDL implements WindowListener {
 	public void windowClosing(WindowEvent e) {
 		
 		PlantillaMF ui = new MainFrameUI();
+		
 		ui.setLogueado(false);
+		
+		ui.setVisible(true);
 	}
 
 	@Override
@@ -44,7 +44,9 @@ public class DialogLogin extends PlantillaDL implements WindowListener {
 		
 		ui.setLogueado(true);
 		
+		ui.agregarBotonesLogueado();
 		ui.agregarBotonPerfil(getUsuario().getNombreUsuario());
+		
 		
 		UsuarioBo uBo = new UsuarioBoImpl();
 		
@@ -62,6 +64,7 @@ public class DialogLogin extends PlantillaDL implements WindowListener {
 			e1.printStackTrace();
 		}
 		
+		ui.setVisible(true);
 	}
 
 	@Override

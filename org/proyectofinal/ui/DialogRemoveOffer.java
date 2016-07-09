@@ -9,18 +9,18 @@ import javax.swing.JOptionPane;
 import org.proyectofinal.bo.ex.NotOffersFoundException;
 import org.proyectofinal.bo.impl.ViajeCabeceraBoImpl;
 import org.proyectofinal.bo.interfaces.ViajeCabeceraBo;
-import org.proyectofinal.ui.plantillasUI.PlantillaDRF;
 import org.proyectofinal.ui.plantillasUI.PlantillaDRO;
 
 public class DialogRemoveOffer extends PlantillaDRO implements WindowListener {
 	
+	private static final long serialVersionUID = 5614192405920777012L;
+
 	public DialogRemoveOffer(){
 	
 		inicializarAtributosRO();
 		inicializarComponentesRO();
-		addWindowListener(this);
 		
-		setVisible(true);
+		addWindowListener(this);		
 	}
 
 	@Override

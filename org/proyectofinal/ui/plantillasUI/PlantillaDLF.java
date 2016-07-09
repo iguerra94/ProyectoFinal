@@ -48,28 +48,27 @@ import com.toedter.calendar.JDateChooser;
 
 public class PlantillaDLF extends JDialog {
 	
+	private static final long serialVersionUID = 3529251422781102033L;
+
 	private JTextField txtCodigoViaje;
 	List<String> codigos;
 	
 	private JPanel panelSalida;
-	private JComboBox cmbPaisOrigen;
-	private JComboBox cmbCiudadOrigen;
-	private JComboBox cmbPlatOrigen;
+	private JComboBox<PaisUtil> cmbPaisOrigen;
+	private JComboBox<CiudadUtil> cmbCiudadOrigen;
+	private JComboBox<PlataformaUtil> cmbPlatOrigen;
 	private JDateChooser dateChooserFechaSalida;
 	private java.util.Date now;
-	private Date fechaSalida;
-	private JComboBox cmbHoraSalida;
-	private String horaSalida;
-	private JComboBox cmbMinutoSalida;
-	private String minutoSalida;
+	private JComboBox<String> cmbHoraSalida;
+	private JComboBox<String> cmbMinutoSalida;
 	
 	private JPanel panelLlegada;
-	private JComboBox cmbPaisDestino;
-	private JComboBox cmbCiudadDestino;
-	private JComboBox cmbPlatDestino;
+	private JComboBox<PaisUtil> cmbPaisDestino;
+	private JComboBox<CiudadUtil> cmbCiudadDestino;
+	private JComboBox<PlataformaUtil> cmbPlatDestino;
 	private JDateChooser dateChooserFechaLlegada;
-	private JComboBox cmbHoraLlegada;
-	private JComboBox cmbMinutoLlegada;
+	private JComboBox<String> cmbHoraLlegada;
+	private JComboBox<String> cmbMinutoLlegada;
 	
 	private JPanel panelPrecios;
 	private JTextField txtPrecioTurista;
@@ -83,15 +82,14 @@ public class PlantillaDLF extends JDialog {
 	
 	private JPanel panelInfoExtra;
 	private JTextField txtDistancia;
-	private JComboBox cmbHoraDuracion;
-	private JComboBox cmbMinutoDuracion;
+	private JComboBox<String> cmbHoraDuracion;
+	private JComboBox<String> cmbMinutoDuracion;
 	private JTextField txtCupo;
 	
 	private JButton btnCargarVuelo;
 	
 	private ViajeCabecera vC;
 	private ViajeCabeceraBo vCBo;
-	
 	
 	public PlantillaDLF(){
 
@@ -276,7 +274,7 @@ public class PlantillaDLF extends JDialog {
 		String[] modelHora = new String[] {"00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"};
 		String[] modelMinuto = new String[] {"00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"};
 
-		cmbPaisOrigen = new JComboBox();
+		cmbPaisOrigen = new JComboBox<PaisUtil>();
 		cmbPaisOrigen.setBounds(180, 30, 190, 30);
 		cmbPaisOrigen.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -297,7 +295,7 @@ public class PlantillaDLF extends JDialog {
 		});
 		panelSalida.add(cmbPaisOrigen);
 		
-		cmbCiudadOrigen = new JComboBox();
+		cmbCiudadOrigen = new JComboBox<CiudadUtil>();
 		cmbCiudadOrigen.setBounds(180, 70, 190, 30);
 		cmbCiudadOrigen.setEnabled(false);
 		cmbCiudadOrigen.addItemListener(new ItemListener() {
@@ -319,7 +317,7 @@ public class PlantillaDLF extends JDialog {
 		});
 		panelSalida.add(cmbCiudadOrigen);
 		
-		cmbPlatOrigen = new JComboBox();
+		cmbPlatOrigen = new JComboBox<PlataformaUtil>();
 		cmbPlatOrigen.setEnabled(false);
 		cmbPlatOrigen.setBounds(180, 110, 190, 30);
 		cmbPlatOrigen.addItemListener(new ItemListener() {
@@ -373,7 +371,7 @@ public class PlantillaDLF extends JDialog {
 		dateChooserFechaSalida.setBounds(180, 150, 190, 30);
 		panelSalida.add(dateChooserFechaSalida);
 		
-		cmbHoraSalida = new JComboBox();
+		cmbHoraSalida = new JComboBox<String>();
 		cmbHoraSalida.addItemListener(new ItemListener() {
 			
 			@Override
@@ -393,13 +391,13 @@ public class PlantillaDLF extends JDialog {
 		});
 		cmbHoraSalida.setBounds(180, 190, 50, 30);
 		panelSalida.add(cmbHoraSalida);
-		cmbHoraSalida.setModel(new DefaultComboBoxModel(modelHora));
+		cmbHoraSalida.setModel(new DefaultComboBoxModel<String>(modelHora));
 		
 		JLabel label1 = new JLabel(":");
 		label1.setBounds(240, 190, 15, 30);
 		panelSalida.add(label1);
 		
-		cmbMinutoSalida = new JComboBox();
+		cmbMinutoSalida = new JComboBox<String>();
 		cmbMinutoSalida.addItemListener(new ItemListener() {
 			
 			@Override
@@ -417,7 +415,7 @@ public class PlantillaDLF extends JDialog {
 		});
 		cmbMinutoSalida.setBounds(255, 190, 50, 30);
 		panelSalida.add(cmbMinutoSalida);
-		cmbMinutoSalida.setModel(new DefaultComboBoxModel(modelMinuto));
+		cmbMinutoSalida.setModel(new DefaultComboBoxModel<String>(modelMinuto));
 		
 		vC.setPaisOrigen("");
 		vC.setCiudadOrigen("");
@@ -437,7 +435,7 @@ public class PlantillaDLF extends JDialog {
 		PlataformaUtil pl = new PlataformaUtil(viaje.getPlataformaOrigen(), viaje.getCiudadOrigen());
 		
 		
-		cmbPaisOrigen = new JComboBox();
+		cmbPaisOrigen = new JComboBox<PaisUtil>();
 		cargarPaisesOrigen();
 		cmbPaisOrigen.getModel().setSelectedItem(p);
 		cmbPaisOrigen.setBounds(180, 30, 190, 30);
@@ -460,7 +458,7 @@ public class PlantillaDLF extends JDialog {
 			}
 		});
 		
-		cmbCiudadOrigen = new JComboBox();
+		cmbCiudadOrigen = new JComboBox<CiudadUtil>();
 		cargarCiudadesOrigen();
 		cmbCiudadOrigen.getModel().setSelectedItem(c);
 		cmbCiudadOrigen.setBounds(180, 70, 190, 30);
@@ -484,7 +482,7 @@ public class PlantillaDLF extends JDialog {
 		});
 		panelSalida.add(cmbCiudadOrigen);
 		
-		cmbPlatOrigen = new JComboBox();
+		cmbPlatOrigen = new JComboBox<PlataformaUtil>();
 		cargarPlataformasOrigen();
 		cmbPlatOrigen.getModel().setSelectedItem(pl);
 		cmbPlatOrigen.setEnabled(false);
@@ -540,8 +538,8 @@ public class PlantillaDLF extends JDialog {
 		dateChooserFechaSalida.setBounds(180, 150, 190, 30);
 		panelSalida.add(dateChooserFechaSalida);
 		
-		cmbHoraSalida = new JComboBox();
-		cmbHoraSalida.setModel(new DefaultComboBoxModel(modelHora));
+		cmbHoraSalida = new JComboBox<String>();
+		cmbHoraSalida.setModel(new DefaultComboBoxModel<String>(modelHora));
 		cmbHoraSalida.getModel().setSelectedItem(viaje.getHoraSalida().toString().substring(0, 2));
 		cmbHoraSalida.addItemListener(new ItemListener() {
 			
@@ -567,8 +565,8 @@ public class PlantillaDLF extends JDialog {
 		label1.setBounds(240, 190, 15, 30);
 		panelSalida.add(label1);
 		
-		cmbMinutoSalida = new JComboBox();
-		cmbMinutoSalida.setModel(new DefaultComboBoxModel(modelMinuto));
+		cmbMinutoSalida = new JComboBox<String>();
+		cmbMinutoSalida.setModel(new DefaultComboBoxModel<String>(modelMinuto));
 		cmbMinutoSalida.getModel().setSelectedItem(viaje.getHoraSalida().toString().substring(3, 5));
 		cmbMinutoSalida.addItemListener(new ItemListener() {
 			
@@ -636,7 +634,7 @@ public class PlantillaDLF extends JDialog {
 			i++;
 		}
 		
-		cmbPaisOrigen.setModel(new DefaultComboBoxModel(modelPaises));
+		cmbPaisOrigen.setModel(new DefaultComboBoxModel<PaisUtil>(modelPaises));
 		cmbPaisOrigen.setSelectedIndex(0);
 	}
 	
@@ -666,7 +664,7 @@ public class PlantillaDLF extends JDialog {
 			i++;
 		}
 		
-		cmbCiudadOrigen.setModel(new DefaultComboBoxModel(modelCiudades));
+		cmbCiudadOrigen.setModel(new DefaultComboBoxModel<CiudadUtil>(modelCiudades));
 		cmbCiudadOrigen.setSelectedIndex(0);
 	}
 	
@@ -696,7 +694,7 @@ public class PlantillaDLF extends JDialog {
 			i++;
 		}
 		
-		cmbPlatOrigen.setModel(new DefaultComboBoxModel(modelPlataformas));
+		cmbPlatOrigen.setModel(new DefaultComboBoxModel<PlataformaUtil>(modelPlataformas));
 		cmbPlatOrigen.setSelectedIndex(0);
 	}
 	
@@ -754,7 +752,7 @@ public class PlantillaDLF extends JDialog {
 		String[] modelMinuto = new String[] {"00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"};
 		
 		
-		cmbPaisDestino = new JComboBox();
+		cmbPaisDestino = new JComboBox<PaisUtil>();
 		cmbPaisDestino.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 
@@ -777,7 +775,7 @@ public class PlantillaDLF extends JDialog {
 		cmbPaisDestino.setBounds(180, 30, 190, 30);
 		panelLlegada.add(cmbPaisDestino);
 		
-		cmbCiudadDestino = new JComboBox();
+		cmbCiudadDestino = new JComboBox<CiudadUtil>();
 		cmbCiudadDestino.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 
@@ -797,7 +795,7 @@ public class PlantillaDLF extends JDialog {
 		cmbCiudadDestino.setBounds(180, 70, 190, 30);
 		panelLlegada.add(cmbCiudadDestino);
 		
-		cmbPlatDestino = new JComboBox();
+		cmbPlatDestino = new JComboBox<PlataformaUtil>();
 		cmbPlatDestino.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				
@@ -843,7 +841,7 @@ public class PlantillaDLF extends JDialog {
 		dateChooserFechaLlegada.setBounds(180, 150, 190, 30);
 		panelLlegada.add(dateChooserFechaLlegada);
 		
-		cmbHoraLlegada = new JComboBox();
+		cmbHoraLlegada = new JComboBox<String>();
 		cmbHoraLlegada.addItemListener(new ItemListener() {
 			
 			@Override
@@ -861,7 +859,7 @@ public class PlantillaDLF extends JDialog {
 			}
 		});
 		cmbHoraLlegada.setBounds(180, 190, 50, 30);
-		cmbHoraLlegada.setModel(new DefaultComboBoxModel(modelHora));
+		cmbHoraLlegada.setModel(new DefaultComboBoxModel<String>(modelHora));
 		panelLlegada.add(cmbHoraLlegada);
 		
 		JLabel label2 = new JLabel(":");
@@ -869,7 +867,7 @@ public class PlantillaDLF extends JDialog {
 		label2.setBounds(240, 190, 15, 30);
 		panelLlegada.add(label2);
 		
-		cmbMinutoLlegada = new JComboBox();
+		cmbMinutoLlegada = new JComboBox<String>();
 		cmbMinutoLlegada.addItemListener(new ItemListener() {
 			
 			@Override
@@ -888,7 +886,7 @@ public class PlantillaDLF extends JDialog {
 			}
 		});
 		cmbMinutoLlegada.setBounds(255, 190, 50, 30);
-		cmbMinutoLlegada.setModel(new DefaultComboBoxModel(modelMinuto));
+		cmbMinutoLlegada.setModel(new DefaultComboBoxModel<String>(modelMinuto));
 		panelLlegada.add(cmbMinutoLlegada);
 
 		vC.setPaisDestino("");
@@ -909,7 +907,7 @@ public class PlantillaDLF extends JDialog {
 		PlataformaUtil pl = new PlataformaUtil(viaje.getPlataformaDestino(), viaje.getCiudadDestino());
 		
 		
-		cmbPaisDestino = new JComboBox();
+		cmbPaisDestino = new JComboBox<PaisUtil>();
 		cargarPaisesDestino();
 		cmbPaisDestino.getModel().setSelectedItem(p);
 		cmbPaisDestino.addItemListener(new ItemListener() {
@@ -933,7 +931,7 @@ public class PlantillaDLF extends JDialog {
 		cmbPaisDestino.setBounds(180, 30, 190, 30);
 		panelLlegada.add(cmbPaisDestino);
 		
-		cmbCiudadDestino = new JComboBox();
+		cmbCiudadDestino = new JComboBox<CiudadUtil>();
 		cargarCiudadesDestino();
 		cmbCiudadDestino.getModel().setSelectedItem(c);
 		cmbCiudadDestino.addItemListener(new ItemListener() {
@@ -955,7 +953,7 @@ public class PlantillaDLF extends JDialog {
 		cmbCiudadDestino.setBounds(180, 70, 190, 30);
 		panelLlegada.add(cmbCiudadDestino);
 		
-		cmbPlatDestino = new JComboBox();
+		cmbPlatDestino = new JComboBox<PlataformaUtil>();
 		cargarPlataformasDestino();
 		cmbPlatDestino.getModel().setSelectedItem(pl);
 		cmbPlatDestino.addItemListener(new ItemListener() {
@@ -1004,8 +1002,8 @@ public class PlantillaDLF extends JDialog {
 		dateChooserFechaLlegada.setBounds(180, 150, 190, 30);
 		panelLlegada.add(dateChooserFechaLlegada);
 		
-		cmbHoraLlegada = new JComboBox();
-		cmbHoraLlegada.setModel(new DefaultComboBoxModel(modelHora));
+		cmbHoraLlegada = new JComboBox<String>();
+		cmbHoraLlegada.setModel(new DefaultComboBoxModel<String>(modelHora));
 		cmbHoraLlegada.getModel().setSelectedItem(viaje.getHoraLlegada().toString().substring(0, 2));
 		cmbHoraLlegada.addItemListener(new ItemListener() {
 			
@@ -1031,8 +1029,8 @@ public class PlantillaDLF extends JDialog {
 		label2.setBounds(240, 190, 15, 30);
 		panelLlegada.add(label2);
 		
-		cmbMinutoLlegada = new JComboBox();
-		cmbMinutoLlegada.setModel(new DefaultComboBoxModel(modelMinuto));
+		cmbMinutoLlegada = new JComboBox<String>();
+		cmbMinutoLlegada.setModel(new DefaultComboBoxModel<String>(modelMinuto));
 		cmbMinutoLlegada.getModel().setSelectedItem(viaje.getHoraLlegada().toString().substring(3, 5));
 		cmbMinutoLlegada.addItemListener(new ItemListener() {
 			
@@ -1121,7 +1119,7 @@ public class PlantillaDLF extends JDialog {
 				i++;
 			}
 			
-			cmbPaisDestino.setModel(new DefaultComboBoxModel(modelPaises));
+			cmbPaisDestino.setModel(new DefaultComboBoxModel<PaisUtil>(modelPaises));
 			cmbPaisDestino.setSelectedIndex(0);
 		}
 	
@@ -1155,7 +1153,7 @@ public class PlantillaDLF extends JDialog {
 			i++;
 		}
 		
-		cmbCiudadDestino.setModel(new DefaultComboBoxModel(modelCiudades));
+		cmbCiudadDestino.setModel(new DefaultComboBoxModel<CiudadUtil>(modelCiudades));
 		cmbCiudadDestino.setSelectedIndex(0);
 	}
 	
@@ -1185,7 +1183,7 @@ public class PlantillaDLF extends JDialog {
 			i++;
 		}
 		
-		cmbPlatDestino.setModel(new DefaultComboBoxModel(modelPlataformas));
+		cmbPlatDestino.setModel(new DefaultComboBoxModel<PlataformaUtil>(modelPlataformas));
 		cmbPlatDestino.setSelectedIndex(0);
 	}
 	
@@ -1735,7 +1733,7 @@ public class PlantillaDLF extends JDialog {
 		txtDistancia.setBounds(120, 30, 125, 30);
 		panelInfoExtra.add(txtDistancia);
 
-		cmbHoraDuracion = new JComboBox();
+		cmbHoraDuracion = new JComboBox<String>();
 		cmbHoraDuracion.setEnabled(false);
 		cmbHoraDuracion.setModel(new DefaultComboBoxModel<>(modelHora));
 		cmbHoraDuracion.setBounds(375, 30, 50, 30);
@@ -1746,7 +1744,7 @@ public class PlantillaDLF extends JDialog {
 		label3.setBounds(435, 30, 15, 30);
 		panelInfoExtra.add(label3);
 		
-		cmbMinutoDuracion = new JComboBox();
+		cmbMinutoDuracion = new JComboBox<String>();
 		cmbMinutoDuracion.setEnabled(false);
 		cmbMinutoDuracion.setModel(new DefaultComboBoxModel<>(modelMinuto));
 		cmbMinutoDuracion.setBounds(450, 30, 50, 30);
@@ -1798,8 +1796,8 @@ public class PlantillaDLF extends JDialog {
 		txtDistancia.setBounds(120, 30, 125, 30);
 		panelInfoExtra.add(txtDistancia);
 
-		cmbHoraDuracion = new JComboBox();
-		cmbHoraDuracion.setModel(new DefaultComboBoxModel<>(modelHora));
+		cmbHoraDuracion = new JComboBox<String>();
+		cmbHoraDuracion.setModel(new DefaultComboBoxModel<String>(modelHora));
 		cmbHoraDuracion.getModel().setSelectedItem(viaje.getDuracion().toString().substring(0, 2));
 		cmbHoraDuracion.setEnabled(false);
 		cmbHoraDuracion.setBounds(375, 30, 50, 30);
@@ -1810,8 +1808,8 @@ public class PlantillaDLF extends JDialog {
 		label3.setBounds(435, 30, 15, 30);
 		panelInfoExtra.add(label3);
 		
-		cmbMinutoDuracion = new JComboBox();
-		cmbMinutoDuracion.setModel(new DefaultComboBoxModel<>(modelMinuto));
+		cmbMinutoDuracion = new JComboBox<String>();
+		cmbMinutoDuracion.setModel(new DefaultComboBoxModel<String>(modelMinuto));
 		cmbMinutoDuracion.getModel().setSelectedItem(viaje.getDuracion().toString().substring(3, 5));
 		cmbMinutoDuracion.setEnabled(false);
 		cmbMinutoDuracion.setBounds(450, 30, 50, 30);
@@ -1991,6 +1989,7 @@ public class PlantillaDLF extends JDialog {
 
 		if (PromptResult == 1){
 			DialogLoadFlight dlf = new DialogLoadFlight();
+			dlf.setVisible(true);
 		}
 	}
 

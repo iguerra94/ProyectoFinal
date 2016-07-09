@@ -10,13 +10,14 @@ import org.proyectofinal.ui.plantillasUI.PlantillaDRF;
 
 public class DialogRemoveFlight extends PlantillaDRF implements WindowListener {
 	
+	private static final long serialVersionUID = -7597921402438371197L;
+
 	public DialogRemoveFlight(){
 	
 		inicializarAtributos();
 		inicializarComponentes();
-		addWindowListener(this);
 		
-		setVisible(true);
+		addWindowListener(this);
 	}
 
 	@Override

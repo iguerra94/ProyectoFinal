@@ -24,7 +24,9 @@ import javax.swing.JButton;
 
 public class PlantillaDRF extends JDialog{
 
-	private JComboBox cmbVuelos;
+	private static final long serialVersionUID = -7511279080206489256L;
+
+	private JComboBox<String> cmbVuelos;
 	
 	public PlantillaDRF(){
 		
@@ -80,9 +82,9 @@ public class PlantillaDRF extends JDialog{
 			i++;
 		}
 		
-		cmbVuelos = new JComboBox();
+		cmbVuelos = new JComboBox<String>();
 		cmbVuelos.setBounds(40, 55, 120, 30);
-		cmbVuelos.setModel(new DefaultComboBoxModel<>(listaVuelos));
+		cmbVuelos.setModel(new DefaultComboBoxModel<String>(listaVuelos));
 		getContentPane().add(cmbVuelos);
 	}
 
@@ -130,6 +132,7 @@ public class PlantillaDRF extends JDialog{
 				ViajeCabecera viaje = vCBo.retornarViaje(codigo);
 				
 				DialogAlterFlight daf = new DialogAlterFlight(viaje);
+				daf.setVisible(true);
 	
 				dispose();
 				
@@ -163,6 +166,7 @@ public class PlantillaDRF extends JDialog{
 
 		if (PromptResult == 1){
 			DialogRemoveFlight drf = new DialogRemoveFlight();
+			drf.setVisible(true);
 		}
 	}
 	

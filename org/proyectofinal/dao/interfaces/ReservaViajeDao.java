@@ -5,6 +5,13 @@ import java.sql.SQLException;
 
 import org.proyectofinal.model.interfaces.ReservaViaje;
 
+/**
+ * Interfaz del DAO ReservaViaje.
+ * 
+ * @author Ivan Guerra
+ * @version 1.0.0
+ */
+
 public interface ReservaViajeDao {
 
 	public void conectar() throws ClassNotFoundException, SQLException;

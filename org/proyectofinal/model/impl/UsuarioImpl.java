@@ -4,27 +4,31 @@ import java.sql.Timestamp;
 
 import org.proyectofinal.model.interfaces.Usuario;
 
-// TODO: Auto-generated Javadoc
 /**
- * Clase de implementacion de la Entidad Usuario.
+ * Implementacion de la clase de dominio Usuario.
+ * 
+ * @author Ivan Guerra
+ * @version 1.0.0
  */
+
 public class UsuarioImpl implements Usuario {
 	
-	/** Nombre de usuario. */
+	/** El nombre de usuario del Usuario. */
 	private String nombreUsuario = null;
 	
-	/** Contraseña. */
+	/** La contraseña del Usuario. */
 	private String password = null;
 	
-	/** Tipo de usuario. */
+	/** El tipo de usuario del Usuario. */
 	private Integer tipoUsuario = null;
 	
-	/** Fecha de registro del usuario. */
+	/** La fecha de registro del Usuario. */
 	private Timestamp fechaInicio = null;
 	
 	/**
-	 * Constructor de la clase.
+	 * Instancia un nuevo objeto de la clase Usuario.
 	 */
+
 	public UsuarioImpl(){
 		
 	}
@@ -32,6 +36,7 @@ public class UsuarioImpl implements Usuario {
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.model.interfaces.Usuario#getNombreUsuario()
 	 */
+	
 	public String getNombreUsuario() {
 		return nombreUsuario;
 	}
@@ -39,6 +44,7 @@ public class UsuarioImpl implements Usuario {
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.model.interfaces.Usuario#setNombreUsuario(java.lang.String)
 	 */
+	
 	public void setNombreUsuario(String nombreUsuario) {
 		this.nombreUsuario = nombreUsuario;
 	}
@@ -46,6 +52,7 @@ public class UsuarioImpl implements Usuario {
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.model.interfaces.Usuario#getPassword()
 	 */
+	
 	public String getPassword() {
 		return password;
 	}
@@ -53,6 +60,7 @@ public class UsuarioImpl implements Usuario {
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.model.interfaces.Usuario#setPassword(java.lang.String)
 	 */
+	
 	public void setPassword(String password) {
 		this.password = password;
 	}
@@ -60,6 +68,7 @@ public class UsuarioImpl implements Usuario {
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.model.interfaces.Usuario#getTipoUsuario()
 	 */
+	
 	public Integer getTipoUsuario() {
 		return tipoUsuario;
 	}
@@ -67,6 +76,7 @@ public class UsuarioImpl implements Usuario {
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.model.interfaces.Usuario#setTipoUsuario(java.lang.Integer)
 	 */
+	
 	public void setTipoUsuario(Integer tipoUsuario) {
 		this.tipoUsuario = tipoUsuario;
 	}
@@ -74,6 +84,7 @@ public class UsuarioImpl implements Usuario {
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.model.interfaces.Usuario#getFechaInicio()
 	 */
+	
 	public Timestamp getFechaInicio() {
 		return fechaInicio;
 	}
@@ -81,6 +92,7 @@ public class UsuarioImpl implements Usuario {
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.model.interfaces.Usuario#setFechaInicio(java.sql.Timestamp)
 	 */
+	
 	public void setFechaInicio(Timestamp fechaInicio) {
 		this.fechaInicio = fechaInicio;
 	}
@@ -88,6 +100,7 @@ public class UsuarioImpl implements Usuario {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -106,6 +119,7 @@ public class UsuarioImpl implements Usuario {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -141,6 +155,7 @@ public class UsuarioImpl implements Usuario {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
+	
 	@Override
 	public String toString() {
 		
@@ -157,6 +172,7 @@ public class UsuarioImpl implements Usuario {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#clone()
 	 */
+	
 	public Usuario clone() throws CloneNotSupportedException {
 		
 		Usuario u = new UsuarioImpl();

@@ -12,7 +12,6 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.Date;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -52,6 +51,8 @@ import com.toedter.calendar.JDateChooser;
 
 public class PlantillaDR extends JDialog {
 	
+	private static final long serialVersionUID = 7802271145872718024L;
+	
 	private JPanel panelDatosPersonales;
 	private JPanel panelDatosUsuario;
 	private JTextField txtDni;
@@ -60,9 +61,8 @@ public class PlantillaDR extends JDialog {
 	private JTextField txtEmail;
 	private JTextField txtTelefono;
 	private JDateChooser birthDateChooser;
-	private JComboBox cmbPais;
-	private JComboBox cmbCiudad;
-	private JTextField txtCiudad;
+	private JComboBox<PaisUtil> cmbPais;
+	private JComboBox<CiudadUtil> cmbCiudad;
 	private JTextField txtNombreUsuario;
 	private JPasswordField txtContrasea;
 	private JButton btnRegistrarse;
@@ -271,7 +271,7 @@ public class PlantillaDR extends JDialog {
 		btnMayorDeEdad.setBounds(353, 135, 31, 24);
 		panelDatosPersonales.add(btnMayorDeEdad);
 		
-		cmbPais = new JComboBox();
+		cmbPais = new JComboBox<PaisUtil>();
 		cmbPais.setBounds(186, 195, 170, 25);
 		cmbPais.addItemListener(new ItemListener() {
 			
@@ -292,7 +292,7 @@ public class PlantillaDR extends JDialog {
 		});
 		panelDatosPersonales.add(cmbPais);
 		
-		cmbCiudad = new JComboBox();
+		cmbCiudad = new JComboBox<CiudadUtil>();
 		cmbCiudad.setBounds(186, 225, 170, 25);
 		cmbCiudad.setEnabled(false);
 		cmbCiudad.addItemListener(new ItemListener() {
@@ -359,7 +359,7 @@ public class PlantillaDR extends JDialog {
 	
 		txtContrasea = new JPasswordField();
 		txtContrasea.addFocusListener(new FocusAdapter() {
-			@Override
+			
 			public void focusLost(FocusEvent arg0) {
 				
 				String pass = new String(txtContrasea.getPassword());
@@ -468,11 +468,7 @@ public class PlantillaDR extends JDialog {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 		} catch (PersonAlreadyExistsException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
-		} catch (ClassNotFoundException e) {
-			JOptionPane.showMessageDialog(null, e.getMessage());
-		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(null, e.getMessage());
-		} 
+		}
 		
 	}
 	
@@ -512,7 +508,7 @@ public class PlantillaDR extends JDialog {
 			i++;
 		}
 		
-		cmbPais.setModel(new DefaultComboBoxModel(modelPaises));
+		cmbPais.setModel(new DefaultComboBoxModel<PaisUtil>(modelPaises));
 		cmbPais.setSelectedIndex(0);
 	}
 	
@@ -542,7 +538,7 @@ public class PlantillaDR extends JDialog {
 			i++;
 		}
 		
-		cmbCiudad.setModel(new DefaultComboBoxModel(modelCiudades));
+		cmbCiudad.setModel(new DefaultComboBoxModel<CiudadUtil>(modelCiudades));
 		cmbCiudad.setSelectedIndex(0);
 	}
 	

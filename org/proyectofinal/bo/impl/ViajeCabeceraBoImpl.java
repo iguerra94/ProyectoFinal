@@ -18,8 +18,23 @@ import org.proyectofinal.dao.interfaces.ViajeCabeceraDao;
 import org.proyectofinal.model.impl.ViajeCabeceraImpl;
 import org.proyectofinal.model.interfaces.ViajeCabecera;
 
+/**
+ * Implementacion de la Clase de Negocio ViajeCabeceraBo.
+ * 
+ * @author Ivan Guerra
+ * @version 1.0.0
+ */
+
 public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 
+	/**
+	 * Instancia un nuevo Objeto de la Clase de Negocio ViajeCabeceraBo.
+	 */
+	
+	public ViajeCabeceraBoImpl(){
+		
+	}
+	
 	/**
 	 *  Metodo de negocio que verifica que todos los datos del viaje ingresados sean correctos.
 	 */

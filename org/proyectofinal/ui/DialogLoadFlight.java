@@ -7,13 +7,13 @@ import org.proyectofinal.ui.plantillasUI.PlantillaDLF;
 
 public class DialogLoadFlight extends PlantillaDLF implements WindowListener {
 
+	private static final long serialVersionUID = 1765228890572535013L;
+
 	public DialogLoadFlight() {
-	
 		inicializarAtributosLF();
 		inicializarComponentesLF();
-		addWindowListener(this);
 		
-		setVisible(true);
+		addWindowListener(this);
 	}
 
 	

@@ -6,6 +6,13 @@ import java.sql.SQLException;
 import org.proyectofinal.bo.ex.UserAlreadyExistsException;
 import org.proyectofinal.model.interfaces.Usuario;
 
+/**
+ * Interfaz del DAO Usuario.
+ * 
+ * @author Ivan Guerra
+ * @version 1.0.0
+ */
+
 public interface UsuarioDao {
 	 
 	public void conectar() throws ClassNotFoundException, SQLException;
@@ -17,5 +24,5 @@ public interface UsuarioDao {
 	public void modificacionNombreUsuario(String valor, String user) throws SQLException, ClassNotFoundException, UserAlreadyExistsException;
 	public void modificacionContrasenia(String contrasenia, String usuario) throws SQLException, ClassNotFoundException;
 	public ResultSet consultarDniPorUsuario(String usuario) throws SQLException;
-			
+
 }

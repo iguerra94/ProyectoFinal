@@ -1,4 +1,3 @@
-
 package org.proyectofinal.bo.impl;
 
 import java.sql.ResultSet;
@@ -11,18 +10,27 @@ import org.proyectofinal.dao.interfaces.PasajeroDao;
 import org.proyectofinal.model.impl.PasajeroImpl;
 import org.proyectofinal.model.interfaces.Pasajero;
 
+/**
+ * Implementacion de la Clase de Negocio PasajeroBo.
+ * 
+ * @author Ivan Guerra
+ * @version 1.0.0
+ */
+
 public class PasajeroBoImpl implements PasajeroBo {
 
-	/*
-	 * Constructor de la clase de negocio PasajeroBoImpl.
+	/**
+	 * Instancia un nuevo Objeto de la Clase de Negocio PasajeroBo.
 	 */
+	
 	public PasajeroBoImpl(){
 		
 	}
 	
-	/**
-	 * Metodo de negocio que verifica que todos los datos del Pasajero sean correctos.
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.bo.interfaces.PasajeroBo#verificarDatosPasajero(org.proyectofinal.model.interfaces.Pasajero)
 	 */
+	
 	public void verificarDatosPasajero(Pasajero p) throws NotValidPassengerException {
 		
 		if (p.getDni().length() == 0 || p.getDni() == null || 
@@ -33,37 +41,10 @@ public class PasajeroBoImpl implements PasajeroBo {
 		}
 	}
 
-	/**
-	 * Metodo de negocio para insertar un nuevo pasajero.
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.bo.interfaces.PasajeroBo#retornarPasajero(java.lang.String)
 	 */
-	@Override
-	public void agregarPasajero(Pasajero pasajero) {
-		
-		PasajeroDao pDao = new PasajeroDaoImpl();
-		
-		try {
-			
-			pDao.conectar();
-
-			ResultSet res = pDao.consultarPorDni(pasajero);
-			
-			if (!res.next()){
-				pDao.altaPasajero(pasajero);
-			}
-
-			pDao.desconectar();
-			
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-	}
-
-	/**
-	 * Metodo de negocio que retorna un Objeto Pasajero a partir del dni pasado como parametro.
-	 */
+	
 	@Override
 	public Pasajero retornarPasajero(String dniPasajero) {
 		
@@ -92,6 +73,35 @@ public class PasajeroBoImpl implements PasajeroBo {
 		}
 		
 		return p;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.bo.interfaces.PasajeroBo#agregarPasajero(org.proyectofinal.model.interfaces.Pasajero)
+	 */
+	
+	@Override
+	public void agregarPasajero(Pasajero pasajero) {
+		
+		PasajeroDao pDao = new PasajeroDaoImpl();
+		
+		try {
+			
+			pDao.conectar();
+
+			ResultSet res = pDao.consultarPorDni(pasajero);
+			
+			if (!res.next()){
+				pDao.altaPasajero(pasajero);
+			}
+
+			pDao.desconectar();
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 }

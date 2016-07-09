@@ -2,98 +2,114 @@ package org.proyectofinal.model.interfaces;
 
 import java.sql.Timestamp;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Interface Usuario.
+ * Interfaz de la clase de dominio Usuario.
+ * 
+ * @author Ivan Guerra
+ * @version 1.0.0
  */
+
 public interface Usuario extends Cloneable {
 
 	/**
-	 * Obtiene el nombre de usuario
-	 *
-	 * @return El nombre de usuario.
+	 * Retorna el nombre de usuario del Usuario.
+	 * 
+	 * @return El nombre de usuario del Usuario.
 	 */
+	
 	public String getNombreUsuario();
 	
 	/**
-	 * Establece el nombre de usuario.
+	 * Establece el nombre de usuario del Usuario.
 	 *
-	 * @param nombreUsuario con el nombre de usuario.
+	 * @param nombreUsuario El nombre de usuario del Usuario.
 	 */
+	
 	public void setNombreUsuario(String nombreUsuario);
 
 	/**
-	 * Obtiene la contraseña.
+	 * Retorna la contraseña del Usuario.
 	 *
-	 * @return La contraseña.
+	 * @return La contraseña del Usuario.
 	 */
+	
 	public String getPassword();
 	
 	/**
-	 * Establece la contraseña.
+	 * Establece la contraseña del Usuario.
 	 *
-	 * @param password con la contraseña.
+	 * @param password La contraseña del Usuario.
 	 */
+	
 	public void setPassword(String password);
 	
 	/**
-	 * Obtiene el tipo de usuario.
+	 * Retorna el tipo de usuario del Usuario.
 	 *
-	 * @return El tipo de usuario.
+	 * @return El tipo de usuario del Usuario.
 	 */
+	
 	public Integer getTipoUsuario();
 	
 	/**
-	 * Establece el tipo de usuario.
-	 *
-	 * @param tipoUsuario con el tipo de usuario.
+	 * Establece el tipo de usuario del Usuario.
+	 * 
+	 * @param tipoUsuario El tipo de usuario del Usuario.
 	 */
+	
 	public void setTipoUsuario(Integer tipoUsuario);
 	
 	/**
-	 * Obtiene la fecha de registro del usuario.
+	 * Retorna la fecha de registro del Usuario.
 	 *
-	 * @return La fecha de registro del usuario.
+	 * @return La fecha de registro del Usuario.
 	 */
+	
 	public Timestamp getFechaInicio();
 	
 	/**
-	 * Establece la fecha de registro del usuario.
+	 * Establece la fecha de registro del Usuario.
 	 *
-	 * @param fechaInicio con la fecha de registro del usuario.
+	 * @param fechaInicio La fecha de registro del Usuario.
 	 */
+	
 	public void setFechaInicio(Timestamp fechaInicio);
 	
 	/**
-	 * Hash code.
-	 *
-	 * @return the int
+	 * Retorna una representacion del objeto Usuario en un objeto String.
+	 * 
+	 * @return Una representacion del objeto Usuario en un objeto String.
 	 */
-	@Override
-	public int hashCode();
 	
-	/**
-	 * Equals.
-	 *
-	 * @param obj the obj
-	 * @return true, if successful
-	 */
-	@Override
-	public boolean equals(Object obj);
-	
-	/**
-	 * To string.
-	 *
-	 * @return the string
-	 */
 	@Override
 	public String toString();
 	
 	/**
-	 * Clone.
+	 * Crea y retorna una copia del objeto Usuario.
 	 *
-	 * @return the usuario
-	 * @throws CloneNotSupportedException the clone not supported exception
+	 * @return Una copia de esta instancia del objeto Usuario.
+	 * @throws CloneNotSupportedException Si la clase del objeto no soporta la interfaz Cloneable.
 	 */
+	
 	public Usuario clone() throws CloneNotSupportedException;
+	
+	/**
+	 * Retorna un codigo hash para el objeto Usuario.
+	 *
+	 * @return Un entero representando el codigo hash del objeto Usuario.
+	 */
+	
+	@Override
+	public int hashCode();
+	
+	/**
+	 * Retorna true si y solo si el objeto obj pasado como parametro no es nulo y ademas los valores de los atributos del objeto Usuario y los del objeto Usuario obj a comparar son iguales.
+	 *
+	 * @param obj El objeto Usuario a comparar.
+	 * @return true, si la condicion se cumple.
+	 */
+	
+	@Override
+	public boolean equals(Object obj);
+	
 }

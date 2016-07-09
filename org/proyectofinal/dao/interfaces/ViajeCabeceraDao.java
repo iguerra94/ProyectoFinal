@@ -6,6 +6,13 @@ import java.sql.SQLException;
 
 import org.proyectofinal.model.interfaces.ViajeCabecera;
 
+/**
+ * Interfaz del DAO ViajeCabecera.
+ * 
+ * @author Ivan Guerra
+ * @version 1.0.0
+ */
+
 public interface ViajeCabeceraDao {
 	
 	public void conectar() throws ClassNotFoundException, SQLException;

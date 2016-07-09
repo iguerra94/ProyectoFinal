@@ -36,8 +36,8 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 public class Boleto {
 	
-	private FileOutputStream ficheroPdf = null;
 	private String path = null;
+	
 	private List<String> ImagePaths = null;
 	
 	public Boleto(){
@@ -64,6 +64,7 @@ public class Boleto {
 			int numero_paginas = document.getNumberOfPages();
 			
 			//Se capturan todas las paginas
+			@SuppressWarnings("rawtypes")
 			List pages = document.getDocumentCatalog().getAllPages();
 			
 			//un ciclo repetitivo para crear todas las imagenes

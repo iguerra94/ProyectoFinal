@@ -17,7 +17,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
-import javax.swing.border.LineBorder;
 
 import org.proyectofinal.bo.impl.ViajeCabeceraBoImpl;
 import org.proyectofinal.bo.interfaces.ViajeCabeceraBo;
@@ -25,6 +24,8 @@ import org.proyectofinal.model.interfaces.ViajeCabecera;
 import org.proyectofinal.ui.ReservaBoletoUI;
 
 public class PlantillaLV extends JDialog {
+	
+	private static final long serialVersionUID = 8425232392561207470L;
 	
 	private JLabel labelDni;
 	private JLabel labelAcumula;
