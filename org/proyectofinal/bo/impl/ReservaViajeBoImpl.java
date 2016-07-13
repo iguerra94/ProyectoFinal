@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.proyectofinal.bo.ex.NotValidPassengerException;
+import org.proyectofinal.bo.ex.NotValidBookingException;
 import org.proyectofinal.bo.interfaces.PasajeroBo;
 import org.proyectofinal.bo.interfaces.ReservaViajeBo;
 import org.proyectofinal.bo.interfaces.ViajeCabeceraBo;
@@ -16,7 +16,7 @@ import org.proyectofinal.model.interfaces.ReservaViaje;
 import org.proyectofinal.model.interfaces.ViajeCabecera;
 
 /**
- * Implementacion de la Clase de Negocio ReservaViajeBo.
+ * Implementacion de la Clase de Negocio de la entidad de dominio <strong>ReservaViaje</strong>: <code>ReservaViajeBo</code>.
  * 
  * @author Ivan Guerra
  * @version 1.0.0
@@ -25,7 +25,7 @@ import org.proyectofinal.model.interfaces.ViajeCabecera;
 public class ReservaViajeBoImpl implements ReservaViajeBo {
 
 	/**
-	 * Instancia un nuevo Objeto de la Clase de Negocio ReservaViajeBo.
+	 * Instancia un nuevo objeto de la Clase de Negocio <code>ReservaViajeBo</code>.
 	 */
 	
 	public ReservaViajeBoImpl(){
@@ -36,10 +36,56 @@ public class ReservaViajeBoImpl implements ReservaViajeBo {
 	 * @see org.proyectofinal.bo.interfaces.ReservaViajeBo#verificarReserva(org.proyectofinal.model.interfaces.ReservaViaje)
 	 */
 	
-	public void verificarReserva(ReservaViaje rV) throws NotValidPassengerException {
-		if (rV.getAsiento() == -1){ throw new NotValidPassengerException(); }
+	public void verificarReserva(ReservaViaje rV) throws NotValidBookingException {
+		if (rV.getAsiento() == -1){ throw new NotValidBookingException(); }
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.bo.interfaces.ReservaViajeBo#retornarReservasSegunDni(java.lang.String)
+	 */
+	
+	@Override
+	public List<ReservaViaje> retornarReservasSegunDni(String dni) {
+		
+		List<ReservaViaje> listaReservas = new ArrayList<ReservaViaje>();
+		
+
+		ViajeCabeceraBo vCBo = new ViajeCabeceraBoImpl();
+		PasajeroBo pBo = new PasajeroBoImpl();
+		
+		ReservaViajeDao rVDao = new ReservaViajeDaoImpl();
+
+		try {
+		
+			rVDao.conectar();
+			
+			ResultSet res = rVDao.consultarPorPersonaQueReserva(dni);
+			
+			while(res.next()){
+				ReservaViaje r = new ReservaViajeImpl();
+
+				r.setViaje(vCBo.retornarViaje(res.getString("codViaje")));
+				r.setPasajero(pBo.retornarPasajero(res.getString("dniPasajero")));
+				r.setDniPersona(dni);
+				r.setFechaReserva(res.getTimestamp("fechaReserva"));
+				r.setAsiento(res.getInt("asiento"));
+				r.setPrecio(res.getFloat("precio"));
+				
+				listaReservas.add(r);
+			}
+			
+			rVDao.desconectar();
+		
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return listaReservas;
+		
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.bo.interfaces.ReservaViajeBo#controlarAsientosOcupados(org.proyectofinal.model.interfaces.ViajeCabecera)
 	 */
@@ -102,52 +148,6 @@ public class ReservaViajeBoImpl implements ReservaViajeBo {
 		}
 		
 		return cantReservas;
-		
-	}
-
-	/* (non-Javadoc)
-	 * @see org.proyectofinal.bo.interfaces.ReservaViajeBo#retornarReservasSegunDni(java.lang.String)
-	 */
-	
-	@Override
-	public List<ReservaViaje> retornarReservasSegunDni(String dni) {
-		
-		List<ReservaViaje> listaReservas = new ArrayList<ReservaViaje>();
-		
-
-		ViajeCabeceraBo vCBo = new ViajeCabeceraBoImpl();
-		PasajeroBo pBo = new PasajeroBoImpl();
-		
-		ReservaViajeDao rVDao = new ReservaViajeDaoImpl();
-
-		try {
-		
-			rVDao.conectar();
-			
-			ResultSet res = rVDao.consultarPorPersonaQueReserva(dni);
-			
-			while(res.next()){
-				ReservaViaje r = new ReservaViajeImpl();
-
-				r.setViaje(vCBo.retornarViaje(res.getString("codViaje")));
-				r.setPasajero(pBo.retornarPasajero(res.getString("dniPasajero")));
-				r.setDniPersona(dni);
-				r.setFechaReserva(res.getTimestamp("fechaReserva"));
-				r.setAsiento(res.getInt("asiento"));
-				r.setPrecio(res.getFloat("precio"));
-				
-				listaReservas.add(r);
-			}
-			
-			rVDao.desconectar();
-		
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return listaReservas;
 		
 	}
 

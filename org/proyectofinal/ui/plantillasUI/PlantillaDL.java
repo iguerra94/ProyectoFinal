@@ -21,7 +21,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import org.proyectofinal.bo.ex.UserNotCorrectException;
+import org.proyectofinal.bo.ex.UserNotExistsException;
 import org.proyectofinal.bo.ex.UserNotValidException;
 import org.proyectofinal.bo.impl.UsuarioBoImpl;
 import org.proyectofinal.bo.interfaces.UsuarioBo;
@@ -97,7 +97,7 @@ public class PlantillaDL extends JDialog {
 		txtUsuario.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				setearUsuario();				
+				setearUsuario();
 			}
 			
 		});
@@ -145,7 +145,7 @@ public class PlantillaDL extends JDialog {
 						
 				} catch (UserNotValidException e) {
 					JOptionPane.showMessageDialog(null, e.getMessage());
-				} catch (UserNotCorrectException e) {
+				} catch (UserNotExistsException e) {
 					JOptionPane.showMessageDialog(null, e.getMessage());
 				}
 				

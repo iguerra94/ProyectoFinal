@@ -7,7 +7,7 @@ import org.proyectofinal.model.interfaces.PersonaRegistrada;
 import org.proyectofinal.model.interfaces.Usuario;
 
 /**
- * Implementacion de la clase de dominio PersonaRegistrada.
+ * Implementacion de la clase de dominio <code>PersonaRegistrada</code>.
  * 
  * @author Ivan Guerra
  * @version 1.0.0
@@ -15,32 +15,32 @@ import org.proyectofinal.model.interfaces.Usuario;
 
 public class PersonaRegistradaImpl extends PersonaGenerica implements PersonaRegistrada {
 	
-	/** El email de la PersonaRegistrada. */
+	/** El email de la <code>PersonaRegistrada</code>. */
 	private String email = null;
 	
-	/** La fecha de nacimiento de la PersonaRegistrada. */
+	/** La fecha de nacimiento de la <code>PersonaRegistrada</code>. */
 	private Date fechaNacimiento = null;
 	
-	/** El telefono de la PersonaRegistrada. */
+	/** El telefono de la <code>PersonaRegistrada</code>. */
 	private String telefono = null;
 	
-	/** El pais de origen de la PersonaRegistrada en formato ISO 3166-1 alfa-3. */
+	/** El pais de origen de la <code>PersonaRegistrada</code> en formato ISO 3166-1 alfa-3. */
 	private String shortPais = null;
 	
-	/** El pais de origen de la PersonaRegistrada. */
+	/** El pais de origen de la <code>PersonaRegistrada</code>. */
 	private String pais = null;
 	
-	/** La ciudad de origen de la PersonaRegistrada. */
+	/** La ciudad de origen de la <code>PersonaRegistrada</code>. */
 	private String ciudad = null;
 	
-	/** El saldo de kilometros acumulados de la PersonaRegistrada. */
+	/** El saldo de kilometros acumulados de la <code>PersonaRegistrada</code>. */
 	private Integer saldo = null;
 	
-	/** El usuario relacionado a la PersonaRegistrada. */
+	/** El usuario relacionado a la <code>PersonaRegistrada</code>. */
 	private Usuario usuario = null;
 	
 	/**
-	 * Instancia un nuevo objeto de la clase PersonaRegistrada.
+	 * Instancia un nuevo objeto de la clase <code>PersonaRegistrada</code>.
 	 */
 
 	public PersonaRegistradaImpl(){

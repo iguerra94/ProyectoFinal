@@ -1,7 +1,7 @@
 package org.proyectofinal.model.interfaces;
 
 /**
- * Interfaz de la clase de dominio Pasajero.
+ * Interfaz de la clase de dominio <code>Pasajero</code>.
  * 
  * @author Ivan Guerra
  * @version 1.0.0
@@ -10,82 +10,82 @@ package org.proyectofinal.model.interfaces;
 public interface Pasajero extends Cloneable{
 	
 	/**
-	 * Retorna el dni del Pasajero.
+	 * Retorna el dni del <code>Pasajero</code>.
 	 *
-	 * @return El dni del Pasajero.
+	 * @return El dni del <code>Pasajero</code>.
 	 */
 	
 	public String getDni();
 	
 	/**
-	 * Establece el dni del Pasajero.
+	 * Establece el dni del <code>Pasajero</code>.
 	 *
-	 * @param dni El dni del Pasajero.
+	 * @param dni El dni del <code>Pasajero</code>.
 	 */
 	
 	public void setDni(String dni);
 	
 	/**
-	 * Retorna el nombre del Pasajero.
+	 * Retorna el nombre del <code>Pasajero</code>.
 	 *
-	 * @return El nombre del Pasajero.
+	 * @return El nombre del <code>Pasajero</code>.
 	 */
 	
 	public String getNombre();
 	
 	/**
-	 * Establece el nombre del Pasajero.
+	 * Establece el nombre del <code>Pasajero</code>.
 	 *
-	 * @param nombre El nombre del Pasajero.
+	 * @param nombre El nombre del <code>Pasajero</code>.
 	 */
 	
 	public void setNombre(String nombre);
 	
 	/**
-	 * Retorna el apellido del Pasajero.
+	 * Retorna el apellido del <code>Pasajero</code>.
 	 *
-	 * @return El apellido del Pasajero.
+	 * @return El apellido del <code>Pasajero</code>.
 	 */
 	
 	public String getApellido();
 	
 	/**
-	 * Establece el apellido del Pasajero.
+	 * Establece el apellido del <code>Pasajero</code>.
 	 *
-	 * @param apellido El apellido del Pasajero.
+	 * @param apellido El apellido del <code>Pasajero</code>.
 	 */
 	
 	public void setApellido(String apellido);
 	
 	/**
-	 * Retorna una representacion del objeto Pasajero en un objeto String.
+	 * Retorna una representacion del objeto <code>Pasajero</code> en un objeto String.
 	 * 
-	 * @return Una representacion del objeto Pasajero en un objeto String.
+	 * @return Una representacion del objeto <code>Pasajero</code> en un objeto String.
 	 */
 	
 	public String toString();
 	
 	/**
-	 * Crea y retorna una copia del objeto Pasajero.
+	 * Crea y retorna una copia del objeto <code>Pasajero</code>.
 	 *
-	 * @return Una copia de esta instancia del objeto Pasajero.
+	 * @return Una copia de esta instancia del objeto <code>Pasajero</code>.
 	 * @throws CloneNotSupportedException Si la clase del objeto no soporta la interfaz Cloneable.
 	 */
 	
 	public Pasajero clone() throws CloneNotSupportedException;
 	
 	/**
-	 * Retorna un codigo hash para el objeto Pasajero.
+	 * Retorna un codigo hash para el objeto <code>Pasajero</code>.
 	 *
-	 * @return Un entero representando el codigo hash del objeto Pasajero.
+	 * @return Un entero representando el codigo hash del objeto <code>Pasajero</code>.
 	 */
 	
 	public int hashCode();
 		
 	/**
-	 * Retorna true si y solo si el objeto obj pasado como parametro no es nulo y ademas los valores de los atributos del objeto Pasajero y los del objeto Pasajero obj a comparar son iguales.
+	 * Retorna true si y solo si el objeto obj pasado como parametro no es nulo y ademas los valores de los atributos del objeto <code>Pasajero</code> y los del objeto <code>Pasajero</code> obj a comparar son iguales.
 	 *
-	 * @param obj El objeto Pasajero a comparar.
+	 * @param obj El objeto <code>Pasajero</code> a comparar.
 	 * @return true, si la condicion se cumple.
 	 */
 	

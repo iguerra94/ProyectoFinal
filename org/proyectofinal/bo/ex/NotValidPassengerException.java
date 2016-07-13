@@ -9,7 +9,7 @@ package org.proyectofinal.bo.ex;
 
 public class NotValidPassengerException extends Exception {
 
-	private static final long serialVersionUID = 8712190458163669657L;
+//	private static final long serialVersionUID = 8712190458163669657L;
 	
 	/**
 	 * Instancia un nuevo objeto de la Excepcion <code>NotValidPassengerException</code>

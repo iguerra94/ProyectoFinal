@@ -35,6 +35,8 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.TitledBorder;
 
+import org.proyectofinal.bo.ex.DniNotValidException;
+import org.proyectofinal.bo.ex.NotValidBookingException;
 import org.proyectofinal.bo.ex.NotValidPassengerException;
 import org.proyectofinal.bo.impl.PasajeroBoImpl;
 import org.proyectofinal.bo.impl.PersonaRegistradaBoImpl;
@@ -1035,8 +1037,7 @@ public class PlantillaRV extends JDialog implements MouseListener{
 			botonesOcupados.add(botones.get(asiento-1));					
 		}
 	}
-		
-	
+			
 	protected void accionesCmbCantPasajerosAlTenerFocoLaVentana() {
 		cmbCantPasajeros.requestFocus();
 
@@ -1047,7 +1048,6 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		}
 	}
 		
-
 	private void agregarPanelInfoPasajeros(ViajeCabecera viaje, String dni) {
 
 		agregarLabelSeleccioneCantPasajeros();
@@ -1400,6 +1400,7 @@ public class PlantillaRV extends JDialog implements MouseListener{
 					
 					//Verifico que los datos del pasajero sean correctos y sino lanza excepcion 
 					pBo.verificarDatosPasajero(pasajero);
+					pBo.verificarDniPasajero(pasajero);
 					
 					rVBo.verificarReserva(rV);
 					
@@ -1429,7 +1430,11 @@ public class PlantillaRV extends JDialog implements MouseListener{
 					panelPasajeros.validate();
 					panelPasajeros.repaint();
 				
+				} catch (DniNotValidException e1) {
+					JOptionPane.showMessageDialog(null, e1.getMessage());
 				} catch (NotValidPassengerException e1) {
+					JOptionPane.showMessageDialog(null, e1.getMessage());
+				} catch (NotValidBookingException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage());
 				} finally{
 				
@@ -1453,7 +1458,7 @@ public class PlantillaRV extends JDialog implements MouseListener{
 						botonesSeleccionados.add(b);
 						
 						if (a > opcion){							
-							agregarReserva();							
+							agregarReserva();
 						}
 					
 						txtNombre.setText("");
@@ -1487,9 +1492,7 @@ public class PlantillaRV extends JDialog implements MouseListener{
 			vCBo.actualizarCupo(reservas.getListReservas().get(0).getViaje());
 			
 			if (lblAcumula.getText().equals("SI")){
-				System.out.println("HOLA");
 				pRBo.actualizarSaldo(distancia, dniPersona);
-				System.out.println("HOLA");				
 			}
 		}
 		
@@ -1502,20 +1505,21 @@ public class PlantillaRV extends JDialog implements MouseListener{
 		String email = pRBo.retornarEmail(reservas.getListReservas().get(0).getDniPersona());
 		
 		try {
-
+			
 			boleto.crearBoleto(reservas);
 			dispose();
 			JOptionPane.showMessageDialog(null, "Se esta enviando un mail a su correo con su boleto.");
 			bE.enviarMail(email, boleto.retornarBoleto());
+
 		} catch (IOException e2) {
 			e2.printStackTrace();
 		} catch (DocumentException e2) {
 			e2.printStackTrace();
 		} finally {
 		
-			JOptionPane.showMessageDialog(null, "El mail ha sido enviado a su correo con el boleto para que este disponible para su descarga cuando lo requiera. Gracias.");
-			
+			JOptionPane.showMessageDialog(null, "El mail ha sido enviado a su correo con el boleto para que este disponible para su descarga cuando lo requiera. Gracias.");			
 			boleto.abrirBoleto();
+		
 		}
 	}
 		

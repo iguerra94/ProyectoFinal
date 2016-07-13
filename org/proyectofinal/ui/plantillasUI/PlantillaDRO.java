@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
+import org.proyectofinal.bo.ex.NotOffersFoundException;
 import org.proyectofinal.bo.impl.ViajeCabeceraBoImpl;
 import org.proyectofinal.bo.interfaces.ViajeCabeceraBo;
 import org.proyectofinal.model.impl.ViajeCabeceraImpl;
@@ -144,8 +145,26 @@ public class PlantillaDRO extends JDialog {
 	        ObjButtons,ObjButtons[0]);
 
 		if (PromptResult == 1){
-			DialogRemoveOffer dro = new DialogRemoveOffer();
-			dro.setVisible(true);
+			
+			try {
+				
+				ViajeCabeceraBo vCBo = new ViajeCabeceraBoImpl();
+
+				List<String> modeloOfertas = vCBo.retornarOfertas();
+
+				if ( modeloOfertas.size() > 0 ){				
+					
+					DialogRemoveOffer dro = new DialogRemoveOffer();
+
+					dro.cargarOfertas(modeloOfertas);
+
+					dro.setVisible(true);
+				}
+		
+			} catch (NotOffersFoundException e1) {
+				JOptionPane.showMessageDialog(null, e1.getMessage());
+			}
+			
 		}
 	}
 	

@@ -3,6 +3,7 @@ package org.proyectofinal.bo.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.proyectofinal.bo.ex.DniNotValidException;
 import org.proyectofinal.bo.ex.NotValidPassengerException;
 import org.proyectofinal.bo.interfaces.PasajeroBo;
 import org.proyectofinal.dao.impl.PasajeroDaoImpl;
@@ -11,7 +12,7 @@ import org.proyectofinal.model.impl.PasajeroImpl;
 import org.proyectofinal.model.interfaces.Pasajero;
 
 /**
- * Implementacion de la Clase de Negocio PasajeroBo.
+ * Implementacion de la Clase de Negocio de la entidad de dominio <strong>Pasajero</strong>: <code>PasajeroBo</code>.
  * 
  * @author Ivan Guerra
  * @version 1.0.0
@@ -20,7 +21,7 @@ import org.proyectofinal.model.interfaces.Pasajero;
 public class PasajeroBoImpl implements PasajeroBo {
 
 	/**
-	 * Instancia un nuevo Objeto de la Clase de Negocio PasajeroBo.
+	 * Instancia un nuevo objeto de la Clase de Negocio <code>PasajeroBo</code>.
 	 */
 	
 	public PasajeroBoImpl(){
@@ -41,6 +42,19 @@ public class PasajeroBoImpl implements PasajeroBo {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.bo.interfaces.PasajeroBo#verificarDniPasajero(org.proyectofinal.model.interfaces.Pasajero)
+	 */
+
+	@Override
+	public void verificarDniPasajero(Pasajero p) throws DniNotValidException {
+		
+		if (p.getDni().length() < 8){
+			throw new DniNotValidException();
+		}
+		
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.bo.interfaces.PasajeroBo#retornarPasajero(java.lang.String)
 	 */
@@ -91,9 +105,11 @@ public class PasajeroBoImpl implements PasajeroBo {
 			ResultSet res = pDao.consultarPorDni(pasajero);
 			
 			if (!res.next()){
-				pDao.altaPasajero(pasajero);
+				pDao.altaPersonaGenerica(pasajero);
 			}
-
+						
+			pDao.altaPasajero(pasajero);
+	
 			pDao.desconectar();
 			
 		} catch (ClassNotFoundException e) {

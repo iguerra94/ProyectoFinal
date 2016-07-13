@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 import org.proyectofinal.model.interfaces.Usuario;
 
 /**
- * Implementacion de la clase de dominio Usuario.
+ * Implementacion de la clase de dominio <code>Usuario</code>.
  * 
  * @author Ivan Guerra
  * @version 1.0.0
@@ -13,20 +13,20 @@ import org.proyectofinal.model.interfaces.Usuario;
 
 public class UsuarioImpl implements Usuario {
 	
-	/** El nombre de usuario del Usuario. */
+	/** El nombre de usuario del <code>Usuario</code>. */
 	private String nombreUsuario = null;
 	
-	/** La contraseña del Usuario. */
+	/** La contraseña del <code>Usuario</code>. */
 	private String password = null;
 	
-	/** El tipo de usuario del Usuario. */
+	/** El tipo de usuario del <code>Usuario</code>. */
 	private Integer tipoUsuario = null;
 	
-	/** La fecha de registro del Usuario. */
+	/** La fecha de registro del <code>Usuario</code>. */
 	private Timestamp fechaInicio = null;
 	
 	/**
-	 * Instancia un nuevo objeto de la clase Usuario.
+	 * Instancia un nuevo objeto de la clase <code>Usuario</code>.
 	 */
 
 	public UsuarioImpl(){

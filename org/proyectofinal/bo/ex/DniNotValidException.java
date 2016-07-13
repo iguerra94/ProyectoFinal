@@ -1,21 +1,21 @@
 package org.proyectofinal.bo.ex;
 
 /**
- * Excepcion que se lanza si no existe ningun objeto <code>ViajeCabecera</code> en la base de datos del sistema con los atributos especificados.
+ * Excepcion que se lanza si el atributo <em>dni</em> del objeto <code>PersonaRegistrada</code> o del objeto <code>Pasajero</code> no es valido.
  * 
  * @author Ivan Guerra
  * @version 1.0.0
  */
 
-public class NoFlightsFoundException extends Exception {
+public class DniNotValidException extends Exception {
 	
 //	private static final long serialVersionUID = -5431279917975862341L;
 
 	/**
-	 * Instancia un nuevo objeto de la Excepcion <code>NoFlightsFoundException</code>
+	 * Instancia un nuevo objeto de la Excepcion <code>DniNotValidException</code>
 	 */
 	
-	public NoFlightsFoundException(){
+	public DniNotValidException(){
 		
 	}
 	
@@ -26,7 +26,7 @@ public class NoFlightsFoundException extends Exception {
 	 */
 	
 	public String getMessage(){
-		return "No se han encontrado vuelos con los parametros ingresados.";
+		return "El dni debe tener una longitud de 8 (ocho) caracteres.";
 	}
 
 }

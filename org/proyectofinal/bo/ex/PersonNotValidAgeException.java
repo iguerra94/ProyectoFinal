@@ -1,7 +1,7 @@
 package org.proyectofinal.bo.ex;
 
 /**
- * Excepcion que se lanza si el atributo edad del objeto PersonaRegistrada es menor a 18.
+ * Excepcion que se lanza si el atributo <em>edad</em> del objeto <code>PersonaRegistrada</code> es menor a 18.
  * 
  * @author Ivan Guerra
  * @version 1.0.0
@@ -9,7 +9,7 @@ package org.proyectofinal.bo.ex;
 
 public class PersonNotValidAgeException extends Exception {
 
-	private static final long serialVersionUID = -1431841553888253108L;
+//	private static final long serialVersionUID = -1431841553888253108L;
 
 	/**
 	 * Instancia un nuevo objeto de la Excepcion <code>PersonNotValidAgeException</code>

@@ -39,6 +39,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
+import org.proyectofinal.bo.ex.EmailNotValidException;
 import org.proyectofinal.bo.ex.NotEqualPasswordException;
 import org.proyectofinal.bo.ex.UserNotExistsException;
 import org.proyectofinal.bo.impl.PersonaRegistradaBoImpl;
@@ -671,35 +672,44 @@ public class PlantillaDP extends JDialog {
 				}
 				
 				PersonaRegistradaBo pRBo = new PersonaRegistradaBoImpl();
-	            
-				pRBo.modificarPersona(persona);
-			
-				if (!nombre.equals(persona.getNombre()) || !apellido.equals(persona.getApellido())) {
+				
+				try {
+				
+					pRBo.verificarEmail(persona);
 
-					c = new Carnet();
+					pRBo.modificarPersona(persona);
 					
-					try {
-						c.crearCarnet(persona);
-					} catch (MalformedURLException e1) {
-						e1.printStackTrace();
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					} catch (DocumentException e1) {
-						e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, "Se ha modificado los datos de la persona con exito!");
+					
+					PersonaRegistrada p = pRBo.retornarPersonaPorUsuario(getLabelAvatar().getToolTipText());
+		
+					txtNombre.setText(p.getNombre());
+					txtApellido.setText(p.getApellido());
+					txtEmail.setText(p.getEmail());
+					txtTelefono.setText(p.getTelefono());		
+					
+					nombre = p.getNombre();
+					apellido = p.getApellido();
+					
+					if (!nombre.equals(persona.getNombre()) || !apellido.equals(persona.getApellido())) {
+
+						c = new Carnet();
+						
+						try {
+							c.crearCarnet(persona);
+						} catch (MalformedURLException e1) {
+							e1.printStackTrace();
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						} catch (DocumentException e1) {
+							e1.printStackTrace();
+						}
 					}
+				
+				} catch (EmailNotValidException e2) {
+					JOptionPane.showMessageDialog(null, e2.getMessage());
 				}
-				
-				JOptionPane.showMessageDialog(null, "Se ha modificado los datos de la persona con exito!");
-				
-				PersonaRegistrada p = pRBo.retornarPersonaPorUsuario(getLabelAvatar().getToolTipText());
-	
-				txtNombre.setText(p.getNombre());
-				txtApellido.setText(p.getApellido());
-				txtEmail.setText(p.getEmail());
-				txtTelefono.setText(p.getTelefono());		
-				
-				nombre = p.getNombre();
-				apellido = p.getApellido();
+
 			}
 		});
 		btnGuardarCambiosDatosPersona.setBounds(25, 230, 155, 40);
@@ -719,7 +729,7 @@ public class PlantillaDP extends JDialog {
 		
 		char c = e.getKeyChar();
 		
-		if ((c < '0' || c > '9') && (c != KeyEvent.VK_KP_LEFT) && c != (KeyEvent.VK_KP_RIGHT) && (c != KeyEvent.VK_SPACE) && (c != KeyEvent.VK_BACK_SPACE)){
+		if ((c < '0' || c > '9') && (c != KeyEvent.VK_KP_LEFT) && c != (KeyEvent.VK_KP_RIGHT) && (c != KeyEvent.VK_SPACE) && (c != KeyEvent.VK_BACK_SPACE) || txtTelefono.getText().length() == 11){
 			e.consume();
 		}
 	}

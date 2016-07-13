@@ -1,6 +1,5 @@
 package org.proyectofinal.dao.impl;
 
-import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,26 +10,42 @@ import org.proyectofinal.dao.interfaces.ViajeCabeceraDao;
 import org.proyectofinal.model.interfaces.ViajeCabecera;
 
 /**
- * Implementacion del DAO ViajeCabecera.
+ * Implementacion de la clase de persistencia de datos de la entidad de dominio <strong>ViajeCabecera</strong>: <code>ViajeCabeceraDao</code>.
  *  
  * @author Ivan Guerra
  * @version 1.0.0 
  */
 
 public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDao {
+
+	/**
+	 * Instancia un nuevo objeto de la clase de persistencia de datos <code>ViajeCabeceraDao</code>.
+	 */
+	
+	public ViajeCabeceraDaoImpl(){
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.dao.abstracts.AbstractDao#conectar()
+	 */
 	
 	public void conectar() throws ClassNotFoundException, SQLException{
 		super.conectar();
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.dao.abstracts.AbstractDao#desconectar()
+	 */
+	
 	public void desconectar() throws SQLException{
 		super.desconectar();
 	}
-	
-	public Connection getConexion() {
-		return super.getConexion();
-	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.dao.interfaces.ViajeCabeceraDao#consultar()
+	 */
+	
 	public ResultSet consultar() throws ClassNotFoundException, SQLException {
 		
 		conectar();
@@ -38,10 +53,14 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		PreparedStatement sentencia = getConexion().prepareStatement("SELECT * FROM ViajeCabecera");
 		
 		ResultSet resultado = sentencia.executeQuery();
-	//	sentencia.close();
+	
 		return resultado;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.dao.interfaces.ViajeCabeceraDao#consultarCodigosViaje()
+	 */
+
 	public ResultSet consultarCodigosViaje() throws SQLException, ClassNotFoundException {
 		
 		conectar();
@@ -53,6 +72,10 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		return resultado;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.dao.interfaces.ViajeCabeceraDao#consultarPorCodigoViaje(java.lang.String)
+	 */
+
 	public ResultSet consultarPorCodigoViaje(String codViaje) throws SQLException, ClassNotFoundException {
 		
 		conectar();
@@ -62,10 +85,13 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		sentencia.setString(1, codViaje);
 		
 		ResultSet resultado = sentencia.executeQuery();
-	//	sentencia.close();
 		
 		return resultado;
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.dao.interfaces.ViajeCabeceraDao#consultarPorCodigoViaje(org.proyectofinal.model.interfaces.ViajeCabecera)
+	 */
 	
 	public ResultSet consultarPorCodigoViaje(ViajeCabecera vC) throws SQLException, ClassNotFoundException {
 	
@@ -76,10 +102,13 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		sentencia.setString(1, vC.getCodigoViaje());
 		
 		ResultSet resultado = sentencia.executeQuery();
-	//	sentencia.close();
 		
 		return resultado;
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.dao.interfaces.ViajeCabeceraDao#consultarPorFechaActualYFutura(java.sql.Date)
+	 */
 	
 	public ResultSet consultarPorFechaActualYFutura(Date fecha) throws SQLException, ClassNotFoundException {
 	
@@ -90,10 +119,13 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		sentencia.setDate(1, fecha);
 		
 		ResultSet resultado = sentencia.executeQuery();
-	//	sentencia.close();
 		
 		return resultado;
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.dao.interfaces.ViajeCabeceraDao#consultarOrigenes()
+	 */
 	
 	public ResultSet consultarOrigenes() throws ClassNotFoundException, SQLException {
 		
@@ -104,6 +136,10 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		return resultado;		
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.dao.interfaces.ViajeCabeceraDao#consultarDestinos()
+	 */
+	
 	public ResultSet consultarDestinos() throws ClassNotFoundException, SQLException {
 		
 		PreparedStatement sentencia = getConexion().prepareStatement("SELECT DISTINCT ciudadDestino, shortPaisDestino FROM ViajeCabecera");
@@ -112,6 +148,10 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		
 		return resultado;
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.dao.interfaces.ViajeCabeceraDao#consultarVuelosPorFecha(org.proyectofinal.model.interfaces.ViajeCabecera)
+	 */
 	
 	public ResultSet consultarVuelosPorFecha(ViajeCabecera vC) throws ClassNotFoundException, SQLException{
 		
@@ -126,6 +166,10 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		return resultado;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.dao.interfaces.ViajeCabeceraDao#consultarVuelosCualquierFecha(org.proyectofinal.model.interfaces.ViajeCabecera)
+	 */
+	
 	public ResultSet consultarVuelosCualquierFecha(ViajeCabecera vC) throws ClassNotFoundException, SQLException{
 		
 		PreparedStatement sentencia = getConexion().prepareStatement("SELECT * FROM ViajeCabecera where ciudadOrigen = ? and ciudadDestino = ?");
@@ -138,6 +182,10 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		return resultado;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.dao.interfaces.ViajeCabeceraDao#alta(org.proyectofinal.model.interfaces.ViajeCabecera)
+	 */
+	
 	public void alta(ViajeCabecera vC) throws SQLException, ClassNotFoundException{
 		
 		conectar();
@@ -173,6 +221,10 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		desconectar();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.dao.interfaces.ViajeCabeceraDao#baja(java.lang.String)
+	 */
+	
 	public void baja(String codigoViaje) throws SQLException, ClassNotFoundException{
 		
 		conectar();
@@ -186,6 +238,10 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		desconectar();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.dao.interfaces.ViajeCabeceraDao#actualizarCupo(org.proyectofinal.model.interfaces.ViajeCabecera)
+	 */
+	
 	public void actualizarCupo(ViajeCabecera vC) throws SQLException, ClassNotFoundException{
 		
 		conectar();
@@ -200,6 +256,10 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 	
 		desconectar();
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.dao.interfaces.ViajeCabeceraDao#modificacion(org.proyectofinal.model.interfaces.ViajeCabecera)
+	 */
 	
 	public void modificacion(ViajeCabecera vC) throws SQLException, ClassNotFoundException{
 		
@@ -242,6 +302,10 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		desconectar();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.dao.interfaces.ViajeCabeceraDao#altaOferta(org.proyectofinal.model.interfaces.ViajeCabecera)
+	 */
+	
 	@Override
 	public void altaOferta(ViajeCabecera vC) throws SQLException, ClassNotFoundException {
 		
@@ -264,6 +328,10 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		desconectar();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.dao.interfaces.ViajeCabeceraDao#consultarOrigenesYDestinos()
+	 */
+	
 	@Override
 	public ResultSet consultarOrigenesYDestinos() throws SQLException, ClassNotFoundException {
 
@@ -274,6 +342,10 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		return resultado;		
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.dao.interfaces.ViajeCabeceraDao#bajaOferta(org.proyectofinal.model.interfaces.ViajeCabecera)
+	 */
+	
 	@Override
 	public void bajaOferta(ViajeCabecera vC) throws SQLException, ClassNotFoundException {
 		
@@ -281,7 +353,7 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		
 		PreparedStatement sentencia = null;
 		
-		sentencia = getConexion().prepareStatement("update ViajeCabecera set oferta = 0 where ciudadOrigen = ? and shortPaisOrigen = ? and ciudadDestino = ? and shortPaisDestino = ?");
+		sentencia = getConexion().prepareStatement("update ViajeCabecera set oferta = 0, imagenOferta = '' where ciudadOrigen = ? and shortPaisOrigen = ? and ciudadDestino = ? and shortPaisDestino = ?");
 		
 		sentencia.setString(1, vC.getCiudadOrigen());
 		sentencia.setString(2, vC.getShortPaisOrigen());
@@ -293,6 +365,10 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		desconectar();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.dao.interfaces.ViajeCabeceraDao#consultarOrigenesDestinos()
+	 */
+	
 	@Override
 	public ResultSet consultarOrigenesDestinos() throws SQLException, ClassNotFoundException {
 		
@@ -303,6 +379,10 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		return resultado;		
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.dao.interfaces.ViajeCabeceraDao#consultarDatosOferta()
+	 */
+	
 	public ResultSet consultarDatosOferta() throws SQLException, ClassNotFoundException {
 			
 		PreparedStatement sentencia = getConexion().prepareStatement("SELECT DISTINCT ciudadOrigen, shortPaisOrigen, ciudadDestino, shortPaisDestino, oferta, imagenOferta, precioClaseTur FROM ViajeCabecera");

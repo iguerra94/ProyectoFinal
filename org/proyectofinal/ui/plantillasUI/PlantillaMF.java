@@ -31,6 +31,7 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.MatteBorder;
 
 import org.proyectofinal.bo.ex.NoFlightsFoundException;
+import org.proyectofinal.bo.ex.NotOffersFoundException;
 import org.proyectofinal.bo.ex.ViajeCabeceraNotValidException;
 import org.proyectofinal.bo.impl.PersonaRegistradaBoImpl;
 import org.proyectofinal.bo.impl.UsuarioBoImpl;
@@ -67,7 +68,8 @@ public class PlantillaMF extends JFrame {
 	private JPanel panelReserva;
 	private JPanel panelFrecuente;
 	private JPanel panelOfertas;
-	private JPanel panelDescuentoOferta;
+//	private JPanel panelOferta;
+//	private JPanel panelDescuentoOferta;
 	private JTabbedPane paneReserva;
 	private JLabel lblOrigen;
 	private JComboBox<String> cmbOrigen;
@@ -82,8 +84,8 @@ public class PlantillaMF extends JFrame {
 	private String destino;
 	private Date fechaIda;
 	private String dni;
-	private JLabel lblOrigenOferta;
-	private JLabel lblDestinoOferta;
+//	private JLabel lblOrigenOferta;
+//	private JLabel lblDestinoOferta;
 	
 	public PlantillaMF() {
 
@@ -103,10 +105,9 @@ public class PlantillaMF extends JFrame {
 	protected void inicializarComponentes(){
 		
 		agregarMenu();
-		
 		agregarTabbedPaneReserva();
-		
 		agregarPanelFrecuente();
+		agregarPanelOfertas();
 	}
 
 	private void agregarTabbedPaneReserva() {
@@ -326,13 +327,27 @@ public class PlantillaMF extends JFrame {
 		panelFrecuente.add(lblFrecuente);
 	}
 	
-	protected void cargarOfertas(List<ViajeCabecera> listaViajes){
+	private void agregarPanelOfertas(){
 		
 		panelOfertas = new JPanel();
 		panelOfertas.setOpaque(false);
-		panelOfertas.setBounds(30, (getHeight()/2), getWidth()-60, 350);
-		getContentPane().add(panelOfertas);
+		panelOfertas.setBounds(30, 372, getWidth()-60, 350);
 		panelOfertas.setLayout(null);
+		getContentPane().add(panelOfertas);
+		
+	}
+	
+	protected void cargarOfertas(List<ViajeCabecera> listaViajes){
+		
+//		scrollPane = new JScrollPane();
+//		scrollPane.setBounds(10, 30, 730, 240);
+//		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+//		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+//		scrollPane.setViewportView(panelVuelos);
+//		scrollPane.getViewport().setView(panelVuelos);
+//		getContentPane().add(scrollPane);
+
+		panelOfertas.removeAll();
 		
 		int i = 0;
 		
@@ -340,6 +355,7 @@ public class PlantillaMF extends JFrame {
 			agregarPanelOferta(viaje, i);
 			i++;
 		}
+		
 	}
 	
 	protected void removePanelOfertas(){
@@ -355,7 +371,7 @@ public class PlantillaMF extends JFrame {
 		panelOfertas.add(panelOferta);
 		panelOferta.setLayout(null);
 		
-		panelDescuentoOferta = new JPanel();
+		JPanel panelDescuentoOferta = new JPanel();
 		panelDescuentoOferta.setBounds(100, 140, 170, 90);
 		panelOferta.add(panelDescuentoOferta);
 		panelDescuentoOferta.setBackground(new Color(0,121,107,190));
@@ -398,13 +414,13 @@ public class PlantillaMF extends JFrame {
 		lblImagen.setHorizontalAlignment(JLabel.CENTER);
 		panelOferta.add(lblImagen);
 		
-		lblOrigenOferta = new JLabel(viaje.getCiudadOrigen());
+		JLabel lblOrigenOferta = new JLabel(viaje.getCiudadOrigen());
 		lblOrigenOferta.setForeground(new Color(245, 245, 245));
 		lblOrigenOferta.setBounds(15, 235, 200, 30);
 		lblOrigenOferta.setFont(new Font("Roboto Medium", Font.PLAIN, 18));
 		panelOferta.add(lblOrigenOferta);
 
-		lblDestinoOferta = new JLabel(viaje.getCiudadDestino());
+		JLabel lblDestinoOferta = new JLabel(viaje.getCiudadDestino());
 		lblDestinoOferta.setForeground(new Color(251, 192, 45));
 		lblDestinoOferta.setBounds(15, 270, 200, 30);
 		lblDestinoOferta.setFont(new Font("Roboto Bold", Font.PLAIN, 22));
@@ -734,7 +750,7 @@ public class PlantillaMF extends JFrame {
 		JMenu mnOfertas = new JMenu("Ofertas");
 		mnAcciones.add(mnOfertas);
 		
-		JMenuItem mntmCargarOferta = new JMenuItem("Cargar oferta");
+		JMenuItem mntmCargarOferta = new JMenuItem("Cargar/Modificar oferta");
 		mntmCargarOferta.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				cargarOferta();
@@ -773,8 +789,26 @@ public class PlantillaMF extends JFrame {
 	}
 	
 	private void eliminarOferta() {
-		DialogRemoveOffer dro = new DialogRemoveOffer();
-		dro.setVisible(true);
+
+		try {
+		
+			ViajeCabeceraBo vCBo = new ViajeCabeceraBoImpl();
+
+			List<String> modeloOfertas = vCBo.retornarOfertas();
+
+			if ( modeloOfertas.size() > 0 ){				
+				
+				DialogRemoveOffer dro = new DialogRemoveOffer();
+
+				dro.cargarOfertas(modeloOfertas);
+
+				dro.setVisible(true);
+			}
+	
+		} catch (NotOffersFoundException e1) {
+			JOptionPane.showMessageDialog(null, e1.getMessage());
+		}
+		
 	}
 	
 	public Boolean getLogueado() {

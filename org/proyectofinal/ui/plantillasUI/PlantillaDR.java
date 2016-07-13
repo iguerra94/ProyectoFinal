@@ -29,6 +29,8 @@ import javax.swing.JPasswordField;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
+import org.proyectofinal.bo.ex.DniNotValidException;
+import org.proyectofinal.bo.ex.EmailNotValidException;
 import org.proyectofinal.bo.ex.PersonAlreadyExistsException;
 import org.proyectofinal.bo.ex.PersonNotValidAgeException;
 import org.proyectofinal.bo.ex.PersonNotValidException;
@@ -156,12 +158,18 @@ public class PlantillaDR extends JDialog {
 		txtDni.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {				
-				controlarCaracteresNumericos(e);				
+				controlarCaracteresNumericosDNI(e);
+			}
+			public void keyReleased(KeyEvent e){
+				if (txtDni.getText().trim().length() > 0){
+					p.setDni(txtDni.getText());
+				}else{
+					p.setDni("");
+				}
 			}
 		});
 		txtDni.setBounds(186, 75, 170, 25);
 		panelDatosPersonales.add(txtDni);
-		txtDni.setColumns(10);
 	
 		txtNombre = new JTextField();
 		txtNombre.addFocusListener(new FocusAdapter() {
@@ -177,12 +185,17 @@ public class PlantillaDR extends JDialog {
 		});
 		txtNombre.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyTyped(KeyEvent e) {
-				
+			public void keyTyped(KeyEvent e) {				
 				controlarCaracteresLetras(e);				
 			}
+			public void keyReleased(KeyEvent e){
+				if (txtNombre.getText().trim().length() > 0){
+					p.setNombre(txtNombre.getText());
+				}else{
+					p.setNombre("");
+				}
+			}
 		});
-		txtNombre.setColumns(10);
 		txtNombre.setBounds(186, 15, 170, 25);
 		txtNombre.requestFocus();
 		panelDatosPersonales.add(txtNombre);
@@ -202,12 +215,16 @@ public class PlantillaDR extends JDialog {
 		txtApellido.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {
-				
 				controlarCaracteresLetras(e);
-				
+			}
+			public void keyReleased(KeyEvent e){
+				if (txtApellido.getText().trim().length() > 0){
+					p.setApellido(txtApellido.getText());
+				}else{
+					p.setApellido("");
+				}
 			}
 		});
-		txtApellido.setColumns(10);
 		txtApellido.setBounds(186, 45, 170, 25);
 		panelDatosPersonales.add(txtApellido);		
 		
@@ -222,8 +239,18 @@ public class PlantillaDR extends JDialog {
 					p.setEmail("");
 				}
 			}
-		});	
-		txtEmail.setColumns(10);
+		});
+		txtEmail.addKeyListener(new KeyAdapter() {
+			
+			public void keyReleased(KeyEvent e){
+				if (txtEmail.getText().trim().length() > 0){
+					p.setEmail(txtEmail.getText());
+				}else{
+					p.setEmail("");
+				}
+			}
+			
+		});
 		txtEmail.setBounds(186, 105, 170, 25);
 		panelDatosPersonales.add(txtEmail);
 
@@ -241,12 +268,17 @@ public class PlantillaDR extends JDialog {
 		});
 		txtTelefono.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyTyped(KeyEvent e) {
-				
-				controlarCaracteresNumericos(e);
+			public void keyTyped(KeyEvent e) {				
+				controlarCaracteresNumericosTELEFONO(e);
+			}
+			public void keyReleased(KeyEvent e){
+				if (txtTelefono.getText().trim().length() > 0){
+					p.setTelefono(txtTelefono.getText());				
+				}else{
+					p.setTelefono("");
+				}
 			}
 		});
-		txtTelefono.setColumns(10);
 		txtTelefono.setBounds(186, 165, 170, 25);
 		panelDatosPersonales.add(txtTelefono);
 
@@ -309,6 +341,11 @@ public class PlantillaDR extends JDialog {
 		});
 		panelDatosPersonales.add(cmbCiudad);
 		
+		p.setDni("");
+		p.setNombre("");
+		p.setApellido("");
+		p.setEmail("");
+		p.setTelefono("");
 	}
 	
 	protected void agregarPaneUsuario(){
@@ -353,7 +390,15 @@ public class PlantillaDR extends JDialog {
 				}
 			}
 		});
-		txtNombreUsuario.setColumns(10);
+		txtNombreUsuario.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e){
+				if (txtNombreUsuario.getText().trim().length() > 0){
+					u.setNombreUsuario(txtNombreUsuario.getText());
+				}else{
+					u.setNombreUsuario("");
+				}
+			}
+		});
 		txtNombreUsuario.setBounds(186, 15, 170, 25);
 		panelDatosUsuario.add(txtNombreUsuario);
 	
@@ -372,8 +417,22 @@ public class PlantillaDR extends JDialog {
 				
 			}
 		});
+		txtContrasea.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e){
+				String pass = new String(txtContrasea.getPassword());
+				
+				if (pass.trim().length() > 0){
+					u.setPassword(pass);					
+				}else{
+					u.setPassword("");
+				}
+			}
+		});
 		txtContrasea.setBounds(186, 45, 170, 25);
 		panelDatosUsuario.add(txtContrasea);
+		
+		u.setNombreUsuario("");
+		u.setPassword("");
 	}
 
 	protected void agregarBotones(){
@@ -417,19 +476,28 @@ public class PlantillaDR extends JDialog {
 		}
 	}
 
-	private void controlarCaracteresNumericos(KeyEvent e) {
+	private void controlarCaracteresNumericosDNI(KeyEvent e) {
 		
 		char c = e.getKeyChar();
 		
-		if ((c < '0' || c > '9') && (c != KeyEvent.VK_KP_LEFT) && c != (KeyEvent.VK_KP_RIGHT) && (c != KeyEvent.VK_SPACE) && (c != KeyEvent.VK_BACK_SPACE)){
+		if ((c < '0' || c > '9') && (c != KeyEvent.VK_KP_LEFT) && c != (KeyEvent.VK_KP_RIGHT) && (c != KeyEvent.VK_SPACE) && (c != KeyEvent.VK_BACK_SPACE) || txtDni.getText().length() == 8){
+			e.consume();
+		}
+	}
+	
+	private void controlarCaracteresNumericosTELEFONO(KeyEvent e) {
+		
+		char c = e.getKeyChar();
+		
+		if ((c < '0' || c > '9') && (c != KeyEvent.VK_KP_LEFT) && c != (KeyEvent.VK_KP_RIGHT) && (c != KeyEvent.VK_SPACE) && (c != KeyEvent.VK_BACK_SPACE) || txtTelefono.getText().length() == 11){
 			e.consume();
 		}
 	}
 	
 	private void actionBtnRegistrarse(){
 
-		pBo = new PersonaRegistradaBoImpl();
 		uBo = new UsuarioBoImpl();
+		pBo = new PersonaRegistradaBoImpl();
 		
 		java.util.Date now = new java.util.Date();
 		Timestamp fechaActual = new Timestamp(now.getTime());
@@ -442,29 +510,38 @@ public class PlantillaDR extends JDialog {
 		u.setTipoUsuario(1);
 		u.setFechaInicio(fechaActual);
 		
+		p.setSaldo(0);
 		p.setUsuario(u);
 		
 		try {
 		
 			uBo.verificar(u);
 			
-			pBo.verificarImportantes(p);
+			pBo.verificarTodos(p);
+			pBo.verificarDni(p);
+			pBo.verificarEmail(p);
 			pBo.verificarEdad(p);
+			
+			pBo.controlarExistenciaUsuarioYPersona(p);
 			
 			uBo.registrarUsuario(u);
 			pBo.registrarPersona(p);
 
 			JOptionPane.showMessageDialog(null, "Se ha registrado el usuario con exito!"); 
 
-			setVisible(false);
+			dispose();
 			
 		} catch (UserNotValidException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
-		} catch (UserAlreadyExistsException e) {
+		} catch (DniNotValidException e) {
+			JOptionPane.showMessageDialog(null, e.getMessage());
+		} catch (EmailNotValidException e) {
+			JOptionPane.showMessageDialog(null, e.getMessage());
+		} catch (PersonNotValidAgeException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 		} catch (PersonNotValidException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
-		} catch (PersonNotValidAgeException e) {
+		} catch (UserAlreadyExistsException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 		} catch (PersonAlreadyExistsException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());

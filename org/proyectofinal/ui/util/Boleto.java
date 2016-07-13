@@ -90,7 +90,7 @@ public class Boleto {
 				
 				// se escribe a imagen en disco
 				
-				ImagePaths.add(path.substring(0, path.length()-4) + "-" + i + ".png");
+				ImagePaths.add(path.substring(0, 50) + "png" + path.substring(53, path.length()-4) + "-" + i + ".png");
 				
 				ImageIO.write(escala, "png", new File(ImagePaths.get(i)));
 			}
@@ -129,15 +129,15 @@ public class Boleto {
 		Image imagen = null;
 		Phrase myText = null;
 		
-		Rectangle rect = new Rectangle(0, 0, 595, 420);
-    	
+		Rectangle rect = new Rectangle(0, 0, 595, 217);
+
     	Document document = new Document(rect, 0,0,0,0);
     	
     	Random r = new Random();
     	
     	Integer num = (Integer) r.nextInt(1000);
-    	
-    	path = "/home/ivang94/Escritorio/BoletoN°".concat(num.toString()) + ".pdf";
+
+    	path = "/home/ivang94/workspace/ProyectoFinal/src/boletos/pdf/BoletoN°".concat(num.toString()) + ".pdf";
     	
     	FileOutputStream ficheroPdf = new FileOutputStream(path);
     	
@@ -147,7 +147,7 @@ public class Boleto {
 		
 		for (int i = 0; i < reserva.getListReservas().size(); i++){
 
-		    imagen = Image.getInstance("/home/ivang94/workspace/PruebaIText/src/BOLETO.gif");
+		    imagen = Image.getInstance("/home/ivang94/workspace/ProyectoFinal/src/imagenes/boleto_solo.png");
 	
 		    document.add(imagen);
 		    
@@ -161,7 +161,7 @@ public class Boleto {
 		
 			//Numero de Viaje Compañia
 			myText = new Phrase(reserva.getListReservas().get(i).getViaje().getCodigoViaje().toString(), FontFactory.getFont("georgia",13f, Font.BOLD, BaseColor.BLACK));
-			ct.setSimpleColumn(myText, 87, 345, 150, 346, 1, Element.ALIGN_CENTER);
+			ct.setSimpleColumn(myText, 87, 146, 150, 147, 1, Element.ALIGN_CENTER);
 			ct.go();
 			
 			cb = writer.getDirectContent();
@@ -169,7 +169,7 @@ public class Boleto {
 
 			//Fecha de Salida Compañia
 			myText = new Phrase(reserva.getListReservas().get(i).getViaje().getFechaSalida().toString().substring(8, 10) + "/" +reserva.getListReservas().get(i).getViaje().getFechaSalida().toString().substring(5, 7) + "/" + reserva.getListReservas().get(i).getViaje().getFechaSalida().toString().substring(0, 4), FontFactory.getFont("georgia",13f, Font.BOLD, BaseColor.BLACK));
-			ct.setSimpleColumn(myText, 84, 317, 180, 318, 1, Element.ALIGN_CENTER);
+			ct.setSimpleColumn(myText, 84, 118, 180, 119, 1, Element.ALIGN_CENTER);
 			ct.go();
 			
 			cb = writer.getDirectContent();
@@ -177,7 +177,7 @@ public class Boleto {
 			
 			//Hora de Salida Compañia
 			myText = new Phrase(reserva.getListReservas().get(i).getViaje().getHoraSalida().toString().substring(0, 5), FontFactory.getFont("georgia",13f, Font.BOLD, BaseColor.BLACK));
-			ct.setSimpleColumn(myText, 230, 317, 275, 318, 1, Element.ALIGN_CENTER);
+			ct.setSimpleColumn(myText, 230, 118, 275, 119, 1, Element.ALIGN_CENTER);
 			ct.go();
 			
 			cb = writer.getDirectContent();
@@ -185,7 +185,7 @@ public class Boleto {
 			
 			//Origen Compañia
 			myText = new Phrase(reserva.getListReservas().get(i).getViaje().getCiudadOrigen() + ", " + reserva.getListReservas().get(i).getViaje().getShortPaisOrigen(), FontFactory.getFont("georgia",13f, Font.BOLD, BaseColor.BLACK));
-			ct.setSimpleColumn(myText, 98, 288, 220, 289, 1, Element.ALIGN_CENTER);
+			ct.setSimpleColumn(myText, 98, 89, 220, 90, 1, Element.ALIGN_CENTER);
 			ct.go();
 			
 			cb = writer.getDirectContent();
@@ -193,7 +193,7 @@ public class Boleto {
 			
 			//Destino Compañia
 			myText = new Phrase(reserva.getListReservas().get(i).getViaje().getCiudadDestino() + ", " + reserva.getListReservas().get(i).getViaje().getShortPaisDestino(), FontFactory.getFont("georgia",13f, Font.BOLD, BaseColor.BLACK));
-			ct.setSimpleColumn(myText, 92, 260, 230, 261, 1, Element.ALIGN_CENTER);
+			ct.setSimpleColumn(myText, 92, 61, 230, 62, 1, Element.ALIGN_CENTER);
 			ct.go();
 			
 			cb = writer.getDirectContent();
@@ -201,7 +201,7 @@ public class Boleto {
 			
 			//Asiento Compañia
 			myText = new Phrase(reserva.getListReservas().get(i).getAsiento().toString(), FontFactory.getFont("georgia",13f, Font.BOLD, BaseColor.BLACK));
-			ct.setSimpleColumn(myText, 109, 236, 130, 237, 1, Element.ALIGN_CENTER);
+			ct.setSimpleColumn(myText, 109, 37, 130, 38, 1, Element.ALIGN_CENTER);
 			ct.go();
 			
 			//DATOS PASAJERO
@@ -211,7 +211,7 @@ public class Boleto {
 
 			//Numero de Viaje Pasajero
 			myText = new Phrase(reserva.getListReservas().get(i).getViaje().getCodigoViaje().toString(), FontFactory.getFont("georgia",10.5f, Font.NORMAL, BaseColor.BLACK));
-			ct.setSimpleColumn(myText, 480, 355, 550, 356, 1, Element.ALIGN_CENTER);
+			ct.setSimpleColumn(myText, 480, 156, 550, 157, 1, Element.ALIGN_CENTER);
 			ct.go();
 
 			cb = writer.getDirectContent();
@@ -219,7 +219,7 @@ public class Boleto {
 
 			//Fecha y Hora de Salida Pasajero
 			myText = new Phrase(reserva.getListReservas().get(i).getViaje().getFechaSalida().toString().substring(8, 10) + "/" +reserva.getListReservas().get(i).getViaje().getFechaSalida().toString().substring(5, 7) + "/" + reserva.getListReservas().get(i).getViaje().getFechaSalida().toString().substring(0, 4) + " - " + reserva.getListReservas().get(i).getViaje().getHoraSalida().toString().substring(0, 5), FontFactory.getFont("georgia",10f, Font.NORMAL, BaseColor.BLACK));
-			ct.setSimpleColumn(myText, 440, 317, 560, 318, 1, Element.ALIGN_CENTER);
+			ct.setSimpleColumn(myText, 440, 118, 560, 119, 1, Element.ALIGN_CENTER);
 			ct.go();
 			
 			cb = writer.getDirectContent();
@@ -227,7 +227,7 @@ public class Boleto {
 
 			//Origen Pasajero
 			myText = new Phrase(reserva.getListReservas().get(i).getViaje().getCiudadOrigen() + ", " + reserva.getListReservas().get(i).getViaje().getShortPaisOrigen(), FontFactory.getFont("georgia",10f, Font.NORMAL, BaseColor.BLACK));
-			ct.setSimpleColumn(myText, 440, 287, 560, 288, 1, Element.ALIGN_CENTER);
+			ct.setSimpleColumn(myText, 440, 88, 560, 89, 1, Element.ALIGN_CENTER);
 			ct.go();
 
 			cb = writer.getDirectContent();
@@ -235,7 +235,7 @@ public class Boleto {
 			
 			//Destino Pasajero
 			myText = new Phrase(reserva.getListReservas().get(i).getViaje().getCiudadDestino() + ", " + reserva.getListReservas().get(i).getViaje().getShortPaisDestino(), FontFactory.getFont("georgia",10f, Font.NORMAL, BaseColor.BLACK));
-			ct.setSimpleColumn(myText, 442, 261, 560, 262, 1, Element.ALIGN_CENTER);
+			ct.setSimpleColumn(myText, 442, 62, 560, 63, 1, Element.ALIGN_CENTER);
 			ct.go();
 			
 			cb = writer.getDirectContent();
@@ -243,7 +243,7 @@ public class Boleto {
 			
 			//Apellido y Nombre Pasajero
 			myText = new Phrase(reserva.getListReservas().get(i).getPasajero().getApellido() + ", " + reserva.getListReservas().get(i).getPasajero().getNombre(), FontFactory.getFont("georgia",9.5f, Font.NORMAL, BaseColor.BLACK));
-			ct.setSimpleColumn(myText, 442, 232, 560, 233, 1, Element.ALIGN_CENTER);
+			ct.setSimpleColumn(myText, 442, 34, 560, 35, 1, Element.ALIGN_CENTER);
 			ct.go();
 			
 			cb = writer.getDirectContent();
@@ -251,7 +251,7 @@ public class Boleto {
 			
 			//Asiento Pasajero
 			myText = new Phrase(reserva.getListReservas().get(i).getAsiento().toString(), FontFactory.getFont("georgia",12f, Font.NORMAL, BaseColor.BLACK));
-			ct.setSimpleColumn(myText, 505, 216, 530, 217, 1, Element.ALIGN_CENTER);
+			ct.setSimpleColumn(myText, 505, 18, 530, 19, 1, Element.ALIGN_CENTER);
 			ct.go();
 			
 			document.newPage();

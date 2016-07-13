@@ -53,7 +53,7 @@ public class PlantillaDLO extends JDialog {
 	}
 	
 	public void inicializarAtributosLO(){
-		setTitle("Cargar Oferta");
+		setTitle("Cargar/Modificar Oferta");
 		setModal(true);
 		setBounds(10,10,570,345);
 		setResizable(false);
@@ -270,7 +270,6 @@ public class PlantillaDLO extends JDialog {
 					vCBo.verificarOferta(vC);
 	
 					vCBo.cargarOferta(vC);
-					
 					
 					JOptionPane.showMessageDialog(null, "Se ha cargado la oferta con exito!"); 
 					

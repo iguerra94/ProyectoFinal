@@ -6,7 +6,7 @@ import java.sql.Time;
 import org.proyectofinal.model.interfaces.ViajeCabecera;
 
 /**
- * Implementacion de la clase de dominio ViajeCabecera.
+ * Implementacion de la clase de dominio <code>ViajeCabecera</code>.
  * 
  * @author Ivan Guerra
  * @version 1.0.0
@@ -14,74 +14,74 @@ import org.proyectofinal.model.interfaces.ViajeCabecera;
 
 public class ViajeCabeceraImpl implements ViajeCabecera {
 
-	/** El codigo del viaje. */
+	/** El codigo del <code>ViajeCabecera</code>. */
 	private String codigoViaje = null;
 	
-	/** La ciudad de origen del viaje. */
+	/** La ciudad de origen del <code>ViajeCabecera</code>. */
 	private String ciudadOrigen = null;
 	
-	/** El pais de origen del viaje. */
+	/** El pais de origen del <code>ViajeCabecera</code>. */
 	private String paisOrigen = null;
 	
-	/** El pais de origen del viaje en formato ISO 3166-1 alfa-3. */
+	/** El pais de origen del <code>ViajeCabecera</code> en formato ISO 3166-1 alfa-3. */
 	private String shortPaisOrigen = null;
 	
-	/** La plataforma de origen del viaje. */
+	/** La plataforma de origen del <code>ViajeCabecera</code>. */
 	private String plataformaOrigen = null;
 	
-	/** La ciudad de destino del viaje. */
+	/** La ciudad de destino del <code>ViajeCabecera</code>. */
 	private String ciudadDestino = null;
 	
-	/** El pais de destino del viaje. */
+	/** El pais de destino del <code>ViajeCabecera</code>. */
 	private String paisDestino = null;
 	
-	/** El pais de destino del viaje en formato ISO 3166-1 alfa-3 */
+	/** El pais de destino del <code>ViajeCabecera</code> en formato ISO 3166-1 alfa-3 */
 	private String shortPaisDestino = null;
 	
-	/** La plataforma de destino del viaje. */
+	/** La plataforma de destino del <code>ViajeCabecera</code>. */
 	private String plataformaDestino = null;
 	
-	/** La fecha de salida del viaje. */
+	/** La fecha de salida del <code>ViajeCabecera</code>. */
 	private Date fechaSalida = null;
 	
-	/** La hora de salida del viaje. */
+	/** La hora de salida del <code>ViajeCabecera</code>. */
 	private Time horaSalida = null;
 	
-	/** La fecha de llegada del viaje. */
+	/** La fecha de llegada del <code>ViajeCabecera</code>. */
 	private Date fechaLlegada = null;
 	
-	/** La hora de llegada del viaje. */
+	/** La hora de llegada del <code>ViajeCabecera</code>. */
 	private Time horaLlegada = null;
 	
-	/** La distancia entre la ciudad de origen y destino del viaje. */
+	/** La distancia entre la ciudad de origen y destino del <code>ViajeCabecera</code>. */
 	private Integer distancia = null;
 	
-	/** La duracion del viaje. */
+	/** La duracion del <code>ViajeCabecera</code>. */
 	private Time duracion = null;
 	
-	/** El precio de la clase turista del viaje. */
+	/** El precio de la clase turista del <code>ViajeCabecera</code>. */
 	private Float precioClaseTur = null;
 	
-	/** El precio de la primera clase del viaje. */
+	/** El precio de la primera clase del <code>ViajeCabecera</code>. */
 	private Float precioClasePrim = null;
 	
-	/** La oferta de descuento que dispone el viaje (entre 0.0 y 0.75). */
+	/** La oferta de descuento que dispone el <code>ViajeCabecera</code> (entre 0.0 y 0.75). */
 	private String oferta = null;
 	
-	/** La ruta de la imagen del destino de la oferta del viaje. */
+	/** La ruta de la imagen del destino de la oferta del <code>ViajeCabecera</code>. */
 	private String imagenOferta = null;
 	
-	/** La ruta de la primera imagen descriptiva del destino del viaje. */
+	/** La ruta de la primera imagen descriptiva del destino del <code>ViajeCabecera</code>. */
 	private String imagen1 = null;
 	
-	/** La ruta de la segunda imagen descriptiva del destino del viaje. */
+	/** La ruta de la segunda imagen descriptiva del destino del <code>ViajeCabecera</code>. */
 	private String imagen2 = null;
 	
-	/** El cupo de pasajeros del viaje. */
+	/** El cupo de pasajeros del <code>ViajeCabecera</code>. */
 	private Integer cupo = null;
 	
 	/**
-	 * Instancia un nuevo objeto de la clase ViajeCabecera.
+	 * Instancia un nuevo objeto de la clase <code>ViajeCabecera</code>.
 	 */
 	
 	public ViajeCabeceraImpl(){

@@ -4,8 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.proyectofinal.bo.ex.NotEqualPasswordException;
-import org.proyectofinal.bo.ex.UserAlreadyExistsException;
-import org.proyectofinal.bo.ex.UserNotCorrectException;
 import org.proyectofinal.bo.ex.UserNotExistsException;
 import org.proyectofinal.bo.ex.UserNotValidException;
 import org.proyectofinal.bo.interfaces.UsuarioBo;
@@ -15,7 +13,7 @@ import org.proyectofinal.model.impl.UsuarioImpl;
 import org.proyectofinal.model.interfaces.Usuario;
 
 /**
- * Implementacion de la Clase de Negocio UsuarioBo.
+ * Implementacion de la Clase de Negocio de la entidad de dominio <strong>Usuario</strong>: <code>UsuarioBo</code>.
  * 
  * @author Ivan Guerra
  * @version 1.0.0
@@ -24,7 +22,7 @@ import org.proyectofinal.model.interfaces.Usuario;
 public class UsuarioBoImpl implements UsuarioBo {
 	
 	/**
-	 * Instancia un nuevo Objeto de la Clase de Negocio UsuarioBo.
+	 * Instancia un nuevo objeto de la Clase de Negocio <code>UsuarioBo</code>.
 	 */
 	
 	public UsuarioBoImpl(){
@@ -59,7 +57,7 @@ public class UsuarioBoImpl implements UsuarioBo {
 	 * @see org.proyectofinal.bo.interfaces.UsuarioBo#verificarDatosCorrectos(org.proyectofinal.model.interfaces.Usuario)
 	 */
 	
-	public void verificarDatosCorrectos(Usuario u) throws UserNotCorrectException{
+	public void verificarDatosCorrectos(Usuario u) throws UserNotExistsException{
 		
 		UsuarioDao uDao = new UsuarioDaoImpl();
 		
@@ -70,7 +68,7 @@ public class UsuarioBoImpl implements UsuarioBo {
 			ResultSet res = uDao.consultarPorUsuario(u);
 			
 			if (!res.next()){
-				throw new UserNotCorrectException();
+				throw new UserNotExistsException();
 			}
 			
 			uDao.desconectar();
@@ -129,6 +127,10 @@ public class UsuarioBoImpl implements UsuarioBo {
 				u.setPassword(res.getString("contrasenia"));
 				u.setTipoUsuario(res.getInt("tipoUsuario"));
 				u.setFechaInicio(res.getTimestamp("fechaInicio"));
+			}
+			
+			if (!res.next()){
+				throw new UserNotExistsException();
 			}
 
 			uDao.desconectar();
@@ -207,12 +209,18 @@ public class UsuarioBoImpl implements UsuarioBo {
 	 * @see org.proyectofinal.bo.interfaces.UsuarioBo#registrarUsuario(org.proyectofinal.model.interfaces.Usuario)
 	 */
 	
-	public void registrarUsuario(Usuario u) throws UserAlreadyExistsException {
+	public void registrarUsuario(Usuario u){
 		
 		UsuarioDao uDao = new UsuarioDaoImpl();
 	
 		try {
-			uDao.alta(u);
+			
+			uDao.conectar();
+			
+			uDao.alta(u);	
+			
+			uDao.desconectar();
+			
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {

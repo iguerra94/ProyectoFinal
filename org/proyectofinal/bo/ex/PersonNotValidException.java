@@ -9,7 +9,7 @@ package org.proyectofinal.bo.ex;
 
 public class PersonNotValidException extends Exception {
 
-	private static final long serialVersionUID = -7798071003952352001L;
+//	private static final long serialVersionUID = -7798071003952352001L;
 
 	/**
 	 * Instancia un nuevo objeto de la Excepcion <code>PersonNotValidException</code>

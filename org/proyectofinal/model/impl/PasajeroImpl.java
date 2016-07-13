@@ -4,7 +4,7 @@ import org.proyectofinal.model.abstracts.PersonaGenerica;
 import org.proyectofinal.model.interfaces.Pasajero;
 	
 /**
- * Implementacion de la clase de dominio Pasajero.
+ * Implementacion de la clase de dominio <code>Pasajero</code>.
  * 
  * @author Ivan Guerra
  * @version 1.0.0
@@ -13,7 +13,7 @@ import org.proyectofinal.model.interfaces.Pasajero;
 public class PasajeroImpl extends PersonaGenerica implements Pasajero {
 
 	/**
-	 * Instancia un nuevo objeto de la clase Pasajero.
+	 * Instancia un nuevo objeto de la clase <code>Pasajero</code>.
 	 */
 	
 	public PasajeroImpl() {

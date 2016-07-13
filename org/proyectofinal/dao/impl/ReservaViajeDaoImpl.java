@@ -9,39 +9,56 @@ import org.proyectofinal.dao.interfaces.ReservaViajeDao;
 import org.proyectofinal.model.interfaces.ReservaViaje;
 
 /**
- * Implementacion del DAO ReservaViaje.
+ * Implementacion de la clase de persistencia de datos de la entidad de dominio <strong>ReservaViaje</strong>: <code>ReservaViajeDao</code>.
  *  
  * @author Ivan Guerra
  * @version 1.0.0 
  */
 
 public class ReservaViajeDaoImpl extends AbstractDao implements ReservaViajeDao {
+
+	/**
+	 * Instancia un nuevo objeto de la clase de persistencia de datos <code>ReservaViajeDao</code>.
+	 */
 	
+	public ReservaViajeDaoImpl(){
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.dao.abstracts.AbstractDao#conectar()
+	 */
+
 	public void conectar() throws ClassNotFoundException, SQLException{
 		super.conectar();
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.dao.abstracts.AbstractDao#desconectar()
+	 */
 	
 	public void desconectar() throws SQLException{
 		super.desconectar();
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.dao.interfaces.ReservaViajeDao#consultar()
+	 */
+	
 	public ResultSet consultar() throws ClassNotFoundException, SQLException{
-		
-		conectar();
 		
 		PreparedStatement sentencia = getConexion().prepareStatement("SELECT * FROM ReservaViaje");
 		
 		ResultSet resultado = sentencia.executeQuery();
 		
-//		desconectar();
-		
-//		sentencia.close();
 		return resultado;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.dao.interfaces.ReservaViajeDao#consultarPorPasajero(org.proyectofinal.model.interfaces.ReservaViaje)
+	 */
+
 	public ResultSet consultarPorPasajero(ReservaViaje rV) throws ClassNotFoundException, SQLException{
-		
-		conectar();
 		
 		PreparedStatement sentencia = getConexion().prepareStatement("SELECT * FROM ReservaViaje WHERE dni = ?");
 		
@@ -49,11 +66,12 @@ public class ReservaViajeDaoImpl extends AbstractDao implements ReservaViajeDao 
 		
 		ResultSet resultado = sentencia.executeQuery();
 		
-//		desconectar();
-	
-//		sentencia.close();
 		return resultado;
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.dao.interfaces.ReservaViajeDao#consultarPorPersonaQueReserva(java.lang.String)
+	 */
 	
 	public ResultSet consultarPorPersonaQueReserva(String dni) throws ClassNotFoundException, SQLException{
 		
@@ -65,6 +83,10 @@ public class ReservaViajeDaoImpl extends AbstractDao implements ReservaViajeDao 
 		
 		return resultado;
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.dao.interfaces.ReservaViajeDao#consultarPorViaje(org.proyectofinal.model.interfaces.ReservaViaje)
+	 */
 	
 	public ResultSet consultarPorViaje(ReservaViaje rV) throws ClassNotFoundException, SQLException{
 		
@@ -79,6 +101,10 @@ public class ReservaViajeDaoImpl extends AbstractDao implements ReservaViajeDao 
 		return resultado;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.dao.interfaces.ReservaViajeDao#consultarAsientosPorViaje(java.lang.String)
+	 */
+	
 	public ResultSet consultarAsientosPorViaje(String codViaje) throws ClassNotFoundException, SQLException{
 		
 		PreparedStatement sentencia = getConexion().prepareStatement("select distinct asiento from ReservaViaje where codViaje = ?");
@@ -89,6 +115,10 @@ public class ReservaViajeDaoImpl extends AbstractDao implements ReservaViajeDao 
 
 		return resultado;
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.dao.interfaces.ReservaViajeDao#alta(org.proyectofinal.model.interfaces.ReservaViaje)
+	 */
 	
 	public void alta(ReservaViaje rV) throws SQLException, ClassNotFoundException{
 		
@@ -104,9 +134,13 @@ public class ReservaViajeDaoImpl extends AbstractDao implements ReservaViajeDao 
 		sentencia.setFloat(6, rV.getPrecio());
 		
 		sentencia.executeUpdate();
-//		sentencia.close();
+
 		desconectar();
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.dao.interfaces.ReservaViajeDao#baja(org.proyectofinal.model.interfaces.ReservaViaje)
+	 */
 	
 	public void baja(ReservaViaje rV) throws SQLException, ClassNotFoundException{
 		conectar();
@@ -118,10 +152,14 @@ public class ReservaViajeDaoImpl extends AbstractDao implements ReservaViajeDao 
 		sentencia.setTimestamp(3, rV.getFechaReserva());
 		
 		sentencia.executeUpdate();
-//		sentencia.close();
+
 		desconectar();
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.dao.interfaces.ReservaViajeDao#modificacion(java.lang.String, java.lang.String)
+	 */
+
 	public void modificacion(String dniNuevo, String dniAnterior) throws SQLException, ClassNotFoundException {
 		
 		this.conectar();
@@ -136,6 +174,10 @@ public class ReservaViajeDaoImpl extends AbstractDao implements ReservaViajeDao 
 		this.desconectar();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.dao.interfaces.ReservaViajeDao#consultarCantidadDeReservas(java.lang.String)
+	 */
+	
 	@Override
 	public ResultSet consultarCantidadDeReservas(String dni) throws SQLException {
 

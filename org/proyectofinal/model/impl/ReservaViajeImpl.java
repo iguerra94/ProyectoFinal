@@ -7,8 +7,8 @@ import org.proyectofinal.model.interfaces.ReservaViaje;
 import org.proyectofinal.model.interfaces.ViajeCabecera;
 
 /**
- * Implementacion de la clase de dominio ReservaViaje.
- * <br /><br />Representa una Reserva de un pasajero en un viaje en particular, con todos los datos correspondientes.
+ * Implementacion de la clase de dominio <code>ReservaViaje</code>.
+ * <br><br>Representa una Reserva de un pasajero en un viaje en particular, con todos los datos correspondientes.
  * 
  * @author Ivan Guerra
  * @version 1.0.0
@@ -16,13 +16,13 @@ import org.proyectofinal.model.interfaces.ViajeCabecera;
 
 public class ReservaViajeImpl implements ReservaViaje {
 	
-	/** El ViajeCabecera relacionado a la ReservaViaje. */
+	/** El <code>ViajeCabecera</code> relacionado a la <code>ReservaViaje</code>. */
 	private ViajeCabecera viaje = null;
 	
-	/** El Pasajero al que esta destinado la ReservaViaje */
+	/** El <code>Pasajero</code> al que esta destinado la <code>ReservaViaje</code> */
 	private Pasajero pasajero = null;
 	
-	/** La fecha de la ReservaViaje */
+	/** La fecha de la <code>ReservaViaje</code> */
 	private Timestamp fechaReserva = null;
 	
 	/** El dni de la persona que reserva el viaje. */
@@ -31,11 +31,11 @@ public class ReservaViajeImpl implements ReservaViaje {
 	/** El asiento del pasajero. */
 	private Integer asiento = null;
 	
-	/** El precio de la ReservaViaje. */
+	/** El precio de la <code>ReservaViaje</code>. */
 	private Float precio = null;
 	
 	/**
-	 * Instancia un nuevo objeto de la clase ReservaViaje.
+	 * Instancia un nuevo objeto de la clase <code>ReservaViaje</code>.
 	 */
 
 	public ReservaViajeImpl(){

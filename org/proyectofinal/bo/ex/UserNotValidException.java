@@ -1,7 +1,7 @@
 package org.proyectofinal.bo.ex;
 
 /**
- * Excepcion que se lanza cuando los atributos del objeto Pasajero no son validos
+ * Excepcion que se lanza si algun atributo del objeto <code>Usuario</code> no es valido.
  * 
  * @author Ivan Guerra
  * @version 1.0.0
@@ -9,7 +9,7 @@ package org.proyectofinal.bo.ex;
 
 public class UserNotValidException extends Exception {
 
-	private static final long serialVersionUID = -7798071003952352001L;
+//	private static final long serialVersionUID = -7798071003952352001L;
 
 	/**
 	 * Instancia un nuevo objeto de la Excepcion <code>UserNotValidException</code>

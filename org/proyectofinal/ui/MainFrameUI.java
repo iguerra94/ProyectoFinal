@@ -33,12 +33,10 @@ public class MainFrameUI extends PlantillaMF implements WindowListener, WindowFo
 		
 		List<ViajeCabecera> listaViajes = vCBo.retornarListaOfertas();
 		
-		cargarOfertas(listaViajes);		
+		cargarOfertas(listaViajes);        
 		
-		getContentPane().validate();
-        getContentPane().repaint();
-        
-//        pack();
+		getPanelOfertas().validate();
+		getPanelOfertas().repaint();
 	}
 
 	@Override
