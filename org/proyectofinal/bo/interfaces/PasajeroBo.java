@@ -5,7 +5,7 @@ import org.proyectofinal.bo.ex.NotValidPassengerException;
 import org.proyectofinal.model.interfaces.Pasajero;
 
 /**
- * Interfaz de la Clase de Negocio <code>PasajeroBo</code>.
+ * Interfaz de la Clase de Negocio de la Entidad de Dominio <strong>Pasajero</strong>: <code>PasajeroBo</code>.
  * 
  * @author Ivan Guerra
  * @version 1.0.0

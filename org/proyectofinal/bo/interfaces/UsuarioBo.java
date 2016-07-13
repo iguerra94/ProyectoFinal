@@ -6,7 +6,7 @@ import org.proyectofinal.bo.ex.UserNotValidException;
 import org.proyectofinal.model.interfaces.Usuario;
 
 /**
- * Interfaz de la Clase de Negocio <code>UsuarioBo</code>.
+ * Interfaz de la Clase de Negocio de la Entidad de Dominio <strong>Usuario</strong>: <code>UsuarioBo</code>.
  * 
  * @author Ivan Guerra
  * @version 1.0.0

@@ -9,7 +9,7 @@ import org.proyectofinal.dao.interfaces.UsuarioDao;
 import org.proyectofinal.model.interfaces.Usuario;
 
 /**
- * Implementacion de la clase de persistencia de datos de la entidad de dominio <strong>Usuario</strong>: <code>UsuarioDao</code>.
+ * Implementacion de la Clase de Persistencia de Datos de la Entidad de Dominio <strong>Usuario</strong>: <code>UsuarioDao</code>.
  *  
  * @author Ivan Guerra
  * @version 1.0.0 
@@ -18,7 +18,7 @@ import org.proyectofinal.model.interfaces.Usuario;
 public class UsuarioDaoImpl extends AbstractDao implements UsuarioDao {
 
 	/**
-	 * Instancia un nuevo objeto de la clase de persistencia de datos <code>UsuarioDao</code>.
+	 * Instancia un nuevo objeto de la Clase de Persistencia de Datos <code>UsuarioDao</code>.
 	 */
 	
 	public UsuarioDaoImpl(){
@@ -40,22 +40,7 @@ public class UsuarioDaoImpl extends AbstractDao implements UsuarioDao {
 	public void desconectar() throws SQLException{
 		super.desconectar();
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.proyectofinal.dao.interfaces.UsuarioDao#consultar()
-	 */
-
-	public ResultSet consultar() throws ClassNotFoundException, SQLException {
 		
-		conectar();
-		
-		PreparedStatement sentencia = getConexion().prepareStatement("select * from Usuario");
-		
-		ResultSet resultado = sentencia.executeQuery();
-
-		return resultado;
-	}
-	
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.dao.interfaces.UsuarioDao#consultarPorUsuario(org.proyectofinal.model.interfaces.Usuario)
 	 */
@@ -78,23 +63,11 @@ public class UsuarioDaoImpl extends AbstractDao implements UsuarioDao {
 	
 	public ResultSet consultarPorUsuario(String usuario) throws ClassNotFoundException, SQLException {
 		
-		PreparedStatement sentencia = null;
-		ResultSet resultado = null;
+		PreparedStatement sentencia = getConexion().prepareStatement("select * from Usuario where usuario = ?");
 		
-		try {
-			conectar();
-			
-			sentencia = getConexion().prepareStatement("select * from Usuario where usuario = ?");
+		sentencia.setString(1, usuario);
 
-			sentencia.setString(1, usuario);
-			
-			resultado = sentencia.executeQuery();
-
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		ResultSet resultado = sentencia.executeQuery();
 
 		return resultado;
 	}
@@ -150,21 +123,4 @@ public class UsuarioDaoImpl extends AbstractDao implements UsuarioDao {
 		desconectar();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.proyectofinal.dao.interfaces.UsuarioDao#baja(org.proyectofinal.model.interfaces.Usuario)
-	 */
-	
-	public void baja(Usuario u) throws SQLException, ClassNotFoundException {
-			
-		conectar();
-		
-		PreparedStatement sentencia = getConexion().prepareStatement("delete from usuario where usuario = ?");
-
-		sentencia.setString(1, u.getNombreUsuario());
-		
-		sentencia.executeUpdate();
-
-		desconectar();
-	}
-	
 }

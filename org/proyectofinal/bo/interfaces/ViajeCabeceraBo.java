@@ -9,7 +9,7 @@ import org.proyectofinal.bo.ex.ViajeCabeceraOfferNotValidException;
 import org.proyectofinal.model.interfaces.ViajeCabecera;
 
 /**
- * Interfaz de la Clase de Negocio <code>ViajeCabeceraBo</code>.
+ * Interfaz de la Clase de Negocio de la Entidad de Dominio <strong>ViajeCabecera</strong>: <code>ViajeCabeceraBo</code>.
  * 
  * @author Ivan Guerra
  * @version 1.0.0

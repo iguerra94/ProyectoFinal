@@ -9,7 +9,7 @@ import org.proyectofinal.dao.interfaces.ReservaViajeDao;
 import org.proyectofinal.model.interfaces.ReservaViaje;
 
 /**
- * Implementacion de la clase de persistencia de datos de la entidad de dominio <strong>ReservaViaje</strong>: <code>ReservaViajeDao</code>.
+ * Implementacion de la Clase de Persistencia de Datos de la Entidad de Dominio <strong>ReservaViaje</strong>: <code>ReservaViajeDao</code>.
  *  
  * @author Ivan Guerra
  * @version 1.0.0 
@@ -18,7 +18,7 @@ import org.proyectofinal.model.interfaces.ReservaViaje;
 public class ReservaViajeDaoImpl extends AbstractDao implements ReservaViajeDao {
 
 	/**
-	 * Instancia un nuevo objeto de la clase de persistencia de datos <code>ReservaViajeDao</code>.
+	 * Instancia un nuevo objeto de la Clase de Persistencia de Datos <code>ReservaViajeDao</code>.
 	 */
 	
 	public ReservaViajeDaoImpl(){
@@ -40,35 +40,7 @@ public class ReservaViajeDaoImpl extends AbstractDao implements ReservaViajeDao 
 	public void desconectar() throws SQLException{
 		super.desconectar();
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.proyectofinal.dao.interfaces.ReservaViajeDao#consultar()
-	 */
-	
-	public ResultSet consultar() throws ClassNotFoundException, SQLException{
 		
-		PreparedStatement sentencia = getConexion().prepareStatement("SELECT * FROM ReservaViaje");
-		
-		ResultSet resultado = sentencia.executeQuery();
-		
-		return resultado;
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.proyectofinal.dao.interfaces.ReservaViajeDao#consultarPorPasajero(org.proyectofinal.model.interfaces.ReservaViaje)
-	 */
-
-	public ResultSet consultarPorPasajero(ReservaViaje rV) throws ClassNotFoundException, SQLException{
-		
-		PreparedStatement sentencia = getConexion().prepareStatement("SELECT * FROM ReservaViaje WHERE dni = ?");
-		
-		sentencia.setString(1, rV.getPasajero().getDni());
-		
-		ResultSet resultado = sentencia.executeQuery();
-		
-		return resultado;
-	}
-	
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.dao.interfaces.ReservaViajeDao#consultarPorPersonaQueReserva(java.lang.String)
 	 */
@@ -83,24 +55,7 @@ public class ReservaViajeDaoImpl extends AbstractDao implements ReservaViajeDao 
 		
 		return resultado;
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.proyectofinal.dao.interfaces.ReservaViajeDao#consultarPorViaje(org.proyectofinal.model.interfaces.ReservaViaje)
-	 */
-	
-	public ResultSet consultarPorViaje(ReservaViaje rV) throws ClassNotFoundException, SQLException{
 		
-		conectar();
-		
-		PreparedStatement sentencia = getConexion().prepareStatement("SELECT * FROM ReservaViaje WHERE codViaje = ?");
-		
-		sentencia.setString(1, rV.getViaje().getCodigoViaje());
-		
-		ResultSet resultado = sentencia.executeQuery();
-		
-		return resultado;
-	}
-	
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.dao.interfaces.ReservaViajeDao#consultarAsientosPorViaje(java.lang.String)
 	 */
@@ -116,6 +71,22 @@ public class ReservaViajeDaoImpl extends AbstractDao implements ReservaViajeDao 
 		return resultado;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.dao.interfaces.ReservaViajeDao#consultarCantidadDeReservas(java.lang.String)
+	 */
+	
+	@Override
+	public ResultSet consultarCantidadDeReservas(String dni) throws SQLException {
+
+		PreparedStatement sentencia = getConexion().prepareStatement("select COUNT(*) cantReservas from ReservaViaje where dniPersona = ?");
+		
+		sentencia.setString(1, dni);
+		
+		ResultSet resultado = sentencia.executeQuery();
+
+		return resultado;
+	}	
+
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.dao.interfaces.ReservaViajeDao#alta(org.proyectofinal.model.interfaces.ReservaViaje)
 	 */
@@ -138,56 +109,4 @@ public class ReservaViajeDaoImpl extends AbstractDao implements ReservaViajeDao 
 		desconectar();
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.proyectofinal.dao.interfaces.ReservaViajeDao#baja(org.proyectofinal.model.interfaces.ReservaViaje)
-	 */
-	
-	public void baja(ReservaViaje rV) throws SQLException, ClassNotFoundException{
-		conectar();
-		
-		PreparedStatement sentencia = getConexion().prepareStatement("DELETE FROM ReservaViaje WHERE codViaje = ? AND dni = ? AND fechaReserva = ?");
-		
-		sentencia.setString(1, rV.getViaje().getCodigoViaje());
-		sentencia.setString(2, rV.getPasajero().getDni());
-		sentencia.setTimestamp(3, rV.getFechaReserva());
-		
-		sentencia.executeUpdate();
-
-		desconectar();
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.proyectofinal.dao.interfaces.ReservaViajeDao#modificacion(java.lang.String, java.lang.String)
-	 */
-
-	public void modificacion(String dniNuevo, String dniAnterior) throws SQLException, ClassNotFoundException {
-		
-		this.conectar();
-		
-		PreparedStatement sentencia = getConexion().prepareStatement("update ReservaViaje set dniPersona = ? where dniPersona = ?");
-
-		sentencia.setString(1, dniNuevo);
-		sentencia.setString(2, dniAnterior);
-		
-		sentencia.executeUpdate();
-
-		this.desconectar();
-	}
-
-	/* (non-Javadoc)
-	 * @see org.proyectofinal.dao.interfaces.ReservaViajeDao#consultarCantidadDeReservas(java.lang.String)
-	 */
-	
-	@Override
-	public ResultSet consultarCantidadDeReservas(String dni) throws SQLException {
-
-		PreparedStatement sentencia = getConexion().prepareStatement("select COUNT(*) cantReservas from ReservaViaje where dniPersona = ?");
-		
-		sentencia.setString(1, dni);
-		
-		ResultSet resultado = sentencia.executeQuery();
-
-		return resultado;
-	}	
-
 }

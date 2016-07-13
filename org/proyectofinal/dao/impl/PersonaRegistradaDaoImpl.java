@@ -10,7 +10,7 @@ import org.proyectofinal.model.interfaces.PersonaRegistrada;
 import org.proyectofinal.model.interfaces.Usuario;
 
 /**
- * Implementacion de la clase de persistencia de datos de la entidad de dominio <strong>PersonaRegistrada</strong>: <code>PersonaRegistradaDao</code>.
+ * Implementacion de la Clase de Persistencia de Datos de la Entidad de Dominio <strong>PersonaRegistrada</strong>: <code>PersonaRegistradaDao</code>.
  *  
  * @author Ivan Guerra
  * @version 1.0.0 
@@ -19,7 +19,7 @@ import org.proyectofinal.model.interfaces.Usuario;
 public class PersonaRegistradaDaoImpl extends AbstractDao implements PersonaRegistradaDao {
 
 	/**
-	 * Instancia un nuevo objeto de la clase de persistencia de datos <code>PersonaRegistradaDao</code>.
+	 * Instancia un nuevo objeto de la Clase de Persistencia de Datos <code>PersonaRegistradaDao</code>.
 	 */
 	
 	public PersonaRegistradaDaoImpl(){
@@ -41,81 +41,19 @@ public class PersonaRegistradaDaoImpl extends AbstractDao implements PersonaRegi
 	public void desconectar() throws SQLException{
 		super.desconectar();
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.proyectofinal.dao.interfaces.PersonaRegistradaDao#consultar()
-	 */
-	
-	public ResultSet consultar() throws SQLException, ClassNotFoundException {
-		
-		conectar();
-		
-		PreparedStatement sentencia = getConexion().prepareStatement("select * from PersonaRegistrada inner join PersonaGenerica");
-		
-		ResultSet resultado = sentencia.executeQuery();
 
-		return resultado;
-	}
-	
 	/* (non-Javadoc)
-	 * @see org.proyectofinal.dao.interfaces.PersonaRegistradaDao#consultarPorDni(org.proyectofinal.model.interfaces.PersonaRegistrada)
+	 * @see org.proyectofinal.dao.interfaces.PersonaRegistradaDao#consultarPorUsuario(java.lang.String)
 	 */
 	
-	public ResultSet consultarPorDni(PersonaRegistrada p) throws SQLException, ClassNotFoundException {
+	public ResultSet consultarDatosPersonaRegistradaPorUsuario(String user) throws ClassNotFoundException, SQLException {
 		
-		PreparedStatement sentencia = getConexion().prepareStatement("select * from PersonaRegistrada preg inner join PersonaGenerica pg on pg.dni = preg.dni where pg.dni = ?");
-		
-		sentencia.setString(1, p.getDni());
+		PreparedStatement sentencia = getConexion().prepareStatement("select * from PersonaRegistrada pr inner join PersonaGenerica pg on pg.dni = pr.dni where usuario = ?");
+
+		sentencia.setString(1, user);
 		
 		ResultSet resultado = sentencia.executeQuery();
 		
-		return resultado;
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.proyectofinal.dao.interfaces.PersonaRegistradaDao#consultarPersonaPorDni(org.proyectofinal.model.interfaces.PersonaRegistrada)
-	 */
-	
-	public ResultSet consultarPersonaPorDni(PersonaRegistrada p) throws SQLException, ClassNotFoundException {
-		
-		PreparedStatement sentencia = getConexion().prepareStatement("select * from PersonaGenerica where dni = ?");
-		
-		sentencia.setString(1, p.getDni());
-		
-		ResultSet resultado = sentencia.executeQuery();
-		
-		return resultado;
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.proyectofinal.dao.interfaces.PersonaRegistradaDao#consultarPersonaPorDni(java.lang.String)
-	 */
-	
-	public ResultSet consultarPersonaPorDni(String dni) throws SQLException, ClassNotFoundException {
-		
-		PreparedStatement sentencia = getConexion().prepareStatement("select * from PersonaGenerica where dni = ?");
-		
-		sentencia.setString(1, dni);
-		
-		ResultSet resultado = sentencia.executeQuery();
-		
-		return resultado;
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.proyectofinal.dao.interfaces.PersonaRegistradaDao#consultarPorPersonaYUsuario(java.lang.String)
-	 */
-	
-	public ResultSet consultarPorPersonaYUsuario(String dni) throws SQLException, ClassNotFoundException {
-		
-		conectar();
-		
-		PreparedStatement sentencia = getConexion().prepareStatement("select * from PersonaGenerica pg inner join PersonaRegistrada preg on pg.dni = preg.dni inner join Usuario u on u.usuario = preg.usuario where pg.dni = ?");
-		
-		sentencia.setString(1, dni);
-		
-		ResultSet resultado = sentencia.executeQuery();
-	
 		return resultado;
 	}
 	
@@ -123,7 +61,7 @@ public class PersonaRegistradaDaoImpl extends AbstractDao implements PersonaRegi
 	 * @see org.proyectofinal.dao.interfaces.PersonaRegistradaDao#consultarPorUsuario(org.proyectofinal.model.interfaces.Usuario)
 	 */
 
-	public ResultSet consultarPorUsuario(Usuario u) throws SQLException, ClassNotFoundException {
+	public ResultSet consultarPersonaRegistradaPorUsuario(Usuario u) throws ClassNotFoundException, SQLException {
 		
 		PreparedStatement sentencia = getConexion().prepareStatement("select * from Usuario u where u.usuario = ?");
 		
@@ -133,16 +71,16 @@ public class PersonaRegistradaDaoImpl extends AbstractDao implements PersonaRegi
 		
 		return resultado;
 	}
-
+		
 	/* (non-Javadoc)
-	 * @see org.proyectofinal.dao.interfaces.PersonaRegistradaDao#consultarPorUsuario(java.lang.String)
+	 * @see org.proyectofinal.dao.interfaces.PersonaRegistradaDao#consultarPorDni(org.proyectofinal.model.interfaces.PersonaRegistrada)
 	 */
 	
-	public ResultSet consultarPorUsuario(String user) throws SQLException, ClassNotFoundException {
+	public ResultSet consultarPorDni(PersonaRegistrada p) throws ClassNotFoundException, SQLException {
 		
-		PreparedStatement sentencia = getConexion().prepareStatement("select * from PersonaRegistrada pr inner join PersonaGenerica pg on pg.dni = pr.dni where usuario = ?");
-
-		sentencia.setString(1, user);
+		PreparedStatement sentencia = getConexion().prepareStatement("select * from PersonaRegistrada preg inner join PersonaGenerica pg on pg.dni = preg.dni where pg.dni = ?");
+		
+		sentencia.setString(1, p.getDni());
 		
 		ResultSet resultado = sentencia.executeQuery();
 		
@@ -158,6 +96,21 @@ public class PersonaRegistradaDaoImpl extends AbstractDao implements PersonaRegi
 		PreparedStatement sentencia = getConexion().prepareStatement("select email from PersonaRegistrada where dni = ?");
 		
 		sentencia.setString(1, dni);
+		
+		ResultSet resultado = sentencia.executeQuery();
+		
+		return resultado;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.dao.interfaces.PersonaRegistradaDao#consultarPersonaPorDni(org.proyectofinal.model.interfaces.PersonaRegistrada)
+	 */
+	
+	public ResultSet consultarPersonaGenericaPorDni(PersonaRegistrada p) throws ClassNotFoundException, SQLException {
+		
+		PreparedStatement sentencia = getConexion().prepareStatement("select * from PersonaGenerica where dni = ?");
+		
+		sentencia.setString(1, p.getDni());
 		
 		ResultSet resultado = sentencia.executeQuery();
 		
@@ -197,23 +150,6 @@ public class PersonaRegistradaDaoImpl extends AbstractDao implements PersonaRegi
 		sentencia1.setString(8, p.getUsuario().getNombreUsuario());
 
 		sentencia1.executeUpdate();
-	}
-
-	/* (non-Javadoc)
-	 * @see org.proyectofinal.dao.interfaces.PersonaRegistradaDao#bajaPersonaRegistrada(org.proyectofinal.model.interfaces.PersonaRegistrada)
-	 */
-	
-	public void bajaPersonaRegistrada(PersonaRegistrada p) throws SQLException, ClassNotFoundException{
-		
-		this.conectar();
-		
-		PreparedStatement sentencia = getConexion().prepareStatement("delete from personaRegistrada where dni = ?");
-
-		sentencia.setString(1, p.getDni());
-		
-		sentencia.executeUpdate();
-		
-		this.desconectar();
 	}
 
 	/* (non-Javadoc)

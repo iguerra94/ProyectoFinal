@@ -9,7 +9,7 @@ import org.proyectofinal.bo.ex.UserAlreadyExistsException;
 import org.proyectofinal.model.interfaces.PersonaRegistrada;
 
 /**
- * Interfaz de la Clase de Negocio <code>PersonaRegistradaBo</code>.
+ * Interfaz de la Clase de Negocio de la Entidad de Dominio <strong>PersonaRegistrada</strong>: <code>PersonaRegistradaBo</code>.
  * 
  * @author Ivan Guerra
  * @version 1.0.0

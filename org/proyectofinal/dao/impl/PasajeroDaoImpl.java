@@ -9,7 +9,7 @@ import org.proyectofinal.dao.interfaces.PasajeroDao;
 import org.proyectofinal.model.interfaces.Pasajero;
 
 /**
- * Implementacion de la clase de persistencia de datos de la entidad de dominio <strong>Pasajero</strong>: <code>PasajeroDao</code>.
+ * Implementacion de la Clase de Persistencia de Datos de la Entidad de Dominio <strong>Pasajero</strong>: <code>PasajeroDao</code>.
  *  
  * @author Ivan Guerra
  * @version 1.0.0 
@@ -18,7 +18,7 @@ import org.proyectofinal.model.interfaces.Pasajero;
 public class PasajeroDaoImpl extends AbstractDao implements PasajeroDao {
 	
 	/**
-	 * Instancia un nuevo objeto de la clase de persistencia de datos <code>PasajeroDao</code>.
+	 * Instancia un nuevo objeto de la Clase de Persistencia de Datos <code>PasajeroDao</code>.
 	 */
 	
 	public PasajeroDaoImpl(){
@@ -40,25 +40,12 @@ public class PasajeroDaoImpl extends AbstractDao implements PasajeroDao {
 	public void desconectar() throws SQLException{
 		super.desconectar();
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.proyectofinal.dao.interfaces.PasajeroDao#consultar()
-	 */
-	
-	public ResultSet consultar() throws SQLException, ClassNotFoundException {
 		
-		PreparedStatement sentencia = getConexion().prepareStatement("select p.dni, p.nombre, p.apellido from Pasajero p inner join PersonaGenerica pg on p.dni = pg.dni");
-		
-		ResultSet resultado = sentencia.executeQuery();
-		
-		return resultado;
-	}
-	
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.dao.interfaces.PasajeroDao#consultarPorDni(org.proyectofinal.model.interfaces.Pasajero)
 	 */
 	
-	public ResultSet consultarPorDni(Pasajero p) throws SQLException, ClassNotFoundException {
+	public ResultSet consultarPersonaGenericaPorDni(Pasajero p) throws SQLException, ClassNotFoundException {
 		
 		PreparedStatement sentencia = getConexion().prepareStatement("select * from PersonaGenerica where dni = ?");
 		
@@ -73,26 +60,11 @@ public class PasajeroDaoImpl extends AbstractDao implements PasajeroDao {
 	 * @see org.proyectofinal.dao.interfaces.PasajeroDao#consultarPorDni(java.lang.String)
 	 */
 	
-	public ResultSet consultarPorDni(String dniPasajero) throws SQLException, ClassNotFoundException {
+	public ResultSet consultarPasajeroPorDni(String dniPasajero) throws SQLException, ClassNotFoundException {
 		
 		PreparedStatement sentencia = getConexion().prepareStatement("select * from Pasajero p inner join PersonaGenerica pg on pg.dni = p.dni where pg.dni = ?");
 		
 		sentencia.setString(1, dniPasajero);
-		
-		ResultSet resultado = sentencia.executeQuery();
-
-		return resultado;
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.proyectofinal.dao.interfaces.PasajeroDao#consultarPersonaPorDni(org.proyectofinal.model.interfaces.Pasajero)
-	 */
-	
-	public ResultSet consultarPersonaPorDni(Pasajero p) throws SQLException, ClassNotFoundException {
-		
-		PreparedStatement sentencia = getConexion().prepareStatement("select dni from PersonaGenerica where dni = ?");
-		
-		sentencia.setString(1, p.getDni());
 		
 		ResultSet resultado = sentencia.executeQuery();
 

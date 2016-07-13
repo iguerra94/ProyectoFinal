@@ -19,7 +19,7 @@ import org.proyectofinal.model.impl.ViajeCabeceraImpl;
 import org.proyectofinal.model.interfaces.ViajeCabecera;
 
 /**
- * Implementacion de la Clase de Negocio de la entidad de dominio <strong>ViajeCabecera</strong>: <code>ViajeCabeceraBo</code>.
+ * Implementacion de la Clase de Negocio de la Entidad de Dominio <strong>ViajeCabecera</strong>: <code>ViajeCabeceraBo</code>.
  * 
  * @author Ivan Guerra
  * @version 1.0.0

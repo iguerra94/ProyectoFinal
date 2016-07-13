@@ -1,3 +1,4 @@
+
 package org.proyectofinal.bo.impl;
 
 import java.sql.ResultSet;
@@ -12,7 +13,7 @@ import org.proyectofinal.model.impl.PasajeroImpl;
 import org.proyectofinal.model.interfaces.Pasajero;
 
 /**
- * Implementacion de la Clase de Negocio de la entidad de dominio <strong>Pasajero</strong>: <code>PasajeroBo</code>.
+ * Implementacion de la Clase de Negocio de la Entidad de Dominio <strong>Pasajero</strong>: <code>PasajeroBo</code>.
  * 
  * @author Ivan Guerra
  * @version 1.0.0
@@ -70,7 +71,7 @@ public class PasajeroBoImpl implements PasajeroBo {
 			
 			pDao.conectar();
 			
-			ResultSet res = pDao.consultarPorDni(dniPasajero);
+			ResultSet res = pDao.consultarPasajeroPorDni(dniPasajero);
 			
 			while (res.next()) {
 				p.setDni(res.getString("dni"));
@@ -102,7 +103,7 @@ public class PasajeroBoImpl implements PasajeroBo {
 			
 			pDao.conectar();
 
-			ResultSet res = pDao.consultarPorDni(pasajero);
+			ResultSet res = pDao.consultarPersonaGenericaPorDni(pasajero);
 			
 			if (!res.next()){
 				pDao.altaPersonaGenerica(pasajero);

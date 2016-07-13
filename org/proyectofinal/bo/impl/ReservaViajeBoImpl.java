@@ -16,7 +16,7 @@ import org.proyectofinal.model.interfaces.ReservaViaje;
 import org.proyectofinal.model.interfaces.ViajeCabecera;
 
 /**
- * Implementacion de la Clase de Negocio de la entidad de dominio <strong>ReservaViaje</strong>: <code>ReservaViajeBo</code>.
+ * Implementacion de la Clase de Negocio de la Entidad de Dominio <strong>ReservaViaje</strong>: <code>ReservaViajeBo</code>.
  * 
  * @author Ivan Guerra
  * @version 1.0.0
@@ -49,7 +49,6 @@ public class ReservaViajeBoImpl implements ReservaViajeBo {
 		
 		List<ReservaViaje> listaReservas = new ArrayList<ReservaViaje>();
 		
-
 		ViajeCabeceraBo vCBo = new ViajeCabeceraBoImpl();
 		PasajeroBo pBo = new PasajeroBoImpl();
 		
@@ -83,7 +82,6 @@ public class ReservaViajeBoImpl implements ReservaViajeBo {
 		}
 		
 		return listaReservas;
-		
 	}
 	
 	/* (non-Javadoc)

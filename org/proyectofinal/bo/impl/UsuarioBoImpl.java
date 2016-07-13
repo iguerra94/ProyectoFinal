@@ -13,7 +13,7 @@ import org.proyectofinal.model.impl.UsuarioImpl;
 import org.proyectofinal.model.interfaces.Usuario;
 
 /**
- * Implementacion de la Clase de Negocio de la entidad de dominio <strong>Usuario</strong>: <code>UsuarioBo</code>.
+ * Implementacion de la Clase de Negocio de la Entidad de Dominio <strong>Usuario</strong>: <code>UsuarioBo</code>.
  * 
  * @author Ivan Guerra
  * @version 1.0.0

@@ -7,7 +7,7 @@ import org.proyectofinal.model.interfaces.ReservaViaje;
 import org.proyectofinal.model.interfaces.ViajeCabecera;
 
 /**
- * Interfaz de la Clase de Negocio <code>ReservaViajeBo</code>.
+ * Interfaz de la Clase de Negocio de la Entidad de Dominio <strong>ReservaViaje</strong>: <code>ReservaViajeBo</code>.
  * 
  * @author Ivan Guerra
  * @version 1.0.0

@@ -17,7 +17,7 @@ import org.proyectofinal.model.impl.PersonaRegistradaImpl;
 import org.proyectofinal.model.interfaces.PersonaRegistrada;
 
 /**
- * Implementacion de la Clase de Negocio de la entidad de dominio <strong>PersonaRegistrada</strong>: <code>PersonaRegistradaBo</code>.
+ * Implementacion de la Clase de Negocio de la Entidad de Dominio <strong>PersonaRegistrada</strong>: <code>PersonaRegistradaBo</code>.
  * 
  * @author Ivan Guerra
  * @version 1.0.0
@@ -135,7 +135,7 @@ public class PersonaRegistradaBoImpl implements PersonaRegistradaBo {
 			
 			pRDao.conectar();
 			
-			ResultSet res = pRDao.consultarPorUsuario(usuario);
+			ResultSet res = pRDao.consultarDatosPersonaRegistradaPorUsuario(usuario);
 			
 			while (res.next()) {
 				pR.setDni(res.getString("dni"));
@@ -203,7 +203,7 @@ public class PersonaRegistradaBoImpl implements PersonaRegistradaBo {
 			
 			pDao.conectar();
 			
-			ResultSet res1 = pDao.consultarPorUsuario(p.getUsuario());
+			ResultSet res1 = pDao.consultarPersonaRegistradaPorUsuario(p.getUsuario());
 			
 			if (res1.next()){
 				throw new UserAlreadyExistsException();
@@ -237,7 +237,7 @@ public class PersonaRegistradaBoImpl implements PersonaRegistradaBo {
 			
 			pDao.conectar();
 			
-			ResultSet res1 = pDao.consultarPersonaPorDni(p);
+			ResultSet res1 = pDao.consultarPersonaGenericaPorDni(p);
 			
 			if (!res1.next()){
 				pDao.altaPersonaGenerica(p);
