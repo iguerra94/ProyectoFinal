@@ -35,9 +35,9 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.TitledBorder;
 
-import org.proyectofinal.bo.ex.DniNotValidException;
-import org.proyectofinal.bo.ex.NotValidBookingException;
-import org.proyectofinal.bo.ex.NotValidPassengerException;
+import org.proyectofinal.bo.ex.BookingNotValidException;
+import org.proyectofinal.bo.ex.PassengerNotValidException;
+import org.proyectofinal.bo.ex.PersonGenericNotValidDniException;
 import org.proyectofinal.bo.impl.PasajeroBoImpl;
 import org.proyectofinal.bo.impl.PersonaRegistradaBoImpl;
 import org.proyectofinal.bo.impl.ReservaViajeBoImpl;
@@ -1365,7 +1365,7 @@ public class PlantillaRV extends JDialog implements MouseListener{
 	private void controlarTeclasNumericas(KeyEvent e) {
 		char c = e.getKeyChar();
 		
-		if ((c < '0' || c > '9') && (c != KeyEvent.VK_KP_LEFT) && c != (KeyEvent.VK_KP_RIGHT) && (c != KeyEvent.VK_SPACE) && (c != KeyEvent.VK_BACK_SPACE)){
+		if ((c < '0' || c > '9') && (c != KeyEvent.VK_KP_LEFT) && c != (KeyEvent.VK_KP_RIGHT) && (c != KeyEvent.VK_SPACE) && (c != KeyEvent.VK_BACK_SPACE) || txtDni.getText().length() == 8){
 			e.consume();
 		}
 	}
@@ -1430,17 +1430,17 @@ public class PlantillaRV extends JDialog implements MouseListener{
 					panelPasajeros.validate();
 					panelPasajeros.repaint();
 				
-				} catch (DniNotValidException e1) {
+				} catch (PersonGenericNotValidDniException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage());
-				} catch (NotValidPassengerException e1) {
+				} catch (PassengerNotValidException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage());
-				} catch (NotValidBookingException e1) {
+				} catch (BookingNotValidException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage());
 				} finally{
 				
 					if (txtNombre.getText().length() > 0 && 
 						txtApellido.getText().length() > 0 && 
-						txtDni.getText().length() > 0 && 
+						txtDni.getText().length() == 8 && 
 						txtAsiento.getText().length() > 0 && 
 						txtPrecio.getText().length() > 0){
 

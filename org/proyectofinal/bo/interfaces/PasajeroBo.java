@@ -1,7 +1,7 @@
 package org.proyectofinal.bo.interfaces;
 
-import org.proyectofinal.bo.ex.DniNotValidException;
-import org.proyectofinal.bo.ex.NotValidPassengerException;
+import org.proyectofinal.bo.ex.PassengerNotValidException;
+import org.proyectofinal.bo.ex.PersonGenericNotValidDniException;
 import org.proyectofinal.model.interfaces.Pasajero;
 
 /**
@@ -17,19 +17,19 @@ public interface PasajeroBo {
 	 * Metodo de negocio que verifica que todos los atributos del objeto <code>Pasajero</code> sean validos.
 	 *
 	 * @param p El objeto <code>Pasajero</code>.
-	 * @throws NotValidPassengerException Si algun atributo del objeto <code>Pasajero</code> no es valido.
+	 * @throws PassengerNotValidException Si algun atributo del objeto <code>Pasajero</code> no es valido.
 	 */
 	
-	public void verificarDatosPasajero(Pasajero p) throws NotValidPassengerException;
+	public void verificarDatosPasajero(Pasajero p) throws PassengerNotValidException;
 
 	/**
 	 * Metodo de negocio que verifica que el atributo <em>dni</em> del objeto <code>Pasajero</code> sea valido.
 	 *
 	 * @param p El objeto <code>Pasajero</code>.
-	 * @throws DniNotValidException Si el atributo <em>dni</em> del objeto <code>Pasajero</code> no es valido.
+	 * @throws PersonGenericNotValidDniException Si el atributo <em>dni</em> del objeto <code>Pasajero</code> no es valido.
 	 */
 	
-	public void verificarDniPasajero(Pasajero p) throws DniNotValidException;
+	public void verificarDniPasajero(Pasajero p) throws PersonGenericNotValidDniException;
 	
 	/**
 	 * Metodo de negocio que se conecta con el objeto DAO <code>Pasajero</code> y retorna un objeto <code>Pasajero</code> con todos sus atributos.

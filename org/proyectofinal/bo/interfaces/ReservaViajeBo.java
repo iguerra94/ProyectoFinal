@@ -2,7 +2,7 @@ package org.proyectofinal.bo.interfaces;
 
 import java.util.List;
 
-import org.proyectofinal.bo.ex.NotValidBookingException;
+import org.proyectofinal.bo.ex.BookingNotValidException;
 import org.proyectofinal.model.interfaces.ReservaViaje;
 import org.proyectofinal.model.interfaces.ViajeCabecera;
 
@@ -19,10 +19,10 @@ public interface ReservaViajeBo {
 	 * Metodo de negocio que verifica que todos los atributos del objeto <code>ReservaViaje</code> sean validos.
 	 *
 	 * @param rV El objeto <code>ReservaViaje</code>.
-	 * @throws NotValidBookingException Si algun atributo del objeto <code>ReservaViaje</code> no es valido.
+	 * @throws BookingNotValidException Si algun atributo del objeto <code>ReservaViaje</code> no es valido.
 	 */
 	
-	public void verificarReserva(ReservaViaje rV) throws NotValidBookingException;
+	public void verificarReserva(ReservaViaje rV) throws BookingNotValidException;
 	
 	/**
 	 * Metodo de negocio que se conecta con el objeto DAO <code>ReservaViaje</code> y retorna una lista con con todos los atributos de las <code>ReservaViaje</code> realizadas por la <code>PersonaRegistrada</code> con el atributo <em>dni</em> pasado como parametro.

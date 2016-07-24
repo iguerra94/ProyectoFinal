@@ -15,165 +15,166 @@ import org.proyectofinal.model.interfaces.ViajeCabecera;
 public interface ViajeCabeceraDao {
 	
 	/* (non-Javadoc)
-	 * @see org.proyectofinal.dao.abstracts.AbstractDao#conectar()
+	 * @see org.proyectofinal.dao.impl.ViajeCabeceraDaoImpl#conectar()
 	 */
 	
 	public void conectar() throws ClassNotFoundException, SQLException;
 	
 	/* (non-Javadoc)
-	 * @see org.proyectofinal.dao.abstracts.AbstractDao#desconectar()
+	 * @see org.proyectofinal.dao.impl.ViajeCabeceraDaoImpl#desconectar()
 	 */
 	
 	public void desconectar() throws SQLException;
 	
 	/**
-	 * Consultar por codigo viaje.
+	 * Metodo de Persistencia de Datos que retorna un objeto ResultSet con todos los datos de cada uno de los <code>ViajeCabecera</code> existentes en la base de datos del sistema.
 	 *
-	 * @param codViaje the cod viaje
-	 * @return the result set
-	 * @throws SQLException the SQL exception
-	 * @throws ClassNotFoundException the class not found exception
+	 * @return Un objeto ResultSet con todos los datos de cada uno de los <code>ViajeCabecera</code> existentes en la base de datos del sistema.
+	 * @throws SQLException Si existe algun error en el acceso a los datos de la base de datos.
+	 */
+
+	public ResultSet consultarVuelos() throws SQLException;
+
+	/**
+	 * Metodo de Persistencia de Datos que retorna un objeto ResultSet con todos los datos del <code>ViajeCabecera</code> con el atributo <em>codViaje</em> pasado como parametro.
+	 *
+	 * @param codViaje El atributo <em>codViaje</em> del <code>ViajeCabecera</code>.
+	 * @return Un objeto ResultSet con todos los datos del <code>ViajeCabecera</code> con el atributo <em>codViaje</em> pasado como parametro.
+	 * @throws SQLException Si existe algun error en el acceso a los datos de la base de datos.
+	 * @throws ClassNotFoundException Si no se encuentra ninguna definicion de la clase buscada.
 	 */
 	
 	public ResultSet consultarPorCodigoViaje(String codViaje) throws SQLException, ClassNotFoundException;
 	
 	/**
-	 * Consultar codigos viaje.
+	 * Metodo de Persistencia de Datos que retorna un objeto ResultSet con los <em>codViaje</em> de cada uno de los <code>ViajeCabecera</code> existentes en la base de datos del sistema.
 	 *
-	 * @return the result set
-	 * @throws SQLException the SQL exception
-	 * @throws ClassNotFoundException the class not found exception
+	 * @return Un objeto ResultSet con los <em>codViaje</em> de cada uno de los <code>ViajeCabecera</code> existentes en la base de datos del sistema.
+	 * @throws SQLException Si existe algun error en el acceso a los datos de la base de datos.
+	 * @throws ClassNotFoundException Si no se encuentra ninguna definicion de la clase buscada.
 	 */
 	
 	public ResultSet consultarCodigosViaje() throws SQLException, ClassNotFoundException;
 	
 	/**
-	 * Consultar vuelos por fecha.
+	 * Metodo de Persistencia de Datos que retorna un objeto ResultSet con todos los datos de cada uno de los <code>ViajeCabecera</code> existentes en la base de datos del sistema con los atributos <em>ciudadOrigen</em>, <em>ciudadDestino</em> y <em>fechaSalida</em> del objeto <code>ViajeCabecera</code> pasado como parametro.
 	 *
-	 * @param vC the v c
-	 * @return the result set
-	 * @throws ClassNotFoundException the class not found exception
-	 * @throws SQLException the SQL exception
+	 * @param vC El objeto <code>ViajeCabecera</code>.
+	 * @return Un objeto ResultSet con todos los datos de cada uno de los <code>ViajeCabecera</code> existentes en la base de datos del sistema con los atributos <em>ciudadOrigen</em>, <em>ciudadDestino</em> y <em>fechaSalida</em> del objeto <code>ViajeCabecera</code> pasado como parametro.
+	 * @throws ClassNotFoundException Si no se encuentra ninguna definicion de la clase buscada.
+	 * @throws SQLException Si existe algun error en el acceso a los datos de la base de datos.
 	 */
 	
 	public ResultSet consultarVuelosPorFecha(ViajeCabecera vC) throws ClassNotFoundException, SQLException;
 	
 	/**
-	 * Consultar vuelos cualquier fecha.
+	 * Metodo de Persistencia de Datos que retorna un objeto ResultSet con todos los datos de cada uno de los <code>ViajeCabecera</code> existentes en la base de datos del sistema con los atributos <em>ciudadOrigen</em> y <em>ciudadDestino</em> del objeto <code>ViajeCabecera</code> pasado como parametro.
 	 *
-	 * @param vC the v c
-	 * @return the result set
-	 * @throws ClassNotFoundException the class not found exception
-	 * @throws SQLException the SQL exception
+	 * @param vC El objeto <code>ViajeCabecera</code>.
+	 * @return Un objeto ResultSet con todos los datos de cada uno de los <code>ViajeCabecera</code> existentes en la base de datos del sistema con los atributos <em>ciudadOrigen</em> y <em>ciudadDestino</em> del objeto <code>ViajeCabecera</code> pasado como parametro.
+	 * @throws ClassNotFoundException Si no se encuentra ninguna definicion de la clase buscada.
+	 * @throws SQLException Si existe algun error en el acceso a los datos de la base de datos.
 	 */
 	
 	public ResultSet consultarVuelosCualquierFecha(ViajeCabecera vC) throws ClassNotFoundException, SQLException;
 	
 	/**
-	 * Consultar origenes destinos.
+	 * Metodo de Persistencia de Datos que retorna un objeto ResultSet con los atributos <em>ciudadOrigen</em>, <em>shortPaisOrigen</em>, <em>ciudadDestino</em> y <em>shortPaisDestino</em> de cada uno de los <code>ViajeCabecera</code> existentes en la base de datos del sistema, sin repetir los cuatro atributos a la vez.
 	 *
-	 * @return the result set
-	 * @throws SQLException the SQL exception
-	 * @throws ClassNotFoundException the class not found exception
+	 * @return Un objeto ResultSet con los atributos <em>ciudadOrigen</em>, <em>shortPaisOrigen</em>, <em>ciudadDestino</em> y <em>shortPaisDestino</em> de cada uno de los <code>ViajeCabecera</code> existentes en la base de datos del sistema, sin repetir los cuatro atributos a la vez.
+	 * @throws SQLException Si existe algun error en el acceso a los datos de la base de datos.
+	 * @throws ClassNotFoundException Si no se encuentra ninguna definicion de la clase buscada.
 	 */
 	
 	public ResultSet consultarOrigenesDestinos() throws SQLException, ClassNotFoundException;
 	
 	/**
-	 * Consultar origenes.
+	 * Metodo de Persistencia de Datos que retorna un objeto ResultSet con los atributos <em>ciudadOrigen</em> y <em>shortPaisOrigen</em> de cada uno de los <code>ViajeCabecera</code> existentes en la base de datos del sistema, sin repetir los dos atributos a la vez.
 	 *
-	 * @return the result set
-	 * @throws ClassNotFoundException the class not found exception
-	 * @throws SQLException the SQL exception
+	 * @return Un objeto ResultSet con los atributos <em>ciudadOrigen</em> y <em>shortPaisOrigen</em> de cada uno de los <code>ViajeCabecera</code> existentes en la base de datos del sistema, sin repetir los dos atributos a la vez.
+	 * @throws SQLException Si existe algun error en el acceso a los datos de la base de datos.
+	 * @throws ClassNotFoundException Si no se encuentra ninguna definicion de la clase buscada.
 	 */
 	
 	public ResultSet consultarOrigenes() throws ClassNotFoundException, SQLException;
 	
 	/**
-	 * Consultar destinos.
+	 * Metodo de Persistencia de Datos que retorna un objeto ResultSet con los atributos <em>ciudadDestino</em> y <em>shortPaisDestino</em> de cada uno de los <code>ViajeCabecera</code> existentes en la base de datos del sistema, segun la <em>ciudadOrigen</em> pasada como parametro, sin repetir los dos atributos a la vez.
 	 *
-	 * @return the result set
-	 * @throws ClassNotFoundException the class not found exception
-	 * @throws SQLException the SQL exception
+	 * @param ciudadOrigen El atributo <em>ciudadOrigen</em> del objeto <code>ViajeCabecera</code>.
+	 * @return Un objeto ResultSet con los atributos <em>ciudadDestino</em> y <em>shortPaisDestino</em> de cada uno de los <code>ViajeCabecera</code> existentes en la base de datos del sistema, segun la <em>ciudadOrigen</em> pasada como parametro, sin repetir los dos atributos a la vez.
+	 * @throws ClassNotFoundException Si no se encuentra ninguna definicion de la clase buscada.
+	 * @throws SQLException Si existe algun error en el acceso a los datos de la base de datos.
 	 */
 	
-	public ResultSet consultarDestinos() throws ClassNotFoundException, SQLException;
+	public ResultSet consultarDestinos(String ciudadOrigen) throws ClassNotFoundException, SQLException;
 	
 	/**
-	 * Consultar datos oferta.
+	 * Metodo de Persistencia de Datos que retorna un objeto ResultSet con los valores de los atributos relacionados con la oferta de un <code>ViajeCabecera</code> de cada uno de los <code>ViajeCabecera</code> existentes en la base de datos del sistema. Los atributos que se retornan son: <em>ciudadOrigen</em>, <em>shortPaisOrigen</em>, <em>ciudadDestino</em>, <em>shortPaisDestino</em>, <em>oferta</em>, <em>imagenOferta</em> y <em>precioClaseTur</em>.
 	 *
-	 * @return the result set
-	 * @throws SQLException the SQL exception
-	 * @throws ClassNotFoundException the class not found exception
+	 * @return Un objeto ResultSet con los valores de los atributos relacionados con la oferta de un <code>ViajeCabecera</code> de cada uno de los <code>ViajeCabecera</code> existentes en la base de datos del sistema.
+	 * @throws SQLException Si existe algun error en el acceso a los datos de la base de datos.
+	 * @throws ClassNotFoundException Si no se encuentra ninguna definicion de la clase buscada.
 	 */
 	
 	public ResultSet consultarDatosOferta() throws SQLException, ClassNotFoundException;
-	
+		
 	/**
-	 * Consultar origenes y destinos.
+	 * Metodo de Persistencia de Datos que inserta un nuevo <code>ViajeCabecera</code> en la base de datos del sistema.
 	 *
-	 * @return the result set
-	 * @throws SQLException the SQL exception
-	 * @throws ClassNotFoundException the class not found exception
+	 * @param vC El objeto <code>ViajeCabecera</code>.
+	 * @throws SQLException Si existe algun error en el acceso a los datos de la base de datos.
+	 * @throws ClassNotFoundException Si no se encuentra ninguna definicion de la clase buscada.
 	 */
 	
-	public ResultSet consultarOrigenesYDestinos() throws SQLException, ClassNotFoundException;
-	
-	/**
-	 * Alta.
-	 *
-	 * @param vC the v c
-	 * @throws SQLException the SQL exception
-	 * @throws ClassNotFoundException the class not found exception
-	 */
 	public void alta(ViajeCabecera vC) throws SQLException, ClassNotFoundException;
 	
 	/**
-	 * Alta oferta.
+	 * Metodo de Persistencia de Datos que modifica en la base de datos del sistema los valores de los atributos del <code>ViajeCabecera</code> relacionados con la oferta, es decir, setea los atributos <em>oferta</em> e <em>imagenOferta</em> del <code>ViajeCabecera</code> pasado como parametro.
 	 *
-	 * @param vC the v c
-	 * @throws SQLException the SQL exception
-	 * @throws ClassNotFoundException the class not found exception
+	 * @param vC El objeto <code>ViajeCabecera</code> al cual se le modificaran los atributos relacionados con la oferta.
+	 * @throws SQLException Si existe algun error en el acceso a los datos de la base de datos.
+	 * @throws ClassNotFoundException Si no se encuentra ninguna definicion de la clase buscada.
 	 */
 	
 	public void altaOferta(ViajeCabecera vC) throws SQLException, ClassNotFoundException;
 	
 	/**
-	 * Baja.
+	 * Metodo de Persistencia de Datos que elimina un <code>ViajeCabecera</code> de la base de datos del sistema con el atributo <em>codViaje</em> pasado como parametro.
 	 *
-	 * @param codigoViaje the codigo viaje
-	 * @throws SQLException the SQL exception
-	 * @throws ClassNotFoundException the class not found exception
+	 * @param codigoViaje El atributo <em>codViaje</em> del ViajeCabecera a eliminar.
+	 * @throws SQLException Si existe algun error en el acceso a los datos de la base de datos.
+	 * @throws ClassNotFoundException Si no se encuentra ninguna definicion de la clase buscada.
 	 */
 	
 	public void baja(String codigoViaje) throws SQLException, ClassNotFoundException;
 	
 	/**
-	 * Baja oferta.
+	 * Metodo de Persistencia de Datos que modifica en la base de datos del sistema los valores de los atributos del <code>ViajeCabecera</code> relacionados con la oferta, es decir, resetea los atributos <em>oferta</em> e <em>imagenOferta</em> del <code>ViajeCabecera</code> pasado como parametro a sus valores iniciales.
 	 *
-	 * @param vC the v c
-	 * @throws SQLException the SQL exception
-	 * @throws ClassNotFoundException the class not found exception
+	 * @param vC El objeto <code>ViajeCabecera</code> al cual se le resetearan los atributos relacionados con la oferta.
+	 * @throws SQLException Si existe algun error en el acceso a los datos de la base de datos.
+	 * @throws ClassNotFoundException Si no se encuentra ninguna definicion de la clase buscada.
 	 */
 	
 	public void bajaOferta(ViajeCabecera vC) throws SQLException, ClassNotFoundException;	
 	
 	/**
-	 * Modificacion.
+	 * Metodo de Persistencia de Datos que modifica en la base de datos del sistema los valores de los atributos del <code>ViajeCabecera</code> con el atributo <em>codViaje</em> del objeto <code>ViajeCabecera</code> pasado como parametro.
 	 *
-	 * @param vC the v c
-	 * @throws SQLException the SQL exception
-	 * @throws ClassNotFoundException the class not found exception
+	 * @param vC El objeto <code>ViajeCabecera</code> con los nuevos valores en los atributos a modificar en la Entidad <code>ViajeCabecera</code> en la base de datos del sistema.
+	 * @throws SQLException Si existe algun error en el acceso a los datos de la base de datos.
+	 * @throws ClassNotFoundException Si no se encuentra ninguna definicion de la clase buscada.
 	 */
 	
 	public void modificacion(ViajeCabecera vC) throws SQLException, ClassNotFoundException;
 	
 	/**
-	 * Actualizar cupo.
+	 * Metodo de Persistencia de Datos que modifica el atributo <em>cupo</em> de un objeto <code>ViajeCabecera</code>, restandole el valor de dicho atributo en 1 (uno).
 	 *
-	 * @param vC the v c
-	 * @throws SQLException the SQL exception
-	 * @throws ClassNotFoundException the class not found exception
+	 * @param vC El objeto <code>ViajeCabecera</code> al cual se le modificara el atributo <em>cupo</em>.
+	 * @throws SQLException Si existe algun error en el acceso a los datos de la base de datos.
+	 * @throws ClassNotFoundException Si no se encuentra ninguna definicion de la clase buscada.
 	 */
 	
 	public void actualizarCupo(ViajeCabecera vC) throws SQLException, ClassNotFoundException;

@@ -4,8 +4,8 @@ package org.proyectofinal.bo.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.proyectofinal.bo.ex.DniNotValidException;
-import org.proyectofinal.bo.ex.NotValidPassengerException;
+import org.proyectofinal.bo.ex.PassengerNotValidException;
+import org.proyectofinal.bo.ex.PersonGenericNotValidDniException;
 import org.proyectofinal.bo.interfaces.PasajeroBo;
 import org.proyectofinal.dao.impl.PasajeroDaoImpl;
 import org.proyectofinal.dao.interfaces.PasajeroDao;
@@ -33,13 +33,13 @@ public class PasajeroBoImpl implements PasajeroBo {
 	 * @see org.proyectofinal.bo.interfaces.PasajeroBo#verificarDatosPasajero(org.proyectofinal.model.interfaces.Pasajero)
 	 */
 	
-	public void verificarDatosPasajero(Pasajero p) throws NotValidPassengerException {
+	public void verificarDatosPasajero(Pasajero p) throws PassengerNotValidException {
 		
 		if (p.getDni().length() == 0 || p.getDni() == null || 
 			p.getNombre().trim().length() == 0 ||  
 			p.getApellido().trim().length() == 0){ 
 			
-			throw new NotValidPassengerException();
+			throw new PassengerNotValidException();
 		}
 	}
 
@@ -48,10 +48,10 @@ public class PasajeroBoImpl implements PasajeroBo {
 	 */
 
 	@Override
-	public void verificarDniPasajero(Pasajero p) throws DniNotValidException {
+	public void verificarDniPasajero(Pasajero p) throws PersonGenericNotValidDniException {
 		
 		if (p.getDni().length() < 8){
-			throw new DniNotValidException();
+			throw new PersonGenericNotValidDniException();
 		}
 		
 	}
@@ -103,14 +103,17 @@ public class PasajeroBoImpl implements PasajeroBo {
 			
 			pDao.conectar();
 
-			ResultSet res = pDao.consultarPersonaGenericaPorDni(pasajero);
+			ResultSet res1 = pDao.consultarPersonaGenericaPorDni(pasajero);
+			ResultSet res2 = pDao.consultarPasajeroPorDni(pasajero.getDni());
 			
-			if (!res.next()){
+			if (!res1.next()){
 				pDao.altaPersonaGenerica(pasajero);
 			}
-						
-			pDao.altaPasajero(pasajero);
-	
+			
+			if (!res2.next()){
+				pDao.altaPasajero(pasajero);
+			}
+			
 			pDao.desconectar();
 			
 		} catch (ClassNotFoundException e) {

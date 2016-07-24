@@ -15,13 +15,13 @@ import org.proyectofinal.model.interfaces.ReservaViaje;
 public interface ReservaViajeDao {
 
 	/* (non-Javadoc)
-	 * @see org.proyectofinal.dao.abstracts.AbstractDao#conectar()
+	 * @see org.proyectofinal.dao.impl.ReservaViajeDaoImpl#conectar()
 	 */
 	
 	public void conectar() throws ClassNotFoundException, SQLException;
 	
 	/* (non-Javadoc)
-	 * @see org.proyectofinal.dao.abstracts.AbstractDao#desconectar()
+	 * @see org.proyectofinal.dao.impl.ReservaViajeDaoImpl#desconectar()
 	 */
 	
 	public void desconectar() throws SQLException;

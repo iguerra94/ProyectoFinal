@@ -1,6 +1,7 @@
 package org.proyectofinal.ui.plantillasUI;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
@@ -37,7 +38,7 @@ public class PlantillaDMP extends JDialog {
 		setModal(true);
 		getContentPane().setBackground(Color.WHITE);
 		setTitle("Recuperación de contraseña");
-		setBounds(200, 200, 337, 120);
+		setBounds(200, 200, 337, 130);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
 	}
@@ -49,8 +50,10 @@ public class PlantillaDMP extends JDialog {
 	}
 	
 	private void agregarLabels(){
-		JLabel lblIngreseSuUsuario = new JLabel("Ingrese su usuario:");
-		lblIngreseSuUsuario.setBounds(10, 15, 150, 30);
+		
+		JLabel lblIngreseSuUsuario = new JLabel("Nombre de usuario:");
+		lblIngreseSuUsuario.setBounds(12, 15, 150, 30);
+		lblIngreseSuUsuario.setFont(new Font("Roboto Regular", Font.BOLD, 14));
 		getContentPane().add(lblIngreseSuUsuario);
 	}
 
@@ -74,8 +77,9 @@ public class PlantillaDMP extends JDialog {
 			}
 		});
 		txtUsuario.setBounds(165, 15, 150, 30);
+		txtUsuario.setFont(new Font("Roboto Regular", Font.PLAIN, 14));
 		getContentPane().add(txtUsuario);
-		txtUsuario.setColumns(10);
+		
 	}
 
 	private void agregarBotones() {
@@ -89,7 +93,10 @@ public class PlantillaDMP extends JDialog {
 				}
 			}
 		});
-		btnRecuperar.setBounds(10, 55, 117, 25);
+		btnRecuperar.setBounds(12, 55, 117, 35);
+		btnRecuperar.setBackground(new Color(0,100,90));
+		btnRecuperar.setFont(new Font("Roboto Regular", Font.PLAIN, 16));
+		btnRecuperar.setForeground(Color.WHITE);
 		getContentPane().add(btnRecuperar);
 		
 		getRootPane().setDefaultButton(btnRecuperar);
@@ -131,4 +138,5 @@ public class PlantillaDMP extends JDialog {
 		txtUsuario.requestFocus();
 		txtUsuario.selectAll();
 	}
+
 }

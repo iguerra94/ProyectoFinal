@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import org.proyectofinal.dao.abstracts.AbstractDao;
 import org.proyectofinal.dao.interfaces.PersonaRegistradaDao;
 import org.proyectofinal.model.interfaces.PersonaRegistrada;
-import org.proyectofinal.model.interfaces.Usuario;
 
 /**
  * Implementacion de la Clase de Persistencia de Datos de la Entidad de Dominio <strong>PersonaRegistrada</strong>: <code>PersonaRegistradaDao</code>.
@@ -56,22 +55,7 @@ public class PersonaRegistradaDaoImpl extends AbstractDao implements PersonaRegi
 		
 		return resultado;
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.proyectofinal.dao.interfaces.PersonaRegistradaDao#consultarPorUsuario(org.proyectofinal.model.interfaces.Usuario)
-	 */
-
-	public ResultSet consultarPersonaRegistradaPorUsuario(Usuario u) throws ClassNotFoundException, SQLException {
-		
-		PreparedStatement sentencia = getConexion().prepareStatement("select * from Usuario u where u.usuario = ?");
-		
-		sentencia.setString(1, u.getNombreUsuario());
-
-		ResultSet resultado = sentencia.executeQuery();
-		
-		return resultado;
-	}
-		
+			
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.dao.interfaces.PersonaRegistradaDao#consultarPorDni(org.proyectofinal.model.interfaces.PersonaRegistrada)
 	 */
@@ -159,8 +143,6 @@ public class PersonaRegistradaDaoImpl extends AbstractDao implements PersonaRegi
 	@Override
 	public void modificacion(PersonaRegistrada pR) throws SQLException, ClassNotFoundException {
 
-		conectar();
-
 		PreparedStatement sentencia1 = getConexion().prepareStatement("update PersonaGenerica set nombre = ?, apellido = ? where dni = ?");
 		
 		sentencia1.setString(1, pR.getNombre());
@@ -175,8 +157,6 @@ public class PersonaRegistradaDaoImpl extends AbstractDao implements PersonaRegi
 		
 		sentencia1.executeUpdate();
 		sentencia2.executeUpdate();
-		
-		desconectar();
 	}
 
 	/* (non-Javadoc)
@@ -186,8 +166,6 @@ public class PersonaRegistradaDaoImpl extends AbstractDao implements PersonaRegi
 	@Override
 	public void modificarSaldo(Integer distancia, String dniPersona) throws SQLException, ClassNotFoundException {
 		
-		conectar();
-		
 		PreparedStatement sentencia = null;
 		
 		sentencia = getConexion().prepareStatement("update PersonaRegistrada set saldo = saldo + ? where dni = ?");
@@ -196,8 +174,6 @@ public class PersonaRegistradaDaoImpl extends AbstractDao implements PersonaRegi
 		sentencia.setString(2, dniPersona);
 		
 		sentencia.executeUpdate();
-	
-		desconectar();
 	}
 
 }

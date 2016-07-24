@@ -50,6 +50,7 @@ public class PlantillaDLF extends JDialog {
 	
 	private static final long serialVersionUID = 3529251422781102033L;
 
+	private JLabel lblAdvertenciaCodViaje;
 	private JTextField txtCodigoViaje;
 	List<String> codigos;
 	
@@ -149,39 +150,48 @@ public class PlantillaDLF extends JDialog {
 		lblCodigoDeViaje.setBounds(25, 20, 120, 30);
 		getContentPane().add(lblCodigoDeViaje);
 		
+		lblAdvertenciaCodViaje = new JLabel("SOLO NUMEROS. POR EJ: \"1000\"");
+		lblAdvertenciaCodViaje.setForeground(new Color(69, 90, 100));
+		lblAdvertenciaCodViaje.setBounds(150, 20, 210, 30);
+		
 		txtCodigoViaje = new JTextField();
-		txtCodigoViaje.setToolTipText("SOLO LETRAS MAYUSCULAS Y NUMEROS. POR EJ: \"AR 1024\"");
 		txtCodigoViaje.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
 				
 				if (txtCodigoViaje.getText().trim().length() > 0){
-					vC.setCodigoViaje(txtCodigoViaje.getText());						
+					vC.setCodigoViaje("AM " + txtCodigoViaje.getText());						
 				}else{
 					vC.setCodigoViaje("");
 				}
+			}
+			@Override
+			public void focusGained(FocusEvent e){
+				actualizarEtiquetaCodViaje();
 			}
 		});
 		txtCodigoViaje.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {
-				controlarTeclasAlfanumericas(e);
+				controlarTeclasNumericas(e);
 			}
 			@Override
 			public void keyReleased(KeyEvent e) {
 			
+				actualizarEtiquetaCodViaje();
+				
 				if (txtCodigoViaje.getText().trim().length() > 0){
 					
-					vC.setCodigoViaje(txtCodigoViaje.getText());						
+					vC.setCodigoViaje("AM " + txtCodigoViaje.getText());						
 					
 					for (String codigo : codigos) {
 						
-						if (txtCodigoViaje.getText().equals(codigo)) {
+						if (txtCodigoViaje.getText().equals(codigo.substring(3))) {
 							JOptionPane.showMessageDialog(null, "El vuelo ingresado ya existe. Ingrese otro Codigo de Viaje");
 							txtCodigoViaje.setText("");
 							vC.setCodigoViaje("");
 							break;
-						}						
+						}
 					}
 					
 				}else{
@@ -189,10 +199,23 @@ public class PlantillaDLF extends JDialog {
 				}
 			}
 		});
-		txtCodigoViaje.setBounds(145, 20, 190, 30);
+		txtCodigoViaje.setBounds(145, 20, 210, 30);
 		getContentPane().add(txtCodigoViaje);
 		
 		vC.setCodigoViaje("");
+	}
+	
+	private void actualizarEtiquetaCodViaje() {
+
+		if (txtCodigoViaje.getText().length() > 0){
+			getContentPane().remove(lblAdvertenciaCodViaje);
+		}else {
+			getContentPane().add(lblAdvertenciaCodViaje);
+			getContentPane().setComponentZOrder(lblAdvertenciaCodViaje, 1);
+		}
+		
+		getContentPane().validate();
+		getContentPane().repaint();
 	}
 	
 	private void agregarCodigoViajeAF(ViajeCabecera viaje) {
@@ -213,10 +236,10 @@ public class PlantillaDLF extends JDialog {
 		vC.setCodigoViaje(viaje.getCodigoViaje());
 	}
 	
-	private void controlarTeclasAlfanumericas(KeyEvent e) {
+	private void controlarTeclasNumericas(KeyEvent e) {
 		char c = e.getKeyChar();
 		
-		if ((c < '0' || c > '9') && (c < 'A' || c > 'Z') && (c != KeyEvent.VK_KP_LEFT) && c != (KeyEvent.VK_KP_RIGHT) && (c != KeyEvent.VK_SPACE) && (c != KeyEvent.VK_BACK_SPACE)){
+		if ((c < '0' || c > '9') && (c != KeyEvent.VK_KP_LEFT) && c != (KeyEvent.VK_KP_RIGHT) && (c != KeyEvent.VK_BACK_SPACE) || txtCodigoViaje.getText().length() == 4){
 			e.consume();
 		}
 	}
@@ -280,6 +303,7 @@ public class PlantillaDLF extends JDialog {
 			public void itemStateChanged(ItemEvent e) {
 
 				actualizarComboCiudadOrigen();
+				actualizarComboPlatOrigen();
 				cargarCiudadesOrigen();
 				
 				if (cmbPaisOrigen.getSelectedIndex() != 0){
@@ -431,7 +455,7 @@ public class PlantillaDLF extends JDialog {
 		String[] modelMinuto = new String[] {"00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"};
 
 		PaisUtil p = new PaisUtil(viaje.getPaisOrigen(), viaje.getShortPaisOrigen());
-		CiudadUtil c = new CiudadUtil(viaje.getCiudadOrigen(), viaje.getShortPaisOrigen());
+		CiudadUtil c = new CiudadUtil(viaje.getCiudadOrigen(), viaje.getShortPaisOrigen(), true);
 		PlataformaUtil pl = new PlataformaUtil(viaje.getPlataformaOrigen(), viaje.getCiudadOrigen());
 		
 		
@@ -444,6 +468,7 @@ public class PlantillaDLF extends JDialog {
 			public void itemStateChanged(ItemEvent e) {
 
 				actualizarComboCiudadOrigen();
+				actualizarComboPlatOrigen();
 				cargarCiudadesOrigen();
 				
 				if (cmbPaisOrigen.getSelectedIndex() != 0){
@@ -644,12 +669,12 @@ public class PlantillaDLF extends JDialog {
 		
 		List<CiudadUtil> listaModeloCiudades = new ArrayList<CiudadUtil>();
 
-		listaModeloCiudades.add(new CiudadUtil("", ""));
+		listaModeloCiudades.add(new CiudadUtil("", "", true));
 		
 		PaisUtil pais = (PaisUtil)cmbPaisOrigen.getSelectedItem();
 		
 		for (CiudadUtil c : ciudades.getListaCiudades()) {
-			if (c.getShortPais().equals( pais.getShortPais()) ){
+			if (c.getShortPais().equals( pais.getShortPais()) && c.getEnVuelos()){
 				listaModeloCiudades.add(c);
 			}
 		}
@@ -903,7 +928,7 @@ public class PlantillaDLF extends JDialog {
 		String[] modelMinuto = new String[] {"00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"};
 		
 		PaisUtil p = new PaisUtil(viaje.getPaisDestino(), viaje.getShortPaisDestino());
-		CiudadUtil c = new CiudadUtil(viaje.getCiudadDestino(), viaje.getShortPaisDestino());
+		CiudadUtil c = new CiudadUtil(viaje.getCiudadDestino(), viaje.getShortPaisDestino(), true);
 		PlataformaUtil pl = new PlataformaUtil(viaje.getPlataformaDestino(), viaje.getCiudadDestino());
 		
 		
@@ -1131,14 +1156,14 @@ public class PlantillaDLF extends JDialog {
 		
 		List<CiudadUtil> listaModeloCiudades = new ArrayList<CiudadUtil>();
 
-		listaModeloCiudades.add(new CiudadUtil("", ""));
+		listaModeloCiudades.add(new CiudadUtil("", "", true));
 		
 		PaisUtil pais = (PaisUtil)cmbPaisDestino.getSelectedItem();
 		
 		CiudadUtil ciudadOrigen = (CiudadUtil) cmbCiudadOrigen.getSelectedItem();
 		
 		for (CiudadUtil c : ciudades.getListaCiudades()) {
-			if (c.getShortPais().equals( pais.getShortPais()) && !c.getCiudad().equals(ciudadOrigen.getCiudad() )){
+			if (c.getShortPais().equals( pais.getShortPais()) && c.getEnVuelos() && !c.getCiudad().equals(ciudadOrigen.getCiudad() )){
 				listaModeloCiudades.add(c);
 			}
 		}
@@ -1763,8 +1788,8 @@ public class PlantillaDLF extends JDialog {
 
 	private void agregarCamposPanelInfoExtraAF(ViajeCabecera viaje) {
 
-		String[] modelHora = new String[] {"00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"};
-		String[] modelMinuto = new String[] {"00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"};
+		String[] modelHora = new String[] {"00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47"};
+		String[] modelMinuto = new String[] {"00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59"};
 		
 		txtDistancia = new JTextField(viaje.getDistancia().toString());
 		txtDistancia.addFocusListener(new FocusAdapter() {

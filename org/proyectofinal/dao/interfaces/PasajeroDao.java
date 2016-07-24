@@ -15,13 +15,13 @@ import org.proyectofinal.model.interfaces.Pasajero;
 public interface PasajeroDao {
 
 	/* (non-Javadoc)
-	 * @see org.proyectofinal.dao.abstracts.AbstractDao#conectar()
+	 * @see org.proyectofinal.dao.impl.PasajeroDaoImpl#conectar()
 	 */
 
 	public void conectar() throws ClassNotFoundException, SQLException;
 	
 	/* (non-Javadoc)
-	 * @see org.proyectofinal.dao.abstracts.AbstractDao#desconectar()
+	 * @see org.proyectofinal.dao.impl.PasajeroDaoImpl#desconectar()
 	 */
 	
 	public void desconectar() throws SQLException;

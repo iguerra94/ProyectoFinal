@@ -1,6 +1,7 @@
 package org.proyectofinal.ui.plantillasUI;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
@@ -26,13 +27,13 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.border.MatteBorder;
 
-import org.proyectofinal.bo.ex.DniNotValidException;
-import org.proyectofinal.bo.ex.EmailNotValidException;
 import org.proyectofinal.bo.ex.PersonAlreadyExistsException;
+import org.proyectofinal.bo.ex.PersonGenericNotValidDniException;
 import org.proyectofinal.bo.ex.PersonNotValidAgeException;
+import org.proyectofinal.bo.ex.PersonNotValidEmailException;
 import org.proyectofinal.bo.ex.PersonNotValidException;
 import org.proyectofinal.bo.ex.UserAlreadyExistsException;
 import org.proyectofinal.bo.ex.UserNotValidException;
@@ -68,7 +69,6 @@ public class PlantillaDR extends JDialog {
 	private JTextField txtNombreUsuario;
 	private JPasswordField txtContrasea;
 	private JButton btnRegistrarse;
-	private JButton btnCancelar;
 	private Usuario u;
 	private PersonaRegistrada p;
 	private UsuarioBo uBo;
@@ -82,94 +82,83 @@ public class PlantillaDR extends JDialog {
 		setTitle("Registrarse");
 		setModal(true);
 		setResizable(false);
-		setBounds(100, 100, 410, 490);
+		setBounds(100, 100, 424, 620);
 		setLocationRelativeTo(null);
 		getContentPane().setBackground(Color.WHITE);
 		getContentPane().setLayout(null);
 	}
 	
-	protected void agregarPanePersona(){
+	protected void agregarPanelPersona(){
 		
 		p = new PersonaRegistradaImpl();
+
+		JPanel panelEtiquetaPersona = new JPanel();
+		panelEtiquetaPersona.setBackground(Color.WHITE);
+		panelEtiquetaPersona.setLayout(null);
+		panelEtiquetaPersona.setBorder(new MatteBorder(0,0,1,0, new Color(27, 0, 136)));
+		panelEtiquetaPersona.setBounds(12, 10, 400, 40);
+		getContentPane().add(panelEtiquetaPersona);
 		
+		JLabel labelEtiquetaPersona = new JLabel("Datos Personales");
+		labelEtiquetaPersona.setFont(new Font("Roboto Light", Font.PLAIN, 18));
+		labelEtiquetaPersona.setForeground(new Color(27, 0, 136));
+		labelEtiquetaPersona.setBounds(10, 0, 400, 40);
+		panelEtiquetaPersona.add(labelEtiquetaPersona);
+	
 		panelDatosPersonales = new JPanel();
 		panelDatosPersonales.setBackground(Color.WHITE);
 		panelDatosPersonales.setLayout(null);
+		panelDatosPersonales.setBounds(12, 50, 400, 335);
 		getContentPane().add(panelDatosPersonales);
 		
 		agregarLabelsPanelPersona();
 		agregarCamposPanelPersona();
-		
-		JTabbedPane panePersona = new JTabbedPane(JTabbedPane.TOP);
-		panePersona.addTab("Datos Personales", null, panelDatosPersonales, null);	
-		panePersona.setBounds(12, 12, 390, 290);
-		getContentPane().add(panePersona);
 	}
 
 	private void agregarLabelsPanelPersona() {
-		
-		JLabel lblDni = new JLabel("* DNI: ");
-		lblDni.setBounds(20, 80, 170, 15);
-		panelDatosPersonales.add(lblDni);
-		
-		JLabel lblNombre = new JLabel("* Nombre: ");
-		lblNombre.setBounds(20, 20, 170, 15);
+
+		JLabel lblNombre = new JLabel("Nombre: ");
+		lblNombre.setBounds(20, 15, 170, 30);
+		lblNombre.setFont(new Font("Roboto Regular", Font.BOLD, 14));
 		panelDatosPersonales.add(lblNombre);
 			
-		JLabel lblApellido = new JLabel("* Apellido: ");
-		lblApellido.setBounds(20, 50, 170, 15);
+		JLabel lblApellido = new JLabel("Apellido: ");
+		lblApellido.setBounds(20, 55, 170, 30);
+		lblApellido.setFont(new Font("Roboto Regular", Font.BOLD, 14));
 		panelDatosPersonales.add(lblApellido);
+		
+		JLabel lblDni = new JLabel("DNI: ");
+		lblDni.setBounds(20, 95, 170, 30);
+		lblDni.setFont(new Font("Roboto Regular", Font.BOLD, 14));
+		panelDatosPersonales.add(lblDni);
 	
-		JLabel lblEmail = new JLabel("* Email: ");
-		lblEmail.setBounds(20, 110, 170, 15);
+		JLabel lblEmail = new JLabel("Email: ");
+		lblEmail.setBounds(20, 135, 170, 30);
+		lblEmail.setFont(new Font("Roboto Regular", Font.BOLD, 14));
 		panelDatosPersonales.add(lblEmail);
 
 		JLabel lblFechaDeNacimiento = new JLabel("Fecha de Nacimiento: ");
-		lblFechaDeNacimiento.setBounds(20, 140, 170, 15);
+		lblFechaDeNacimiento.setBounds(20, 175, 170, 30);
+		lblFechaDeNacimiento.setFont(new Font("Roboto Regular", Font.BOLD, 14));
 		panelDatosPersonales.add(lblFechaDeNacimiento);
 	
-		JLabel lblPais = new JLabel("Pais: ");
-		lblPais.setBounds(20, 200, 170, 15);
-		panelDatosPersonales.add(lblPais);
-	
 		JLabel lblTelefono = new JLabel("Telefono: ");
-		lblTelefono.setBounds(20, 170, 170, 15);
+		lblTelefono.setBounds(20, 215, 170, 30);
+		lblTelefono.setFont(new Font("Roboto Regular", Font.BOLD, 14));
 		panelDatosPersonales.add(lblTelefono);
-	
+		
+		JLabel lblPais = new JLabel("Pais: ");
+		lblPais.setBounds(20, 255, 170, 30);
+		lblPais.setFont(new Font("Roboto Regular", Font.BOLD, 14));
+		panelDatosPersonales.add(lblPais);
+		
 		JLabel lblCiudad = new JLabel("Ciudad: ");
-		lblCiudad.setBounds(20, 230, 170, 15);
+		lblCiudad.setBounds(20, 295, 170, 30);
+		lblCiudad.setFont(new Font("Roboto Regular", Font.BOLD, 14));
 		panelDatosPersonales.add(lblCiudad);
 	}
 
 	private void agregarCamposPanelPersona() {
-		
-		txtDni = new JTextField();
-		txtDni.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				
-				if (txtDni.getText().trim().length() > 0){
-					p.setDni(txtDni.getText());
-				}else{
-					p.setDni("");
-				}
-			}
-		});
-		txtDni.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent e) {				
-				controlarCaracteresNumericosDNI(e);
-			}
-			public void keyReleased(KeyEvent e){
-				if (txtDni.getText().trim().length() > 0){
-					p.setDni(txtDni.getText());
-				}else{
-					p.setDni("");
-				}
-			}
-		});
-		txtDni.setBounds(186, 75, 170, 25);
-		panelDatosPersonales.add(txtDni);
 	
 		txtNombre = new JTextField();
 		txtNombre.addFocusListener(new FocusAdapter() {
@@ -196,7 +185,8 @@ public class PlantillaDR extends JDialog {
 				}
 			}
 		});
-		txtNombre.setBounds(186, 15, 170, 25);
+		txtNombre.setBounds(186, 15, 180, 30);
+		txtNombre.setFont(new Font("Roboto Regular", Font.PLAIN, 14));
 		txtNombre.requestFocus();
 		panelDatosPersonales.add(txtNombre);
 	
@@ -225,8 +215,38 @@ public class PlantillaDR extends JDialog {
 				}
 			}
 		});
-		txtApellido.setBounds(186, 45, 170, 25);
+		txtApellido.setBounds(186, 55, 180, 30);
+		txtApellido.setFont(new Font("Roboto Regular", Font.PLAIN, 14));
 		panelDatosPersonales.add(txtApellido);		
+		
+		txtDni = new JTextField();
+		txtDni.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				
+				if (txtDni.getText().trim().length() > 0){
+					p.setDni(txtDni.getText());
+				}else{
+					p.setDni("");
+				}
+			}
+		});
+		txtDni.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {				
+				controlarCaracteresNumericosDNI(e);
+			}
+			public void keyReleased(KeyEvent e){
+				if (txtDni.getText().trim().length() > 0){
+					p.setDni(txtDni.getText());
+				}else{
+					p.setDni("");
+				}
+			}
+		});
+		txtDni.setBounds(186, 95, 180, 30);
+		txtDni.setFont(new Font("Roboto Regular", Font.PLAIN, 14));
+		panelDatosPersonales.add(txtDni);
 		
 		txtEmail = new JTextField();
 		txtEmail.addFocusListener(new FocusAdapter() {
@@ -251,9 +271,33 @@ public class PlantillaDR extends JDialog {
 			}
 			
 		});
-		txtEmail.setBounds(186, 105, 170, 25);
+		txtEmail.setBounds(186, 135, 180, 30);
+		txtEmail.setFont(new Font("Roboto Regular", Font.PLAIN, 14));
 		panelDatosPersonales.add(txtEmail);
 
+		now = new java.util.Date();
+		
+		birthDateChooser = new JDateChooser();
+		birthDateChooser.setDate(now);
+		birthDateChooser.addPropertyChangeListener(new PropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				establecerFecha();
+			}
+		});
+		birthDateChooser.setBounds(186, 175, 180, 30);
+		birthDateChooser.setFont(new Font("Roboto Regular", Font.PLAIN, 14));
+		panelDatosPersonales.add(birthDateChooser);
+	
+		JButton btnMayorDeEdad = new JButton("<html>?</html>");
+		btnMayorDeEdad.setToolTipText("Debes ser mayor de 18 años para poder registrarte en el sistema.");
+		btnMayorDeEdad.setForeground(new Color(27,0,136));
+		btnMayorDeEdad.setContentAreaFilled(false);
+		btnMayorDeEdad.setBorderPainted(false);
+		btnMayorDeEdad.setBounds(366, 175, 34, 30);
+		btnMayorDeEdad.setFont(new Font("Roboto Regular", Font.BOLD, 14));
+		panelDatosPersonales.add(btnMayorDeEdad);
+		
 		txtTelefono = new JTextField();
 		txtTelefono.addFocusListener(new FocusAdapter() {
 			@Override
@@ -279,32 +323,12 @@ public class PlantillaDR extends JDialog {
 				}
 			}
 		});
-		txtTelefono.setBounds(186, 165, 170, 25);
+		txtTelefono.setBounds(186, 215, 180, 30);
+		txtTelefono.setFont(new Font("Roboto Regular", Font.PLAIN, 14));
 		panelDatosPersonales.add(txtTelefono);
-
-		now = new java.util.Date();
-		
-		birthDateChooser = new JDateChooser();
-		birthDateChooser.setDate(now);
-		birthDateChooser.addPropertyChangeListener(new PropertyChangeListener() {
-			@Override
-			public void propertyChange(PropertyChangeEvent evt) {
-				establecerFecha();
-			}
-		});
-		birthDateChooser.setBounds(186, 135, 170, 25);
-		panelDatosPersonales.add(birthDateChooser);
-	
-		JButton btnMayorDeEdad = new JButton("<html><strong>?</strong></html>");
-		btnMayorDeEdad.setToolTipText("Debes ser mayor de 18 años para poder registrarte en el sistema.");
-		btnMayorDeEdad.setForeground(Color.BLUE);
-		btnMayorDeEdad.setContentAreaFilled(false);
-		btnMayorDeEdad.setBorderPainted(false);
-		btnMayorDeEdad.setBounds(353, 135, 31, 24);
-		panelDatosPersonales.add(btnMayorDeEdad);
 		
 		cmbPais = new JComboBox<PaisUtil>();
-		cmbPais.setBounds(186, 195, 170, 25);
+		cmbPais.setBounds(186, 255, 180, 30);
 		cmbPais.addItemListener(new ItemListener() {
 			
 			@Override
@@ -322,10 +346,11 @@ public class PlantillaDR extends JDialog {
 				}
 			}
 		});
+		cmbPais.setFont(new Font("Roboto Regular", Font.PLAIN, 14));
 		panelDatosPersonales.add(cmbPais);
 		
 		cmbCiudad = new JComboBox<CiudadUtil>();
-		cmbCiudad.setBounds(186, 225, 170, 25);
+		cmbCiudad.setBounds(186, 295, 180, 30);
 		cmbCiudad.setEnabled(false);
 		cmbCiudad.addItemListener(new ItemListener() {
 			
@@ -339,6 +364,7 @@ public class PlantillaDR extends JDialog {
 				}
 			}
 		});
+		cmbCiudad.setFont(new Font("Roboto Regular", Font.PLAIN, 14));
 		panelDatosPersonales.add(cmbCiudad);
 		
 		p.setDni("");
@@ -348,33 +374,50 @@ public class PlantillaDR extends JDialog {
 		p.setTelefono("");
 	}
 	
-	protected void agregarPaneUsuario(){
+	
+	protected void agregarPanelUsuario(){
 		
 		u = new UsuarioImpl();
+		
+		JPanel panelEtiquetaUsuario = new JPanel();
+		panelEtiquetaUsuario.setBackground(Color.WHITE);
+		panelEtiquetaUsuario.setLayout(null);
+		panelEtiquetaUsuario.setBorder(new MatteBorder(0,0,1,0, new Color(27, 0, 136)));
+		panelEtiquetaUsuario.setBounds(12, 400, 400, 40);
+		getContentPane().add(panelEtiquetaUsuario);
+		
+		JLabel labelEtiquetaUsuario = new JLabel("Datos del Usuario");
+		labelEtiquetaUsuario.setFont(new Font("Roboto Light", Font.PLAIN, 18));
+		labelEtiquetaUsuario.setForeground(new Color(27, 0, 136));
+		labelEtiquetaUsuario.setBounds(10, 0, 400, 40);
+		panelEtiquetaUsuario.add(labelEtiquetaUsuario);
+	
 		
 		panelDatosUsuario = new JPanel();
 		panelDatosUsuario.setBackground(Color.WHITE);
 		panelDatosUsuario.setLayout(null);
+		panelDatosUsuario.setBounds(12, 440, 400, 95);
+		getContentPane().add(panelDatosUsuario);
 
 		agregarLabelsPaneUsuario();
 		agregarCamposPaneUsuario();
 		
-		JTabbedPane paneUsuario = new JTabbedPane(JTabbedPane.TOP);
-		paneUsuario.addTab("Datos del usuario", null, panelDatosUsuario, null);	
-		paneUsuario.setBounds(12, 315, 390, 120);
-		getContentPane().add(paneUsuario);
 	}
+	
 	
 	private void agregarLabelsPaneUsuario() {
 		
-		JLabel lblNombreUsuario = new JLabel("* Nombre de usuario: ");
-		lblNombreUsuario.setBounds(20, 20, 170, 15);
+		JLabel lblNombreUsuario = new JLabel("Nombre de usuario: ");
+		lblNombreUsuario.setBounds(20, 15, 170, 30);
+		lblNombreUsuario.setFont(new Font("Roboto Regular", Font.BOLD, 14));
 		panelDatosUsuario.add(lblNombreUsuario);
 		
-		JLabel lblContrasea = new JLabel("* Contraseña: ");
-		lblContrasea.setBounds(20, 50, 170, 15);
+		JLabel lblContrasea = new JLabel("Contraseña: ");
+		lblContrasea.setBounds(20, 55, 170, 30);
+		lblContrasea.setFont(new Font("Roboto Regular", Font.BOLD, 14));
 		panelDatosUsuario.add(lblContrasea);
 	}
+	
 
 	private void agregarCamposPaneUsuario() {
 		
@@ -399,7 +442,8 @@ public class PlantillaDR extends JDialog {
 				}
 			}
 		});
-		txtNombreUsuario.setBounds(186, 15, 170, 25);
+		txtNombreUsuario.setBounds(186, 15, 180, 30);
+		txtNombreUsuario.setFont(new Font("Roboto Regular", Font.PLAIN, 14));
 		panelDatosUsuario.add(txtNombreUsuario);
 	
 		txtContrasea = new JPasswordField();
@@ -428,13 +472,15 @@ public class PlantillaDR extends JDialog {
 				}
 			}
 		});
-		txtContrasea.setBounds(186, 45, 170, 25);
+		txtContrasea.setBounds(186, 55, 180, 30);
+		txtContrasea.setFont(new Font("Roboto Regular", Font.PLAIN, 14));
 		panelDatosUsuario.add(txtContrasea);
 		
 		u.setNombreUsuario("");
 		u.setPassword("");
 	}
 
+	
 	protected void agregarBotones(){
 		
 		btnRegistrarse = new JButton("Registrarse");
@@ -448,23 +494,13 @@ public class PlantillaDR extends JDialog {
 			
 			}
 		});
-		btnRegistrarse.setBounds(12, 435, 174, 25);
+		btnRegistrarse.setBounds(20, 545, 170, 40);
+		btnRegistrarse.setBackground(new Color(0,100,90));
+		btnRegistrarse.setFont(new Font("Roboto Regular", Font.PLAIN, 18));
+		btnRegistrarse.setForeground(Color.WHITE);
 		getContentPane().add(btnRegistrarse);
 		
 		getRootPane().setDefaultButton(btnRegistrarse);
-
-		btnCancelar = new JButton("Cancelar");
-		btnCancelar.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-			
-				if (e.getSource() == btnCancelar){
-					dispose();
-				}
-			}
-		});
-		btnCancelar.setBounds(270, 435, 117, 25);
-		getContentPane().add(btnCancelar);
 	}
 	
 	private void controlarCaracteresLetras(KeyEvent e) {
@@ -522,7 +558,8 @@ public class PlantillaDR extends JDialog {
 			pBo.verificarEmail(p);
 			pBo.verificarEdad(p);
 			
-			pBo.controlarExistenciaUsuarioYPersona(p);
+			uBo.controlarExistenciaUsuario(p.getUsuario());
+			pBo.controlarExistenciaPersona(p);
 			
 			uBo.registrarUsuario(u);
 			pBo.registrarPersona(p);
@@ -533,9 +570,9 @@ public class PlantillaDR extends JDialog {
 			
 		} catch (UserNotValidException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
-		} catch (DniNotValidException e) {
+		} catch (PersonGenericNotValidDniException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
-		} catch (EmailNotValidException e) {
+		} catch (PersonNotValidEmailException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
 		} catch (PersonNotValidAgeException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
@@ -595,7 +632,7 @@ public class PlantillaDR extends JDialog {
 		
 		List<CiudadUtil> listaModeloCiudades = new ArrayList<CiudadUtil>();
 
-		listaModeloCiudades.add(new CiudadUtil("", ""));
+		listaModeloCiudades.add(new CiudadUtil("", "", false));
 		
 		PaisUtil pais = (PaisUtil)cmbPais.getSelectedItem();
 		

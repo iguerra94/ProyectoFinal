@@ -39,8 +39,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 
-import org.proyectofinal.bo.ex.EmailNotValidException;
-import org.proyectofinal.bo.ex.NotEqualPasswordException;
+import org.proyectofinal.bo.ex.PersonNotValidEmailException;
+import org.proyectofinal.bo.ex.UserNotEqualPasswordException;
 import org.proyectofinal.bo.ex.UserNotExistsException;
 import org.proyectofinal.bo.impl.PersonaRegistradaBoImpl;
 import org.proyectofinal.bo.impl.ReservaViajeBoImpl;
@@ -706,7 +706,7 @@ public class PlantillaDP extends JDialog {
 						}
 					}
 				
-				} catch (EmailNotValidException e2) {
+				} catch (PersonNotValidEmailException e2) {
 					JOptionPane.showMessageDialog(null, e2.getMessage());
 				}
 
@@ -812,7 +812,7 @@ public class PlantillaDP extends JDialog {
 						
 						limpiarContrasenia();
 					
-					} catch (NotEqualPasswordException e1) {
+					} catch (UserNotEqualPasswordException e1) {
 						JOptionPane.showMessageDialog(null, e1.getMessage());
 						limpiarContrasenia();
 					} catch (UserNotExistsException e1) {

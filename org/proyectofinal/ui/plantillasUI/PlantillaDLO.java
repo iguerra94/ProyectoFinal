@@ -26,6 +26,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.proyectofinal.bo.ex.ViajeCabeceraOfferDiscountNotValidException;
 import org.proyectofinal.bo.ex.ViajeCabeceraOfferNotValidException;
 import org.proyectofinal.bo.impl.ViajeCabeceraBoImpl;
 import org.proyectofinal.bo.interfaces.ViajeCabeceraBo;
@@ -141,7 +142,7 @@ public class PlantillaDLO extends JDialog {
 	}
 
 	private void agregarLabelsPanelOferta() {
-		JLabel label5 = new JLabel("Oferta: ");
+		JLabel label5 = new JLabel("Descuento de Oferta: ");
 		label5.setBounds(20, 30, 130, 30);
 		panelOferta.add(label5);
 		
@@ -181,7 +182,7 @@ public class PlantillaDLO extends JDialog {
 
 			}
 		});
-		txtOferta.setToolTipText("DEBE SER UN NUMERO ENTRE 0 Y 1. POR EJ: 0.1");
+		txtOferta.setToolTipText("DEBE SER UN NUMERO MAYOR A 0.0 Y MENOR A 0.76. POR EJ: 0.1");
 		panelOferta.add(txtOferta);
 		
 		txtImagen = new JTextField();
@@ -268,6 +269,7 @@ public class PlantillaDLO extends JDialog {
 				try {
 					
 					vCBo.verificarOferta(vC);
+					vCBo.verificarDescuentoOferta(vC);
 	
 					vCBo.cargarOferta(vC);
 					
@@ -278,6 +280,8 @@ public class PlantillaDLO extends JDialog {
 					continuarCargando();
 					
 				} catch (ViajeCabeceraOfferNotValidException e1) {
+					JOptionPane.showMessageDialog(null, e1.getMessage());
+				} catch (ViajeCabeceraOfferDiscountNotValidException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage());
 				}
 		

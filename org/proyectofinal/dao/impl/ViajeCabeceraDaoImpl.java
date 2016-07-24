@@ -42,6 +42,19 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 	}
 
 	/* (non-Javadoc)
+	 * @see org.proyectofinal.dao.interfaces.ViajeCabeceraDao#consultarVuelos()
+	 */
+	
+	public ResultSet consultarVuelos() throws SQLException {
+		
+		PreparedStatement sentencia = getConexion().prepareStatement("SELECT * FROM ViajeCabecera");
+		
+		ResultSet resultado = sentencia.executeQuery();
+		
+		return resultado;
+	}
+	
+	/* (non-Javadoc)
 	 * @see org.proyectofinal.dao.interfaces.ViajeCabeceraDao#consultarPorCodigoViaje(java.lang.String)
 	 */
 
@@ -133,9 +146,11 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 	 * @see org.proyectofinal.dao.interfaces.ViajeCabeceraDao#consultarDestinos()
 	 */
 	
-	public ResultSet consultarDestinos() throws ClassNotFoundException, SQLException {
+	public ResultSet consultarDestinos(String ciudadOrigen) throws ClassNotFoundException, SQLException {
 		
-		PreparedStatement sentencia = getConexion().prepareStatement("SELECT DISTINCT ciudadDestino, shortPaisDestino FROM ViajeCabecera");
+		PreparedStatement sentencia = getConexion().prepareStatement("SELECT DISTINCT ciudadDestino, shortPaisDestino FROM ViajeCabecera where ciudadOrigen = ?");
+		
+		sentencia.setString(1, ciudadOrigen);
 		
 		ResultSet resultado = sentencia.executeQuery();
 		
@@ -156,26 +171,10 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 	}
 	
 	/* (non-Javadoc)
-	 * @see org.proyectofinal.dao.interfaces.ViajeCabeceraDao#consultarOrigenesYDestinos()
-	 */
-	
-	@Override
-	public ResultSet consultarOrigenesYDestinos() throws SQLException, ClassNotFoundException {
-
-		PreparedStatement sentencia = getConexion().prepareStatement("SELECT DISTINCT ciudadOrigen, shortPaisOrigen, ciudadDestino, shortPaisDestino, oferta FROM ViajeCabecera");
-		
-		ResultSet resultado = sentencia.executeQuery();
-	
-		return resultado;		
-	}
-
-	/* (non-Javadoc)
 	 * @see org.proyectofinal.dao.interfaces.ViajeCabeceraDao#alta(org.proyectofinal.model.interfaces.ViajeCabecera)
 	 */
 	
 	public void alta(ViajeCabecera vC) throws SQLException, ClassNotFoundException{
-		
-		conectar();
 		
 		PreparedStatement sentencia = getConexion().prepareStatement("INSERT INTO ViajeCabecera VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 		
@@ -202,10 +201,7 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		sentencia.setString(21, vC.getImagen2());
 		sentencia.setInt(22, vC.getCupo());
 
-		
 		sentencia.executeUpdate();
-	
-		desconectar();
 	}
 
 	/* (non-Javadoc)
@@ -215,23 +211,16 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 	@Override
 	public void altaOferta(ViajeCabecera vC) throws SQLException, ClassNotFoundException {
 		
-		conectar();			
-		
-		PreparedStatement sentencia = null;
-		
-		sentencia = getConexion().prepareStatement("update ViajeCabecera set oferta = ?, imagenOferta = ? where ciudadOrigen = ? and shortPaisOrigen = ? and ciudadDestino = ? and shortPaisDestino = ?");
+		PreparedStatement sentencia = getConexion().prepareStatement("update ViajeCabecera set oferta = ?, imagenOferta = ? where ciudadOrigen = ? and shortPaisOrigen = ? and ciudadDestino = ? and shortPaisDestino = ?");
 
 		sentencia.setString(1, vC.getOferta());
-		sentencia.setString(2, vC.getImagenOferta());
-		
+		sentencia.setString(2, vC.getImagenOferta());	
 		sentencia.setString(3, vC.getCiudadOrigen());
 		sentencia.setString(4, vC.getShortPaisOrigen());
 		sentencia.setString(5, vC.getCiudadDestino());
 		sentencia.setString(6, vC.getShortPaisDestino());
 	
-		sentencia.executeUpdate();
-		
-		desconectar();
+		sentencia.executeUpdate();	
 	}
 
 	/* (non-Javadoc)
@@ -240,15 +229,11 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 	
 	public void baja(String codigoViaje) throws SQLException, ClassNotFoundException{
 		
-		conectar();
-		
 		PreparedStatement sentencia = getConexion().prepareStatement("DELETE FROM ViajeCabecera WHERE codViaje = ?");
 		
 		sentencia.setString(1, codigoViaje);
 		
 		sentencia.executeUpdate();
-	
-		desconectar();
 	}
 
 	/* (non-Javadoc)
@@ -258,11 +243,7 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 	@Override
 	public void bajaOferta(ViajeCabecera vC) throws SQLException, ClassNotFoundException {
 		
-		conectar();
-		
-		PreparedStatement sentencia = null;
-		
-		sentencia = getConexion().prepareStatement("update ViajeCabecera set oferta = 0, imagenOferta = '' where ciudadOrigen = ? and shortPaisOrigen = ? and ciudadDestino = ? and shortPaisDestino = ?");
+		PreparedStatement sentencia = getConexion().prepareStatement("update ViajeCabecera set oferta = 0, imagenOferta = '' where ciudadOrigen = ? and shortPaisOrigen = ? and ciudadDestino = ? and shortPaisDestino = ?");
 		
 		sentencia.setString(1, vC.getCiudadOrigen());
 		sentencia.setString(2, vC.getShortPaisOrigen());
@@ -270,8 +251,6 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		sentencia.setString(4, vC.getShortPaisDestino());
 
 		sentencia.executeUpdate();
-	
-		desconectar();
 	}
 	
 	/* (non-Javadoc)
@@ -279,8 +258,6 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 	 */
 	
 	public void modificacion(ViajeCabecera vC) throws SQLException, ClassNotFoundException{
-		
-		conectar();			
 		
 		PreparedStatement sentencia = null;
 		
@@ -315,8 +292,6 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 		sentencia.setString(22, vC.getCodigoViaje());
 		
 		sentencia.executeUpdate();
-		
-		desconectar();
 	}
 
 	/* (non-Javadoc)
@@ -325,17 +300,11 @@ public class ViajeCabeceraDaoImpl extends AbstractDao implements ViajeCabeceraDa
 	
 	public void actualizarCupo(ViajeCabecera vC) throws SQLException, ClassNotFoundException{
 		
-		conectar();
-		
-		PreparedStatement sentencia = null;
-		
-		sentencia = getConexion().prepareStatement("update ViajeCabecera set cupo = cupo -1 where codViaje = ?");
+		PreparedStatement sentencia = getConexion().prepareStatement("update ViajeCabecera set cupo = cupo -1 where codViaje = ?");
 		
 		sentencia.setString(1, vC.getCodigoViaje());
 		
 		sentencia.executeUpdate();
-	
-		desconectar();
 	}
 
 }

@@ -14,7 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
-import org.proyectofinal.bo.ex.NotOffersFoundException;
+import org.proyectofinal.bo.ex.ViajeCabeceraOfferNotFoundException;
 import org.proyectofinal.bo.impl.ViajeCabeceraBoImpl;
 import org.proyectofinal.bo.interfaces.ViajeCabeceraBo;
 import org.proyectofinal.model.impl.ViajeCabeceraImpl;
@@ -161,7 +161,7 @@ public class PlantillaDRO extends JDialog {
 					dro.setVisible(true);
 				}
 		
-			} catch (NotOffersFoundException e1) {
+			} catch (ViajeCabeceraOfferNotFoundException e1) {
 				JOptionPane.showMessageDialog(null, e1.getMessage());
 			}
 			

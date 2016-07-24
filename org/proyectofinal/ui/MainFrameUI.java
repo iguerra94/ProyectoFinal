@@ -7,6 +7,7 @@ import java.awt.event.WindowFocusListener;
 import java.awt.event.WindowListener;
 import java.util.List;
 
+import org.proyectofinal.bo.ex.ViajeCabeceraNotFoundException;
 import org.proyectofinal.bo.impl.ViajeCabeceraBoImpl;
 import org.proyectofinal.bo.interfaces.ViajeCabeceraBo;
 import org.proyectofinal.model.interfaces.ViajeCabecera;
@@ -16,11 +17,25 @@ public class MainFrameUI extends PlantillaMF implements WindowListener, WindowFo
 	
 	private static final long serialVersionUID = -1621781631832124940L;
 
+	private List<ViajeCabecera> listaViajes = null;
+	
 	public MainFrameUI() {
 		
 		inicializarAtributos();
 		inicializarComponentes();
+
+		ViajeCabeceraBo vCBo = new ViajeCabeceraBoImpl();
 		
+		try {
+
+			List<ViajeCabecera> listViajes = vCBo.consultarVuelos();
+			
+			this.setListaViajes(listViajes);
+		
+		} catch (ViajeCabeceraNotFoundException e) {
+//			JOptionPane.showMessageDialog(null, e.getMessage());
+		}
+
 		addWindowListener(this);
 		addWindowFocusListener(this);
 		addComponentListener(this);
@@ -28,15 +43,29 @@ public class MainFrameUI extends PlantillaMF implements WindowListener, WindowFo
 
 	@Override
 	public void windowGainedFocus(WindowEvent e) {
-		
+
 		ViajeCabeceraBo vCBo = new ViajeCabeceraBoImpl();
+
+		List<ViajeCabecera> listaOfertas = vCBo.retornarListaOfertas();
 		
-		List<ViajeCabecera> listaViajes = vCBo.retornarListaOfertas();
-		
-		cargarOfertas(listaViajes);        
+		cargarOfertas(listaOfertas);        
 		
 		getPanelOfertas().validate();
 		getPanelOfertas().repaint();
+		
+		try {
+
+			List<ViajeCabecera> listViajes = vCBo.consultarVuelos();
+			
+			if (listViajes.size() != getListaViajes().size()){
+				cargarComboBoxOrigen();
+			}
+			
+		} catch (ViajeCabeceraNotFoundException e1) {
+//			JOptionPane.showMessageDialog(null, e1.getMessage());
+		}
+
+
 	}
 
 	@Override
@@ -96,6 +125,14 @@ public class MainFrameUI extends PlantillaMF implements WindowListener, WindowFo
 
 	@Override
 	public void componentHidden(ComponentEvent e) {
+	}
+
+	public List<ViajeCabecera> getListaViajes() {
+		return listaViajes;
+	}
+
+	public void setListaViajes(List<ViajeCabecera> listaViajes) {
+		this.listaViajes = listaViajes;
 	}
 	
 }

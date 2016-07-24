@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.proyectofinal.bo.ex.NotValidBookingException;
+import org.proyectofinal.bo.ex.BookingNotValidException;
 import org.proyectofinal.bo.interfaces.PasajeroBo;
 import org.proyectofinal.bo.interfaces.ReservaViajeBo;
 import org.proyectofinal.bo.interfaces.ViajeCabeceraBo;
@@ -36,8 +36,8 @@ public class ReservaViajeBoImpl implements ReservaViajeBo {
 	 * @see org.proyectofinal.bo.interfaces.ReservaViajeBo#verificarReserva(org.proyectofinal.model.interfaces.ReservaViaje)
 	 */
 	
-	public void verificarReserva(ReservaViaje rV) throws NotValidBookingException {
-		if (rV.getAsiento() == -1){ throw new NotValidBookingException(); }
+	public void verificarReserva(ReservaViaje rV) throws BookingNotValidException {
+		if (rV.getAsiento() == -1){ throw new BookingNotValidException(); }
 	}
 
 	/* (non-Javadoc)
@@ -159,7 +159,13 @@ public class ReservaViajeBoImpl implements ReservaViajeBo {
 		ReservaViajeDao rVDao = new ReservaViajeDaoImpl();
 		
 		try {
+			
+			rVDao.conectar();
+			
 			rVDao.alta(reservaViaje);
+			
+			rVDao.desconectar();
+			
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {

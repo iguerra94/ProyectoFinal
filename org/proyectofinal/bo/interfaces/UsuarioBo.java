@@ -1,6 +1,7 @@
 package org.proyectofinal.bo.interfaces;
 
-import org.proyectofinal.bo.ex.NotEqualPasswordException;
+import org.proyectofinal.bo.ex.UserAlreadyExistsException;
+import org.proyectofinal.bo.ex.UserNotEqualPasswordException;
 import org.proyectofinal.bo.ex.UserNotExistsException;
 import org.proyectofinal.bo.ex.UserNotValidException;
 import org.proyectofinal.model.interfaces.Usuario;
@@ -46,10 +47,10 @@ public interface UsuarioBo {
 	 *
 	 * @param nueva La nueva contrasenia.
 	 * @param confirmar La contrasenia a la que se quiere comparar con la nueva contrasenia.
-	 * @throws NotEqualPasswordException Si las contrasenias pasadas como parametro no coinciden.
+	 * @throws UserNotEqualPasswordException Si las contrasenias pasadas como parametro no coinciden.
 	 */
 	
-	public void controlarNuevaContrasenia(char[] nueva, char[] confirmar) throws NotEqualPasswordException;
+	public void controlarNuevaContrasenia(char[] nueva, char[] confirmar) throws UserNotEqualPasswordException;
 	
 	/**
 	 * Metodo de negocio que se conecta con el objeto DAO <code>Usuario</code> y retorna un objeto <code>Usuario</code> con todos sus atributos.
@@ -80,6 +81,15 @@ public interface UsuarioBo {
 	
 	public String recuperarPass(String usuario) throws UserNotExistsException;
 
+	/**
+	 * Metodo de negocio que se conecta con el objeto DAO <code>Usuario</code> para verificar la existencia en la base de datos del sistema del objeto <code>Usuario</code> pasado como parametro.
+	 *
+	 * @param u El objeto <code>Usuario</code>.
+	 * @throws UserAlreadyExistsException Si el objeto <code>Usuario</code> ya existe en la base de datos del sistema.
+	 */
+	
+	public void controlarExistenciaUsuario(Usuario u) throws UserAlreadyExistsException;
+	
 	/**
 	 * Metodo de negocio que se conecta con el objeto DAO <code>Usuario</code> para insertar un nuevo objeto <code>Usuario</code> en la base de datos del sistema.
 	 *

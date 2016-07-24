@@ -93,8 +93,6 @@ public class ReservaViajeDaoImpl extends AbstractDao implements ReservaViajeDao 
 	
 	public void alta(ReservaViaje rV) throws SQLException, ClassNotFoundException{
 		
-		conectar();
-		
 		PreparedStatement sentencia = getConexion().prepareStatement("INSERT INTO ReservaViaje (codViaje, dniPasajero, fechaReserva, dniPersona, asiento, precio) VALUES (?,?,?,?,?,?)");
 		
 		sentencia.setString(1, rV.getViaje().getCodigoViaje());
@@ -105,8 +103,6 @@ public class ReservaViajeDaoImpl extends AbstractDao implements ReservaViajeDao 
 		sentencia.setFloat(6, rV.getPrecio());
 		
 		sentencia.executeUpdate();
-
-		desconectar();
 	}
 	
 }

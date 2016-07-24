@@ -77,6 +77,7 @@ public class PasajeroDaoImpl extends AbstractDao implements PasajeroDao {
 	
 	@Override
 	public void altaPersonaGenerica(Pasajero p) throws SQLException {
+
 		PreparedStatement sentencia1 = getConexion().prepareStatement("insert into PersonaGenerica (dni, nombre, apellido) VALUES (?,?,?)");
 
 		sentencia1.setString(1, p.getDni());

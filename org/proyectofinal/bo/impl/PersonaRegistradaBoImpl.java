@@ -4,12 +4,11 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.proyectofinal.bo.ex.DniNotValidException;
-import org.proyectofinal.bo.ex.EmailNotValidException;
 import org.proyectofinal.bo.ex.PersonAlreadyExistsException;
+import org.proyectofinal.bo.ex.PersonGenericNotValidDniException;
 import org.proyectofinal.bo.ex.PersonNotValidAgeException;
+import org.proyectofinal.bo.ex.PersonNotValidEmailException;
 import org.proyectofinal.bo.ex.PersonNotValidException;
-import org.proyectofinal.bo.ex.UserAlreadyExistsException;
 import org.proyectofinal.bo.interfaces.PersonaRegistradaBo;
 import org.proyectofinal.dao.impl.PersonaRegistradaDaoImpl;
 import org.proyectofinal.dao.interfaces.PersonaRegistradaDao;
@@ -71,10 +70,10 @@ public class PersonaRegistradaBoImpl implements PersonaRegistradaBo {
 	 * @see org.proyectofinal.bo.interfaces.PersonaRegistradaBo#verificarDni(org.proyectofinal.model.interfaces.PersonaRegistrada)
 	 */
 	
-	public void verificarDni(PersonaRegistrada p) throws DniNotValidException {
+	public void verificarDni(PersonaRegistrada p) throws PersonGenericNotValidDniException {
 		
 		if (p.getDni().length() < 8){
-			throw new DniNotValidException();
+			throw new PersonGenericNotValidDniException();
 		}
 		
 	}
@@ -83,10 +82,10 @@ public class PersonaRegistradaBoImpl implements PersonaRegistradaBo {
 	 * @see org.proyectofinal.bo.interfaces.PersonaRegistradaBo#verificarEmail(org.proyectofinal.model.interfaces.PersonaRegistrada)
 	 */
 	
-	public void verificarEmail(PersonaRegistrada p) throws EmailNotValidException {
+	public void verificarEmail(PersonaRegistrada p) throws PersonNotValidEmailException {
         
         if (!p.getEmail().matches("^([0-9a-zA-Z_.]+@gmail.com)$")) {
-        	throw new EmailNotValidException();
+        	throw new PersonNotValidEmailException();
         }
         
 	}
@@ -195,7 +194,7 @@ public class PersonaRegistradaBoImpl implements PersonaRegistradaBo {
 	 * @see org.proyectofinal.bo.interfaces.PersonaRegistradaBo#controlarExistenciaUsuarioYPersona(org.proyectofinal.model.interfaces.PersonaRegistrada)
 	 */
 	
-	public void controlarExistenciaUsuarioYPersona(PersonaRegistrada p) throws UserAlreadyExistsException, PersonAlreadyExistsException{
+	public void controlarExistenciaPersona(PersonaRegistrada p) throws PersonAlreadyExistsException{
 		
 		PersonaRegistradaDao pDao = new PersonaRegistradaDaoImpl();
 		
@@ -203,15 +202,9 @@ public class PersonaRegistradaBoImpl implements PersonaRegistradaBo {
 			
 			pDao.conectar();
 			
-			ResultSet res1 = pDao.consultarPersonaRegistradaPorUsuario(p.getUsuario());
+			ResultSet res1 = pDao.consultarPorDni(p);
 			
 			if (res1.next()){
-				throw new UserAlreadyExistsException();
-			}
-			
-			ResultSet res2 = pDao.consultarPorDni(p);
-			
-			if (res2.next()){
 				throw new PersonAlreadyExistsException();
 			}
 			
@@ -264,7 +257,13 @@ public class PersonaRegistradaBoImpl implements PersonaRegistradaBo {
 		PersonaRegistradaDao pRDao = new PersonaRegistradaDaoImpl();
 		
 		try {
+
+			pRDao.conectar();
+
 			pRDao.modificacion(pR);
+
+			pRDao.desconectar();
+
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -282,7 +281,13 @@ public class PersonaRegistradaBoImpl implements PersonaRegistradaBo {
 		PersonaRegistradaDao pRDao = new PersonaRegistradaDaoImpl();
 		
 		try {
+			
+			pRDao.conectar();
+
 			pRDao.modificarSaldo(distancia, dniPersona);
+
+			pRDao.desconectar();
+
 		} catch (ClassNotFoundException e) {			
 			e.printStackTrace();
 		} catch (SQLException e) {

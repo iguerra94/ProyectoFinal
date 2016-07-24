@@ -15,13 +15,13 @@ import org.proyectofinal.model.interfaces.Usuario;
 public interface UsuarioDao {
 	 
 	/* (non-Javadoc)
-	 * @see org.proyectofinal.dao.abstracts.AbstractDao#conectar()
+	 * @see org.proyectofinal.dao.impl.UsuarioDaoImpl#conectar()
 	 */
 	
 	public void conectar() throws ClassNotFoundException, SQLException;
 	
 	/* (non-Javadoc)
-	 * @see org.proyectofinal.dao.abstracts.AbstractDao#desconectar()
+	 * @see org.proyectofinal.dao.impl.UsuarioDaoImpl#desconectar()
 	 */
 	
 	public void desconectar() throws SQLException;

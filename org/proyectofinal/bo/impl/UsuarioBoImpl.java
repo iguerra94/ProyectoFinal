@@ -3,7 +3,8 @@ package org.proyectofinal.bo.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.proyectofinal.bo.ex.NotEqualPasswordException;
+import org.proyectofinal.bo.ex.UserAlreadyExistsException;
+import org.proyectofinal.bo.ex.UserNotEqualPasswordException;
 import org.proyectofinal.bo.ex.UserNotExistsException;
 import org.proyectofinal.bo.ex.UserNotValidException;
 import org.proyectofinal.bo.interfaces.UsuarioBo;
@@ -85,7 +86,7 @@ public class UsuarioBoImpl implements UsuarioBo {
 	 * @see org.proyectofinal.bo.interfaces.UsuarioBo#controlarNuevaContrasenia(char[], char[])
 	 */
 	
-	public void controlarNuevaContrasenia(char[] nueva, char[] confirmar) throws NotEqualPasswordException {
+	public void controlarNuevaContrasenia(char[] nueva, char[] confirmar) throws UserNotEqualPasswordException {
 
 		Boolean igual = true;
 		
@@ -101,7 +102,7 @@ public class UsuarioBoImpl implements UsuarioBo {
 		}
 		
 		if (!igual){
-			throw new NotEqualPasswordException();
+			throw new UserNotEqualPasswordException();
 		}
 	}
 
@@ -122,19 +123,17 @@ public class UsuarioBoImpl implements UsuarioBo {
 			
 			ResultSet res = uDao.consultarPorUsuario(usuario);
 			
-			while (res.next()) {
+			if (res.next()){
 				u.setNombreUsuario(res.getString("usuario"));
 				u.setPassword(res.getString("contrasenia"));
 				u.setTipoUsuario(res.getInt("tipoUsuario"));
 				u.setFechaInicio(res.getTimestamp("fechaInicio"));
-			}
-			
-			if (!res.next()){
+			} else {
 				throw new UserNotExistsException();
 			}
 
 			uDao.desconectar();
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
@@ -175,7 +174,7 @@ public class UsuarioBoImpl implements UsuarioBo {
 		
 		return dni;	
 	}
-	
+		
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.bo.interfaces.UsuarioBo#recuperarPass(java.lang.String)
 	 */
@@ -188,6 +187,8 @@ public class UsuarioBoImpl implements UsuarioBo {
 		
 		try {
 			
+			uDao.conectar();
+			
 			ResultSet res = uDao.consultarPorUsuario(usuario);
 			
 			if (res.next()){
@@ -196,6 +197,8 @@ public class UsuarioBoImpl implements UsuarioBo {
 				throw new UserNotExistsException();
 			}
 			
+			uDao.desconectar();
+			
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -203,6 +206,35 @@ public class UsuarioBoImpl implements UsuarioBo {
 		}
 		
 		return pass;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.bo.interfaces.UsuarioBo#controlarExistenciaUsuario(org.proyectofinal.model.interfaces.Usuario)
+	 */
+	
+	@Override
+	public void controlarExistenciaUsuario(Usuario u) throws UserAlreadyExistsException {
+		
+		UsuarioDao uDao = new UsuarioDaoImpl();
+		
+		try {
+			
+			uDao.conectar();
+			
+			ResultSet res1 = uDao.consultarPorUsuario(u.getNombreUsuario());
+			
+			if (res1.next()){
+				throw new UserAlreadyExistsException();
+			}
+			
+			uDao.desconectar();
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();			
+		}
+		
 	}
 
 	/* (non-Javadoc)
@@ -238,7 +270,13 @@ public class UsuarioBoImpl implements UsuarioBo {
 		UsuarioDao uDao = new UsuarioDaoImpl();
 		
 		try {
+	
+			uDao.conectar();
+			
 			uDao.modificacionContrasenia(contrasenia, usuario);
+
+			uDao.desconectar();
+			
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {

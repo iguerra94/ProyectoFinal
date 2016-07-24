@@ -1,11 +1,10 @@
 package org.proyectofinal.bo.interfaces;
 
-import org.proyectofinal.bo.ex.DniNotValidException;
-import org.proyectofinal.bo.ex.EmailNotValidException;
 import org.proyectofinal.bo.ex.PersonAlreadyExistsException;
+import org.proyectofinal.bo.ex.PersonGenericNotValidDniException;
 import org.proyectofinal.bo.ex.PersonNotValidAgeException;
+import org.proyectofinal.bo.ex.PersonNotValidEmailException;
 import org.proyectofinal.bo.ex.PersonNotValidException;
-import org.proyectofinal.bo.ex.UserAlreadyExistsException;
 import org.proyectofinal.model.interfaces.PersonaRegistrada;
 
 /**
@@ -39,19 +38,19 @@ public interface PersonaRegistradaBo {
 	 * Metodo de negocio que verifica que el atributo <em>dni</em> del objeto <code>PersonaRegistrada</code> sea valido.
 	 *
 	 * @param p El objeto <code>PersonaRegistrada</code>.
-	 * @throws DniNotValidException Si el atributo <em>dni</em> del objeto <code>PersonaRegistrada</code> no es valido.
+	 * @throws PersonGenericNotValidDniException Si el atributo <em>dni</em> del objeto <code>PersonaRegistrada</code> no es valido.
 	 */
 	
-	public void verificarDni(PersonaRegistrada p) throws DniNotValidException;
+	public void verificarDni(PersonaRegistrada p) throws PersonGenericNotValidDniException;
 
 	/**
 	 * Metodo de negocio que verifica que el atributo <em>email</em> del objeto <code>PersonaRegistrada</code> sea valido.
 	 *
 	 * @param p El objeto <code>PersonaRegistrada</code>.
-	 * @throws EmailNotValidException Si el atributo <em>email</em> del objeto <code>PersonaRegistrada</code> no es valido.
+	 * @throws PersonNotValidEmailException Si el atributo <em>email</em> del objeto <code>PersonaRegistrada</code> no es valido.
 	 */
 	
-	public void verificarEmail(PersonaRegistrada p) throws EmailNotValidException;
+	public void verificarEmail(PersonaRegistrada p) throws PersonNotValidEmailException;
 	
 	/**
 	 * Metodo de negocio que verifica que el atributo <em>edad</em> del objeto <code>PersonaRegistrada</code> sea mayor o igual a 18.
@@ -82,15 +81,12 @@ public interface PersonaRegistradaBo {
 
 	/**
 	 * Metodo de negocio que se conecta con el objeto DAO <code>PersonaRegistrada</code> para verificar la existencia en la base de datos del sistema del objeto <code>PersonaRegistrada</code> pasado como parametro.
-	 * <br>Tambien verifica la existencia del objeto <code>Usuario</code> relacionado a la <code>PersonaRegistrada</code>.
-	 * <br>De verificarse la existencia de alguno de estos dos objetos en la base de datos del sistema, se lanza la excepcion correspondiente que manejara el error.
 	 *
 	 * @param p El objeto <code>PersonaRegistrada</code>.
-	 * @throws UserAlreadyExistsException Si el objeto <code>Usuario</code> relacionado a la <code>PersonaRegistrada</code> ya existe en la base de datos del sistema.
 	 * @throws PersonAlreadyExistsException Si el objeto <code>PersonaRegistrada</code> ya existe en la base de datos del sistema.
 	 */
 
-	public void controlarExistenciaUsuarioYPersona(PersonaRegistrada p) throws UserAlreadyExistsException, PersonAlreadyExistsException;
+	public void controlarExistenciaPersona(PersonaRegistrada p) throws PersonAlreadyExistsException;
 	
 	/**
 	 * Metodo de negocio que se conecta con el objeto DAO <code>PersonaRegistrada</code> para insertar un nuevo objeto <code>PersonaRegistrada</code> en la base de datos del sistema.
@@ -111,7 +107,7 @@ public interface PersonaRegistradaBo {
 	/**
 	 * Metodo de negocio que se conecta con el objeto DAO <code>PersonaRegistrada</code> para modificar el atributo <em>saldo</em> de un objeto <code>PersonaRegistrada</code>.
 	 *
-	 * @param distancia El atributo <em>distancia</em> que sera acumulado al atributo <em>saldo</em> del objeto <code>PersonaRegistrada</code>.
+	 * @param distancia El atributo <em>distancia</em> de un <code>ViajeCabecera</code> que sera acumulado al atributo <em>saldo</em> del objeto <code>PersonaRegistrada</code>.
 	 * @param dniPersona El atributo <em>dni</em> del objeto <code>PersonaRegistrada</code> al cual se le modificara el atributo <em>saldo</em>.
 	 */
 	

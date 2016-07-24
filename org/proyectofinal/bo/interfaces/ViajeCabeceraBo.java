@@ -2,9 +2,11 @@ package org.proyectofinal.bo.interfaces;
 
 import java.util.List;
 
-import org.proyectofinal.bo.ex.NoFlightsFoundException;
-import org.proyectofinal.bo.ex.NotOffersFoundException;
+import org.proyectofinal.bo.ex.ViajeCabeceraNotFoundException;
+import org.proyectofinal.bo.ex.ViajeCabeceraNotFoundParametersException;
 import org.proyectofinal.bo.ex.ViajeCabeceraNotValidException;
+import org.proyectofinal.bo.ex.ViajeCabeceraOfferDiscountNotValidException;
+import org.proyectofinal.bo.ex.ViajeCabeceraOfferNotFoundException;
 import org.proyectofinal.bo.ex.ViajeCabeceraOfferNotValidException;
 import org.proyectofinal.model.interfaces.ViajeCabecera;
 
@@ -52,7 +54,25 @@ public interface ViajeCabeceraBo {
 	 */
 	
 	public void verificarOferta(ViajeCabecera vC) throws ViajeCabeceraOfferNotValidException;
+
+	/**
+	 * Metodo de negocio que verifica que el atributo <em>oferta</em> del objeto <code>ViajeCabecera</code> sea mayor a 0 (cero) y menor o igual a 0.75 (cero con .75).
+	 *
+	 * @param vC El objeto <code>ViajeCabecera</code>.
+	 * @throws ViajeCabeceraOfferDiscountNotValidException Si el atributo <em>oferta</em> del objeto <code>ViajeCabecera</code> es menor o igual a 0 (cero) o es mayor a 0.75 (cero con .75).
+	 */
+
+	public void verificarDescuentoOferta(ViajeCabecera vC) throws ViajeCabeceraOfferDiscountNotValidException;
 	
+	/**
+	 * Metodo de negocio que se conecta con el objeto DAO <code>ViajeCabecera</code> y retorna una lista con todos los objetos <code>ViajeCabecera</code> encontrados en la base de datos del sistema.
+	 *
+	 * @return Una lista con todos los objetos <code>ViajeCabecera</code> encontrados en la base de datos del sistema.
+	 * @throws ViajeCabeceraNotFoundException Si no existe ningun objeto <code>ViajeCabecera</code> en la base de datos del sistema.
+	 */
+	
+	public List<ViajeCabecera> consultarVuelos() throws ViajeCabeceraNotFoundException;
+
 	/**
 	 * Metodo de negocio que se conecta con el objeto DAO <code>ViajeCabecera</code> y retorna un objeto <code>ViajeCabecera</code> con todos sus atributos.
 	 *
@@ -75,20 +95,20 @@ public interface ViajeCabeceraBo {
 	 *
 	 * @param vC El objeto <code>ViajeCabecera</code>.
 	 * @return La lista con los objetos <code>ViajeCabecera</code> encontrados en la base de datos del sistema segun los atributos <em>ciudadOrigen</em>, <em>ciudadDestino</em> y <em>fechaSalida</em> del objeto <code>ViajeCabecera</code>.
-	 * @throws NoFlightsFoundException Si no existe ningun objeto <code>ViajeCabecera</code> en la base de datos del sistema con los atributos especificados.
+	 * @throws ViajeCabeceraNotFoundParametersException Si no existe ningun objeto <code>ViajeCabecera</code> en la base de datos del sistema con los atributos especificados.
 	 */
 	
-	public List<ViajeCabecera> retornarVuelosPorFecha(ViajeCabecera vC) throws NoFlightsFoundException;
+	public List<ViajeCabecera> retornarVuelosPorFecha(ViajeCabecera vC) throws ViajeCabeceraNotFoundParametersException;
 	
 	/**
 	 * Metodo de negocio que se conecta con el objeto DAO <code>ViajeCabecera</code> y retorna una lista con los objetos <code>ViajeCabecera</code> encontrados en la base de datos del sistema segun los atributos <em>ciudadOrigen</em> y <em>ciudadDestino</em> del objeto <code>ViajeCabecera</code>.
 	 *
 	 * @param vC El objeto <code>ViajeCabecera</code>.
 	 * @return La lista con los objetos <code>ViajeCabecera</code> encontrados en la base de datos del sistema segun los atributos <em>ciudadOrigen</em> y <em>ciudadDestino</em> del objeto <code>ViajeCabecera</code>.
-	 * @throws NoFlightsFoundException Si no existe ningun objeto <code>ViajeCabecera</code> en la base de datos del sistema con los atributos especificados.
+	 * @throws ViajeCabeceraNotFoundParametersException Si no existe ningun objeto <code>ViajeCabecera</code> en la base de datos del sistema con los atributos especificados.
 	 */
 	
-	public List<ViajeCabecera> retornarVuelosCualquierFecha(ViajeCabecera vC) throws NoFlightsFoundException;
+	public List<ViajeCabecera> retornarVuelosCualquierFecha(ViajeCabecera vC) throws ViajeCabeceraNotFoundParametersException;
 	
 	/**
 	 * Metodo de negocio que se conecta con el objeto DAO <code>ViajeCabecera</code> y retorna una lista con las ciudades de origen, pais de origen, ciudad de destino y pais de destino de cada uno de los objetos <code>ViajeCabecera</code> existentes en la base de datos del sistema.
@@ -107,12 +127,13 @@ public interface ViajeCabeceraBo {
 	public List<String> retornarOrigenes();
 	
 	/**
-	 * Metodo de negocio que se conecta con el objeto DAO <code>ViajeCabecera</code> y retorna una lista con las ciudades de destino y pais de destino de cada uno de los objetos <code>ViajeCabecera</code> existentes en la base de datos del sistema.
+	 * Metodo de negocio que se conecta con el objeto DAO <code>ViajeCabecera</code> y retorna una lista con las ciudades de destino y pais de destino de cada uno de los objetos <code>ViajeCabecera</code> existentes en la base de datos del sistema segun la <em>ciudadOrigen</em> pasada como parametro.
 	 *
-	 * @return La lista con las ciudades de destino y pais de destino de cada uno de los objetos <code>ViajeCabecera</code> existentes en la base de datos del sistema.
+	 * @param ciudadOrigen El atributo <em>ciudadOrigen</em> del objeto <code>ViajeCabecera</code>.
+	 * @return La lista con las ciudades de destino y pais de destino de cada uno de los objetos <code>ViajeCabecera</code> existentes en la base de datos del sistema segun la <em>ciudadOrigen</em> pasada como parametro.
 	 */
 	
-	public List<String> retornarDestinos();
+	public List<String> retornarDestinos(String ciudadOrigen);
 
 	/**
 	 * Metodo de negocio que se conecta con el objeto DAO <code>ViajeCabecera</code> para verificar que objetos <code>ViajeCabecera</code> tienen el atributo <em>oferta</em> mayor a cero, luego para cada uno de ellos setea un objeto <code>ViajeCabecera</code> con todos los atributos relacionados a la oferta de un viaje y retorna una lista con dichos objetos <code>ViajeCabecera</code>.
@@ -126,10 +147,10 @@ public interface ViajeCabeceraBo {
 	 * Metodo de negocio que se conecta con el objeto DAO <code>ViajeCabecera</code> para verificar que objetos <code>ViajeCabecera</code> tienen el atributo <em>oferta</em> mayor a cero y retorna una lista con los atributos <em>ciudadOrigen</em>, <em>paisOrigen</em>, <em>ciudadDestino</em> y <em>paisDestino</em> de dichos objetos <code>ViajeCabecera</code>.
 	 *
 	 * @return La lista con los atributos <em>ciudadOrigen</em>, <em>paisOrigen</em>, <em>ciudadDestino</em> y <em>paisDestino</em> de los objetos <code>ViajeCabecera</code> que tienen el atributo <em>oferta</em> mayor a cero.
-	 * @throws NotOffersFoundException Si no existe ningun objeto <code>ViajeCabecera</code> en la base de datos del sistema con el atributo <em>oferta</em> mayor a cero.
+	 * @throws ViajeCabeceraOfferNotFoundException Si no existe ningun objeto <code>ViajeCabecera</code> en la base de datos del sistema con el atributo <em>oferta</em> mayor a cero.
 	 */
 	
-	public List<String> retornarOfertas() throws NotOffersFoundException;
+	public List<String> retornarOfertas() throws ViajeCabeceraOfferNotFoundException;
 	
 	/**
 	 * Metodo de negocio que se conecta con el objeto DAO <code>ViajeCabecera</code> para insertar un nuevo objeto <code>ViajeCabecera</code> en la base de datos del sistema.
@@ -156,7 +177,7 @@ public interface ViajeCabeceraBo {
 	public void eliminarVuelo(String codigo);
 	
 	/**
-	 * Metodo de negocio que se conecta con el objeto DAO <code>ViajeCabecera</code> para actualizar los atributos <em>oferta</em> e <em>imagenOferta</em> de un objeto <code>ViajeCabecera</code>, seteando sus valores en \"0.0\" y \"\"".
+	 * Metodo de negocio que se conecta con el objeto DAO <code>ViajeCabecera</code> para actualizar los atributos <em>oferta</em> e <em>imagenOferta</em> de un objeto <code>ViajeCabecera</code>, seteando sus valores en '0.0' y ' '".
 	 *
 	 * @param vC El objeto <code>ViajeCabecera</code>. 
 	 */

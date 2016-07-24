@@ -40,7 +40,7 @@ public class UsuarioDaoImpl extends AbstractDao implements UsuarioDao {
 	public void desconectar() throws SQLException{
 		super.desconectar();
 	}
-		
+	
 	/* (non-Javadoc)
 	 * @see org.proyectofinal.dao.interfaces.UsuarioDao#consultarPorUsuario(org.proyectofinal.model.interfaces.Usuario)
 	 */
@@ -109,18 +109,12 @@ public class UsuarioDaoImpl extends AbstractDao implements UsuarioDao {
 	
 	public void modificacionContrasenia(String contrasenia, String usuario) throws SQLException, ClassNotFoundException {
 		
-		conectar();
-		
-		PreparedStatement sentencia = null;
-
-		sentencia = getConexion().prepareStatement("update Usuario set contrasenia = ? where usuario = ?");
+		PreparedStatement sentencia = getConexion().prepareStatement("update Usuario set contrasenia = ? where usuario = ?");
 		
 		sentencia.setString(1, contrasenia);
 		sentencia.setString(2, usuario);
 		
 		sentencia.executeUpdate();
-		
-		desconectar();
 	}
 
 }

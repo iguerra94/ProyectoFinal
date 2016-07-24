@@ -21,6 +21,7 @@ import javax.swing.SwingConstants;
 import org.proyectofinal.bo.impl.ViajeCabeceraBoImpl;
 import org.proyectofinal.bo.interfaces.ViajeCabeceraBo;
 import org.proyectofinal.model.interfaces.ViajeCabecera;
+import org.proyectofinal.ui.DialogLogin;
 import org.proyectofinal.ui.ReservaBoletoUI;
 
 public class PlantillaLV extends JDialog {
@@ -167,7 +168,7 @@ public class PlantillaLV extends JDialog {
 		JLabel lblDestino = new JLabel(viaje.getCiudadDestino() + " (" + viaje.getPlataformaDestino() + ")");
 		lblDestino.setHorizontalAlignment(SwingConstants.CENTER);
 		lblDestino.setFont(new Font("Arial", Font.BOLD,14));
-		lblDestino.setBounds(292, 10, 160, 20);
+		lblDestino.setBounds(292, 10, 200, 20);
 		panelVuelo.add(lblDestino);
 		
 		fecha = viaje.getFechaLlegada().toString().substring(8,10) + "/" + viaje.getFechaLlegada().toString().substring(5,7) + "/" + viaje.getFechaLlegada().toString().substring(0,4);
@@ -218,22 +219,36 @@ public class PlantillaLV extends JDialog {
 				ViajeCabecera viaje = vCBo.retornarViaje(btnSeleccionar.getToolTipText());
 				
 				String dni = labelDni.getToolTipText();
+				
+				Boolean acumula = new Boolean(labelAcumula.getToolTipText());
+				
+				if (dni.length() == 0){
+					loguear(viaje, acumula);
+				}else{
 
-				ReservaBoletoUI ui = new ReservaBoletoUI();
-				
-				ui.cargarAsientos(viaje);
-				
-				ui.setearViajeYDniReserva(viaje, dni);
-				
-				ui.cargarInfoVuelo(viaje, new Boolean(labelAcumula.getToolTipText()));
-				
-				dispose();
-				
-				ui.setVisible(true);
-				
+					ReservaBoletoUI ui = new ReservaBoletoUI();
+					
+					ui.cargarAsientos(viaje);
+					
+					ui.setearViajeYDniReserva(viaje, dni);
+					
+					ui.cargarInfoVuelo(viaje, acumula);
+					
+					dispose();
+					
+					ui.setVisible(true);
+				}
 			}
 		});
 		panelVuelo.add(btnSeleccionar);
+	}
+	
+	private void loguear(ViajeCabecera viaje, Boolean acumula){
+		dispose();
+		
+		DialogLogin d = new DialogLogin("RESERVA", viaje, acumula);
+		
+		d.setVisible(true);
 	}
 	
 	private void agregarPanelImagenes(ViajeCabecera viaje) {
@@ -321,6 +336,10 @@ public class PlantillaLV extends JDialog {
 		agregarLabels(dni, acumula);
 	}
 	
+	public void setearAcumula(String dni, Boolean acumula){
+		agregarLabels(dni, acumula);
+	}
+
 	public void mostrarVuelos(List<ViajeCabecera> listaViajes){
 		
 		int i = 0;

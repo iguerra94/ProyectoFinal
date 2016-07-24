@@ -27,16 +27,16 @@ public class ListaPaises {
 	
 	public void cargarPaises(){
 		paises.add(inicializarPais("Argentina", "ARG"));
-		paises.add(inicializarPais("Brasil", "BRA"));
-		paises.add(inicializarPais("México", "MEX"));
 		paises.add(inicializarPais("Australia", "AUS"));
-		paises.add(inicializarPais("Nueva Zelanda", "NZL"));
+		paises.add(inicializarPais("Brasil", "BRA"));
 		paises.add(inicializarPais("Colombia", "COL"));
-		paises.add(inicializarPais("Estados Unidos", "USA"));
 		paises.add(inicializarPais("España", "ESP"));
+		paises.add(inicializarPais("Estados Unidos", "USA"));
 		paises.add(inicializarPais("Francia", "FRA"));
-		paises.add(inicializarPais("Inglaterra", "ING"));
 		paises.add(inicializarPais("Italia", "ITA"));
+		paises.add(inicializarPais("México", "MEX"));
+		paises.add(inicializarPais("Nueva Zelanda", "NZL"));
+		paises.add(inicializarPais("Reino Unido", "GBR"));
 	}
 	
 }

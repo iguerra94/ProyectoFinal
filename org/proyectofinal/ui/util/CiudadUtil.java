@@ -4,10 +4,12 @@ public class CiudadUtil {
 	
 	private String ciudad = null;
 	private String shortPais = null;
+	private Boolean enVuelos = null;
 	
-	public CiudadUtil(String ciudad, String shortPais){
+	public CiudadUtil(String ciudad, String shortPais, Boolean enVuelos){
 		this.ciudad = ciudad;
 		this.shortPais = shortPais;
+		this.enVuelos = enVuelos;
 	}
 
 	public String getCiudad() {
@@ -26,6 +28,14 @@ public class CiudadUtil {
 		this.shortPais = shortPais;
 	}
 	
+	public Boolean getEnVuelos() {
+		return enVuelos;
+	}
+
+	public void setEnVuelos(Boolean enVuelos) {
+		this.enVuelos = enVuelos;
+	}
+	
 	public String toString(){
 		
 		if (getCiudad().length() > 0) {
@@ -34,4 +44,5 @@ public class CiudadUtil {
 			return "";
 		}
 	}
+
 }

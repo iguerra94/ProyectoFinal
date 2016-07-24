@@ -12,8 +12,8 @@ public class DialogRegistrarse extends PlantillaDR implements WindowFocusListene
 	public DialogRegistrarse() {
 
 		inicializarAtributos();
-		agregarPanePersona();
-		agregarPaneUsuario();
+		agregarPanelPersona();
+		agregarPanelUsuario();
 		agregarBotones();
 		
 		addWindowFocusListener(this);
@@ -30,5 +30,5 @@ public class DialogRegistrarse extends PlantillaDR implements WindowFocusListene
 	public void windowLostFocus(WindowEvent e) {
 		
 	}
-
+	
 }

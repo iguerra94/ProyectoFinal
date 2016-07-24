@@ -2,6 +2,7 @@ package org.proyectofinal.ui.plantillasUI;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -34,11 +35,11 @@ public class PlantillaDL extends JDialog {
 	
 	private static final long serialVersionUID = -6234766295289047065L;
 	
-	private JTextField txtUsuario;
-	private JPasswordField txtContrasea;
-	private JButton btnIngresar;
+	JTextField txtUsuario;
+	JPasswordField txtContrasea;
+	JButton btnIngresar;
 	private Usuario u;
-	private UsuarioBo uBo;
+	UsuarioBo uBo;
 	
 	public PlantillaDL(){
 	}
@@ -74,17 +75,19 @@ public class PlantillaDL extends JDialog {
 		lblImagen.setIcon(icon);
 		getContentPane().add(lblImagen);
 		
-		JLabel lblUsuario = new JLabel("USUARIO:");
+		JLabel lblUsuario = new JLabel("Nombre de usuario:");
 		lblUsuario.setLabelFor(txtUsuario);
 		lblUsuario.setHorizontalAlignment(SwingConstants.CENTER);
 		lblUsuario.setBounds(15, 132, 284, 39);
+		lblUsuario.setFont(new Font("Roboto Regular", Font.BOLD, 14));
 		getContentPane().add(lblUsuario);
 		
-		JLabel lblContrasea = new JLabel("CONTRASEÑA:");
+		JLabel lblContrasea = new JLabel("Contraseña:");
 		lblContrasea.setLabelFor(txtContrasea);
 		lblContrasea.setHorizontalAlignment(SwingConstants.CENTER);
 		lblContrasea.setHorizontalTextPosition(SwingConstants.CENTER);
 		lblContrasea.setBounds(15, 236, 284, 39);
+		lblContrasea.setFont(new Font("Roboto Regular", Font.BOLD, 14));
 		getContentPane().add(lblContrasea);
 	}
 	
@@ -107,6 +110,7 @@ public class PlantillaDL extends JDialog {
 				setearUsuario();
 			}
 		});
+		txtUsuario.setFont(new Font("Roboto Regular", Font.PLAIN, 14));
 		getContentPane().add(txtUsuario);
 
 		txtContrasea = new JPasswordField();
@@ -123,6 +127,7 @@ public class PlantillaDL extends JDialog {
 				setearPass();
 			}
 		});
+		txtContrasea.setFont(new Font("Roboto Regular", Font.PLAIN, 14));
 		getContentPane().add(txtContrasea);		
 	}
 	
@@ -131,7 +136,10 @@ public class PlantillaDL extends JDialog {
 		uBo = new UsuarioBoImpl();
 		
 		btnIngresar = new JButton("Ingresar");
-		btnIngresar.setBounds(75, 355, 160, 34);
+		btnIngresar.setBounds(75, 355, 160, 40);
+		btnIngresar.setBackground(new Color(0,100,90));
+		btnIngresar.setFont(new Font("Roboto Regular", Font.PLAIN, 18));
+		btnIngresar.setForeground(Color.WHITE);
 		btnIngresar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
@@ -162,27 +170,28 @@ public class PlantillaDL extends JDialog {
 				registrar();
 			}			
 		});
-		btnUsuarioNuevo.setHorizontalTextPosition(SwingConstants.CENTER);
-		btnUsuarioNuevo.setForeground(Color.BLUE);
+		btnUsuarioNuevo.setHorizontalTextPosition(SwingConstants.RIGHT);
+		btnUsuarioNuevo.setForeground(new Color(27,0,136));
 		btnUsuarioNuevo.setContentAreaFilled(false);
 		btnUsuarioNuevo.setBorderPainted(false);
-		btnUsuarioNuevo.setBounds(0, 206, 310, 30);
+		btnUsuarioNuevo.setBounds(40, 206, 250, 30);
+		btnUsuarioNuevo.setFont(new Font("Roboto Thin", Font.BOLD, 12));
 		getContentPane().add(btnUsuarioNuevo);
 		
 		JButton btnOlvidoSuContrasea = new JButton("¿Olvidó su contraseña?");
-		btnOlvidoSuContrasea.setHorizontalAlignment(SwingConstants.LEFT);
 		btnOlvidoSuContrasea.setMargin(new Insets(2, 0, 2, 0));
-		btnOlvidoSuContrasea.setHorizontalTextPosition(SwingConstants.CENTER);
 		btnOlvidoSuContrasea.addActionListener(new ActionListener() {		
 			@Override
 			public void actionPerformed(ActionEvent e) {				
 				recuperarPass();				
 			}
 		});
-		btnOlvidoSuContrasea.setBorderPainted(false);
-		btnOlvidoSuContrasea.setForeground(Color.BLUE);
+		btnOlvidoSuContrasea.setHorizontalTextPosition(SwingConstants.RIGHT);
+		btnOlvidoSuContrasea.setForeground(new Color(27,0,136));
 		btnOlvidoSuContrasea.setContentAreaFilled(false);
-		btnOlvidoSuContrasea.setBounds(45, 310, 220, 30);
+		btnOlvidoSuContrasea.setBorderPainted(false);
+		btnOlvidoSuContrasea.setBounds(65, 310, 250, 30);
+		btnOlvidoSuContrasea.setFont(new Font("Roboto Thin", Font.BOLD, 12));
 		getContentPane().add(btnOlvidoSuContrasea);
 	}
 

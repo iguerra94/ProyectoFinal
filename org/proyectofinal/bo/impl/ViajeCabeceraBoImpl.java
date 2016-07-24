@@ -8,9 +8,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import org.proyectofinal.bo.ex.NoFlightsFoundException;
-import org.proyectofinal.bo.ex.NotOffersFoundException;
+import org.proyectofinal.bo.ex.ViajeCabeceraNotFoundException;
+import org.proyectofinal.bo.ex.ViajeCabeceraNotFoundParametersException;
 import org.proyectofinal.bo.ex.ViajeCabeceraNotValidException;
+import org.proyectofinal.bo.ex.ViajeCabeceraOfferDiscountNotValidException;
+import org.proyectofinal.bo.ex.ViajeCabeceraOfferNotFoundException;
 import org.proyectofinal.bo.ex.ViajeCabeceraOfferNotValidException;
 import org.proyectofinal.bo.interfaces.ViajeCabeceraBo;
 import org.proyectofinal.dao.impl.ViajeCabeceraDaoImpl;
@@ -94,12 +96,60 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 
 		if (vC.getShortPaisOrigen().length() == 0 || vC.getCiudadOrigen().length() == 0 || 
 			vC.getShortPaisDestino().length() == 0 || vC.getCiudadDestino().length() == 0 || 
-			Float.parseFloat(vC.getOferta()) <= 0 || Float.parseFloat(vC.getOferta()) > 0.75 || 
 			vC.getImagenOferta().length() == 0){
 	
 			throw new ViajeCabeceraOfferNotValidException();
 		}
 		
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.bo.interfaces.ViajeCabeceraBo#verificarDescuentoOferta(org.proyectofinal.model.interfaces.ViajeCabecera)
+	 */
+	
+	public void verificarDescuentoOferta(ViajeCabecera vC) throws ViajeCabeceraOfferDiscountNotValidException {
+		
+		if (Float.parseFloat(vC.getOferta()) <= 0 || Float.parseFloat(vC.getOferta()) > 0.75){
+			throw new ViajeCabeceraOfferDiscountNotValidException();
+		}
+		
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.proyectofinal.bo.interfaces.ViajeCabeceraBo#consultarVuelos()
+	 */
+	
+	@Override
+	public List<ViajeCabecera> consultarVuelos() throws ViajeCabeceraNotFoundException {
+
+		List<ViajeCabecera> listVuelos = new ArrayList<ViajeCabecera>();
+		
+		ViajeCabeceraDao vCDao = new ViajeCabeceraDaoImpl();
+		
+		try {
+			
+			vCDao.conectar();
+			
+			ResultSet res = vCDao.consultarVuelos();
+	
+			if (res.next()){
+				ViajeCabecera viaje = retornarViaje(res.getString("codViaje"));
+				listVuelos.add(viaje);
+			}
+			
+			if (listVuelos.size() == 0){
+				throw new ViajeCabeceraNotFoundException();
+			}
+			
+			vCDao.desconectar();
+
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return listVuelos;
 	}
 	
 	/* (non-Javadoc)
@@ -168,11 +218,15 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 
 		try {
 
+			vCDao.conectar();
+			
 			ResultSet res = vCDao.consultarCodigosViaje();
 			
 			while (res.next()){
 				listaVuelos.add(res.getString("codViaje"));
 			}
+
+			vCDao.desconectar();
 						
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -187,7 +241,7 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 	 * @see org.proyectofinal.bo.interfaces.ViajeCabeceraBo#retornarVuelosPorFecha(org.proyectofinal.model.interfaces.ViajeCabecera)
 	 */
 	
-	public List<ViajeCabecera> retornarVuelosPorFecha(ViajeCabecera vC) throws NoFlightsFoundException {
+	public List<ViajeCabecera> retornarVuelosPorFecha(ViajeCabecera vC) throws ViajeCabeceraNotFoundParametersException {
 		
 		List<ViajeCabecera> listVuelos = new ArrayList<ViajeCabecera>();
 		
@@ -234,7 +288,7 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 			}
 			
 			if (listVuelos.size() == 0){
-				throw new NoFlightsFoundException();
+				throw new ViajeCabeceraNotFoundParametersException();
 			}
 			
 			vCDao.desconectar();
@@ -252,7 +306,7 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 	 * @see org.proyectofinal.bo.interfaces.ViajeCabeceraBo#retornarVuelosCualquierFecha(org.proyectofinal.model.interfaces.ViajeCabecera)
 	 */
 	
-	public List<ViajeCabecera> retornarVuelosCualquierFecha(ViajeCabecera vC) throws NoFlightsFoundException {
+	public List<ViajeCabecera> retornarVuelosCualquierFecha(ViajeCabecera vC) throws ViajeCabeceraNotFoundParametersException {
 		
 		List<ViajeCabecera> listVuelos = new ArrayList<ViajeCabecera>();
 		
@@ -270,10 +324,11 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 			}
 			
 			if (listVuelos.size() == 0){
-				throw new NoFlightsFoundException();
+				throw new ViajeCabeceraNotFoundParametersException();
 			}
 			
 			vCDao.desconectar();
+		
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -352,7 +407,7 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 	 * @see org.proyectofinal.bo.interfaces.ViajeCabeceraBo#retornarDestinos()
 	 */
 	
-	public List<String> retornarDestinos(){
+	public List<String> retornarDestinos(String ciudadOrigen){
 		
 		List<String> listDestinos = new ArrayList<String>();
 		
@@ -362,7 +417,7 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 
 			vCDao.conectar();
 
-			ResultSet res = vCDao.consultarDestinos();
+			ResultSet res = vCDao.consultarDestinos(ciudadOrigen);
 
 			while (res.next()){
 				listDestinos.add(res.getString("ciudadDestino")+" ("+res.getString("shortPaisDestino")+")");
@@ -431,7 +486,7 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 	 * @see org.proyectofinal.bo.interfaces.ViajeCabeceraBo#retornarOfertas()
 	 */
 	
-	public List<String> retornarOfertas() throws NotOffersFoundException{
+	public List<String> retornarOfertas() throws ViajeCabeceraOfferNotFoundException{
 		
 		List<String> listOffers = new ArrayList<String>();
 		
@@ -441,19 +496,19 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 
 			vCDao.conectar();
 
-			ResultSet res = vCDao.consultarOrigenesYDestinos();
+			ResultSet res = vCDao.consultarDatosOferta();
 
 			while (res.next()){
 				if (Float.parseFloat(res.getString("oferta")) > 0f){
 					listOffers.add(res.getString("ciudadOrigen")+" ("+res.getString("shortPaisOrigen")+") - " +res.getString("ciudadDestino")+" ("+res.getString("shortPaisDestino") + ")");
 				}
 			}
-			
-			vCDao.desconectar();
 
 			if (listOffers.size() == 0){
-				throw new NotOffersFoundException();
+				throw new ViajeCabeceraOfferNotFoundException();
 			}
+
+			vCDao.desconectar();
 			
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -474,7 +529,13 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 		ViajeCabeceraDao vCDao = new ViajeCabeceraDaoImpl();
 		
 		try {
+
+			vCDao.conectar();
+
 			vCDao.alta(vC);
+			
+			vCDao.desconectar();
+
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -492,7 +553,13 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 		ViajeCabeceraDao vCDao = new ViajeCabeceraDaoImpl();
 		
 		try {
+
+			vCDao.conectar();
+			
 			vCDao.altaOferta(vC);
+
+			vCDao.desconectar();
+
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -511,7 +578,13 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 		ViajeCabeceraDao vCDao = new ViajeCabeceraDaoImpl();
 		
 		try {
+		
+			vCDao.conectar();
+			
 			vCDao.baja(codigo);
+
+			vCDao.desconectar();
+
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -529,7 +602,13 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 		ViajeCabeceraDao vCDao = new ViajeCabeceraDaoImpl();
 		
 		try {
+			
+			vCDao.conectar();
+			
 			vCDao.bajaOferta(vC);
+
+			vCDao.desconectar();
+
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -547,7 +626,13 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 		ViajeCabeceraDao vCDao = new ViajeCabeceraDaoImpl();
 		
 		try {
+
+			vCDao.conectar();
+			
 			vCDao.modificacion(vC);
+			
+			vCDao.desconectar();
+
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -566,7 +651,13 @@ public class ViajeCabeceraBoImpl implements ViajeCabeceraBo {
 		ViajeCabeceraDao vCDao = new ViajeCabeceraDaoImpl();
 		
 		try {
+
+			vCDao.conectar();
+
 			vCDao.actualizarCupo(viaje);
+			
+			vCDao.desconectar();
+
 		} catch (ClassNotFoundException e) {			
 			e.printStackTrace();
 		} catch (SQLException e) {
